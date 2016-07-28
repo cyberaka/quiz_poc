@@ -1,5 +1,7 @@
 package com.cyberaka.quiz.service;
 
-public interface SubTopicService {
+import com.cyberaka.quiz.domain.SubTopic;
 
+public interface SubTopicService {
+	public Iterable<SubTopic> findByTopic(Integer topicId);
 }

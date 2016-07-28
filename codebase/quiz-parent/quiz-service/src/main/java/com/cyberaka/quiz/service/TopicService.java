@@ -1,5 +1,7 @@
 package com.cyberaka.quiz.service;
 
-public interface TopicService {
+import com.cyberaka.quiz.domain.Topic;
 
+public interface TopicService {
+	public Iterable<Topic> findAll();
 }
