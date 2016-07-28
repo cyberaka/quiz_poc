@@ -16,7 +16,6 @@ public class QuestionController {
 	@RequestMapping("/")
 	@ResponseBody
 	String home() {
-		questionService.bootup();
 		return "Hello World!";
 	}
 }

@@ -6,4 +6,10 @@ create user quiz_dev;
 grant all on quiz.* to 'quiz_dev'@'localhost' identified by 'quiz_dev';
 flush privileges;
 
+To Bootup the application
+=========================
+Export an environment variable
+set QUIZ_DATA_FOLDER="C:\Abhinav\Quiz\quiz_poc\documents\questions"
 
+And then execute the following command from quiz-ws module:
+mvn spring-boot:run

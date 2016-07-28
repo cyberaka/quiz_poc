@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "com.cyberaka.quiz.dao")
 @EntityScan(basePackages = "com.cyberaka.quiz.domain")
-@ComponentScan(basePackages = { "com.cyberaka.quiz.rest", "com.cyberaka.quiz.dao", "com.cyberaka.quiz.service.impl" })
+@ComponentScan(basePackages = { "com.cyberaka.quiz", "com.cyberaka.quiz.rest", "com.cyberaka.quiz.dao", "com.cyberaka.quiz.service.impl" })
 public class QuizBootApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuizBootApplication.class, args);

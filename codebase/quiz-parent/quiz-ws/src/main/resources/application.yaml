@@ -13,3 +13,6 @@ spring:
     hibernate:
       ddl-auto: create
       dialect: org.hibernate.dialect.MySQL5Dialect
+data:
+  file: ${QUIZ_DATA_FOLDER}
+  
