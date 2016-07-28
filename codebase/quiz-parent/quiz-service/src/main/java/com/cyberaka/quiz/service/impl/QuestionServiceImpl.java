@@ -46,6 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
 		
 		SubTopic subTopic = new SubTopic();
 		subTopic.setTitle("Section 1");
+		subTopic.setTopic(topic);
 		subtopicRepo.save(subTopic);
 	}
 

@@ -2,6 +2,8 @@ package com.cyberaka.quiz.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,7 +13,9 @@ import javax.persistence.Table;
 @Table(name = "quiz_question")
 
 public class Question {
+
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ques_id", nullable = false)
 	private Integer questionId;
 	@Column(name = "question")
@@ -20,7 +24,7 @@ public class Question {
 	private String answers;
 	@Column(name = "options")
 	private String options;
-	@Column (name = "difficulty_level")
+	@Column(name = "difficulty_level")
 	private Integer difficultyLevel;
 	@ManyToOne
 	@JoinColumn(name = "topic_id", referencedColumnName = "topic_id")
@@ -91,6 +95,14 @@ public class Question {
 
 	public void setContributer(User contributer) {
 		this.contributer = contributer;
+	}
+
+	public Integer getDifficultyLevel() {
+		return difficultyLevel;
+	}
+
+	public void setDifficultyLevel(Integer difficultyLevel) {
+		this.difficultyLevel = difficultyLevel;
 	}
 
 }
