@@ -1,13 +1,29 @@
 package com.cyberaka.quiz.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "quiz_user")
 public class User {
+	@Id
+	@Column(name = "user_id", nullable = false)
 	private Integer userId;
+	@Column(name = "user_name")
 	private String userName;
+	@Column(name = "password")
 	private String password;
+	@Column(name = "email")
 	private String email;
+	@Column(name = "phone_no")
 	private String phoneNo;
+	@Column(name = "admin")
 	private boolean admin;
+	@Column(name = "publisher")
 	private boolean publisher;
+	@Column(name = "consumer")
 	private boolean consumer;
 
 	public User() {

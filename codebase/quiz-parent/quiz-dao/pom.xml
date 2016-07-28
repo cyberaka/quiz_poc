@@ -8,9 +8,7 @@
       <version>1.0-SNAPSHOT</version>
     </parent>
     
-    <groupId>com.cyberaka.quiz</groupId>
     <artifactId>quiz-dao</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Quiz Dao Module</name>
     <dependencies>
