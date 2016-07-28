@@ -15,6 +15,8 @@ public class User {
 	private String userName;
 	@Column(name = "password")
 	private String password;
+	@Column(name = "name")
+	private String name;
 	@Column(name = "email")
 	private String email;
 	@Column(name = "phone_no")
@@ -92,6 +94,14 @@ public class User {
 
 	public void setConsumer(boolean consumer) {
 		this.consumer = consumer;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

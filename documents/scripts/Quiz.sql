@@ -9,11 +9,19 @@ SET FOREIGN_KEY_CHECKS=1;
 -- Create the users who will use the system 
 create table quiz_users (
   id INT NOT NULL AUTO_INCREMENT,
+  user_id VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  name VARCHAR(200) NOT NULL, 
+  email VARCHAR(200) NOT NULL,
   status INT,
   created_timestamp timestamp,
   modified_timestamp timestamp,
   PRIMARY KEY(id)
 );
+
+-- Insert default users
+insert into quiz_users (user_id, password, name, email, status, created_timestamp) 
+  values ('cyberaka', password('1234'), 'Abhinav Anand', 'cyberaka@gmail.com', '1', now());
 
 -- Create the quiz topic which will list down all the subjects in the system 
 create table quiz_topic (
@@ -30,6 +38,10 @@ create table quiz_topic (
   ON DELETE RESTRICT
 );
 
+-- Insert default topics
+insert into quiz_topic (topic_name, created_by_id, status, created_timestamp) 
+  values ('Java', '1', '1', now());
+  
 -- Create the quiz sub topic which will list down all the sub topics within a topic
 create table quiz_sub_topic (
   id INT NOT NULL AUTO_INCREMENT,
