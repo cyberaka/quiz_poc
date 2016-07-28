@@ -1,0 +1,9 @@
+To create a new database and user account
+=========================================
+
+create database quiz;
+create user quiz_dev;
+grant all on quiz.* to 'quiz_dev'@'localhost' identified by 'quiz_dev';
+flush privileges;
+
+

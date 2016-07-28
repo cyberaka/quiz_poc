@@ -20,6 +20,8 @@ public class Question {
 	private String answers;
 	@Column(name = "options")
 	private String options;
+	@Column (name = "difficulty_level")
+	private Integer difficultyLevel;
 	@ManyToOne
 	@JoinColumn(name = "topic_id", referencedColumnName = "topic_id")
 	private Topic topic;

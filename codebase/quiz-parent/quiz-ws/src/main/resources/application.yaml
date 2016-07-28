@@ -1,0 +1,15 @@
+server:
+  port: 8090
+spring: 
+  datasource: 
+    autoReconnect: true
+    driver-class-name: com.mysql.jdbc.Driver
+    password: quiz_dev
+    testOnBorrow: true
+    url: "jdbc:mysql://localhost:3306/quiz"
+    username: quiz_dev
+    validationQuery: "SELECT 1"
+  jpa: 
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL5Dialect
