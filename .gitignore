@@ -1,5 +1,6 @@
 *.class
 
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
@@ -10,3 +11,13 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/codebase/quiz-parent/.project
+
+#eclipse specific files removed
+*.classpath
+*.project
+.settings
+
+#maven specific folders removed
+target
+bin
