@@ -18,11 +18,11 @@ public class Question {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ques_id", nullable = false)
 	private Integer questionId;
-	@Column(name = "question")
+	@Column(columnDefinition = "text", name = "question")
 	private String question;
 	@Column(name = "answers")
 	private String answers;
-	@Column(name = "options")
+	@Column(columnDefinition = "text", name = "options")
 	private String options;
 	@Column(name = "difficulty_level")
 	private Integer difficultyLevel;
