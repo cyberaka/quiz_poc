@@ -10,6 +10,18 @@ To Bootup the application
 =========================
 Export an environment variable
 set QUIZ_DATA_FOLDER="C:\Abhinav\Quiz\quiz_poc\documents\questions"
+set ANDROID_HOME="C:\Abhinav\Tools\Android\sdk"
 
 And then execute the following command from quiz-ws module:
 mvn spring-boot:run
+
+To install ionic
+================
+ npm install -g cordova ionic
+ ionic start myApp tabs
+ cd myApp
+ ionic platform add android
+ ionic build android
+ ionic emulate android
+ ionic serve
+ 
