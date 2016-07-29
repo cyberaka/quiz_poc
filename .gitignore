@@ -33,3 +33,4 @@ plugins
 *.swo
 *.log
 *.DS_Store
+/codebase/quiz-parent/quiz-ui/.io-config.json
