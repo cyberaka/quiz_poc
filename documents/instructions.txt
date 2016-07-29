@@ -10,6 +10,9 @@ To Bootup the application
 =========================
 Export an environment variable
 set QUIZ_DATA_FOLDER="C:\Abhinav\Quiz\quiz_poc\documents\questions"
+set QUIZ_CONNECTION_STRING="jdbc:mysql://localhost:3306/quiz"
+set QUIZ_CONNECTION_USER="quiz_dev"
+set QUIZ_CONNECTION_PASSWORD="quiz_dev"
 set ANDROID_HOME="C:\Abhinav\Tools\Android\sdk"
 
 And then execute the following command from quiz-ws module:

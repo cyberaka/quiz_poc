@@ -4,10 +4,10 @@ spring:
   datasource: 
     autoReconnect: true
     driver-class-name: com.mysql.jdbc.Driver
-    password: quiz_dev
+    password: ${QUIZ_CONNECTION_PASSWORD}
     testOnBorrow: true
-    url: "jdbc:mysql://localhost:3306/quiz"
-    username: quiz_dev
+    url: ${QUIZ_CONNECTION_STRING}
+    username: ${QUIZ_CONNECTION_USER}
     validationQuery: "SELECT 1"
   jpa: 
     hibernate:
