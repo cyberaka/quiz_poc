@@ -20,6 +20,7 @@ import com.cyberaka.quiz.domain.Question;
 import com.cyberaka.quiz.domain.SubTopic;
 import com.cyberaka.quiz.domain.Topic;
 import com.cyberaka.quiz.domain.User;
+import com.cyberaka.quiz.service.AppConstants;
 
 @Component
 public class QuizBootupRunner implements CommandLineRunner {
@@ -101,6 +102,7 @@ public class QuizBootupRunner implements CommandLineRunner {
 				quest.setQuestion(line[1]);
 				quest.setOptions(line[3]);
 				quest.setAnswers(line[4]);
+				quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
 				questionRepo.save(quest);
 			}
 //			dumpInsertStatements(list);
