@@ -1,5 +1,5 @@
 var topicsModule= angular.module('quiz.module.topics', ['quiz.resources.topics'])
-topicsModule.controller('TopicController',function($scope,TopicService){
+topicsModule.controller('TopicController',function($scope,$state,TopicService){
   $scope.topics=[]
   TopicService.getTopics().then(function(results){
     if(results!=null){
@@ -8,4 +8,7 @@ topicsModule.controller('TopicController',function($scope,TopicService){
   },function(){
 
   })
+  $scope.showSubTopics = function(theTopicId){
+      $state.go('subtopics',{topicId:theTopicId})
+  }
 })

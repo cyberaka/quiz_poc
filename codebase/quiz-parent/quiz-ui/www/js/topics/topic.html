@@ -1,7 +1,7 @@
 <ion-view title="Topic">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="topic in topics" type="item-text-wrap">
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="topic in topics" type="item-text-wrap" ng-click="showSubTopics(topic.topicId)">
         <h2>{{topic.title}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
