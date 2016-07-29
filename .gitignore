@@ -21,3 +21,15 @@ hs_err_pid*
 #maven specific folders removed
 target
 bin
+
+#ionic specific ignores
+node_modules
+.tmp
+.sass-cache
+bower_components
+platforms
+plugins
+*.swp
+*.swo
+*.log
+*.DS_Store
