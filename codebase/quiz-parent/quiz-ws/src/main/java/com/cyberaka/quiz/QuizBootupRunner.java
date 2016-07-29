@@ -1,6 +1,8 @@
 package com.cyberaka.quiz;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -228,8 +230,11 @@ public class QuizBootupRunner implements CommandLineRunner {
 
 		private ArrayList<String> readFile() throws IOException {
 			ArrayList<String> lines = new ArrayList<String>();
-			try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-				stream.forEach(lines::add);
+			try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+			    String line;
+			    while ((line = br.readLine()) != null) {
+			       lines.add(line);
+			    }
 			}
 			return lines;
 		}
