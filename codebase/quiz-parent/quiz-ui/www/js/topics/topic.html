@@ -1,13 +1,10 @@
 <ion-view title="Topic">
-  <ion-content class="padding">
-      <!-- <div class="list list-inset">
-          <label class="item item-input">
-              <input type="text" placeholder="User Name" ng-model="data.username">
-          </label>
-          <label class="item item-input">
-              <input type="password" placeholder="Password" ng-model="data.password">
-          </label>
-      </div>
-      <button class="button button-block button-calm" ng-click="login()">Login</button> -->
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="topic in topics" type="item-text-wrap">
+        <h2>{{topic.title}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>
