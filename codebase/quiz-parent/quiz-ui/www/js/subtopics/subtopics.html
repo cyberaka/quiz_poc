@@ -1,8 +1,8 @@
-<ion-view title="Sub Topics">
+<ion-view view-title="Sub Topics">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="subTopic in subTopics" type="item-text-wrap">
-        <h2>{{subTopic.title}}</h2>
+      <ion-item class="item-icon-right" ng-repeat="subTopic in data.subTopics" type="item-text-wrap" ng-click="showQuizSettings(subTopic.topicId,subTopic.subTopicId)">
+        {{subTopic.title}}
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>

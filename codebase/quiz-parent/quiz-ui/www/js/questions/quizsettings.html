@@ -1,0 +1,21 @@
+<ion-view view-title="Quiz Settings" >
+  <ion-content class="padding">
+    <div class="list">
+      <div class="item item-divider">
+        Difficulty Level
+      </div>
+
+      <ion-radio ng-model="data.level" ng-value="'1'">Beginner</ion-radio>
+      <ion-radio ng-model="data.level" ng-value="'2'">Intermediate</ion-radio>
+      <ion-radio ng-model="data.level" ng-value="'3'">Expert</ion-radio>
+      <div class="item item-divider">
+      Others
+      </div>
+      <label class="item item-input">
+          <input type="text" placeholder="No Of Questions" ng-model="data.count">
+      </label>
+
+    </div>
+    <button class="button button-block button-calm" ng-click="startQuiz()">Start Quiz</button>
+  </ion-content>
+</ion-view>
