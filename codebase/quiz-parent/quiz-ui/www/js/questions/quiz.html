@@ -29,8 +29,8 @@
             <div class="item item-divider">
               Options
             </div>
-            <div ng-repeat="option in data.questions[data.index].options">
-              <ion-checkbox>{{option}}</ion-radio>
+            <div ng-repeat="option in data.options">
+              <ion-checkbox ng-model="option.checked" class="item item-text-wrap">{{option.text}}</ion-checkbox>
             </div>
 
           </div>
@@ -39,15 +39,14 @@
             <div class="item item-divider">
               Options
             </div>
-            <div ng-repeat="option in data.questions[data.index].options">
-              <ion-radio>{{option}}</ion-radio>
+            <div ng-repeat="option in data.options">
+              <ion-radio ng-model="data.singleChoice" ng-value="option.value" class="item item-text-wrap">{{option.text}}</ion-radio>
             </div>
-
           </div>
 
           <div ng-show="needsUserEntry()">
             <label class="item item-input">
-              <input type="text" placeholder="Provide Answer">
+              <input type="text" ng-model="data.userentry" placeholder="Provide Answer">
             </label>
           </div>
         </div>

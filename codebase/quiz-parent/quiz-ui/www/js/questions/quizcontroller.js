@@ -1,15 +1,15 @@
 var questionsModule = angular.module('quiz.module.questions', ['quiz.resources.questions'])
 questionsModule.controller('QuestionController', function($scope, $state, $stateParams, QuestionService) {
   $scope.data = {
-      questions: [],
-      index: -1,
-      count: 0,
-      score: 0,
-      level: 1
-    }
-    // $scope.questions = []
-    // $scope.index = -1
-    // $scope.score = 0
+    questions: [],
+    index: -1,
+    count: 0,
+    score: 0,
+    level: 1,
+    options: [],
+    userentry: '',
+    singleChoice: ''
+  }
 
   if ($state.current.name == "quizsettings") {
     $scope.data.level = 1
@@ -21,6 +21,9 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
       if (results != null && results.length > 0) {
         $scope.data.questions = angular.copy(results)
         $scope.data.index = 0
+        $scope.data.level = $stateParams.level
+        $scope.data.count = $stateParams.count
+        $scope.configureOptions()
       } else {
         $scope.data.questions = []
         $scope.data.index = -1
@@ -29,6 +32,29 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
 
     })
   }
+
+  $scope.configureOptions = function() {
+    $scope.data.userentry = ''
+    $scope.data.singleChoice = ''
+    $scope.data.options = []
+    if ($scope.validCurrentQuestion()) {
+      var question = $scope.data.questions[$scope.data.index]
+      if (question != null && question.options != null && question.options.length > 0) {
+        for (var i = 0; i < question.options.length; i++) {
+          $scope.data.options[i] = {
+            text: question.options[i],
+            value: question.options[i].charAt(0),
+            checked: false
+
+          }
+        }
+      }
+      console.log(JSON.stringify(question.answers))
+      console.log(JSON.stringify($scope.data.options))
+
+    }
+  }
+
   $scope.noQuestions = function() {
     if ($scope.data.questions == null || $scope.data.questions == undefined || $scope.data.questions.length == 0) {
       return true
@@ -79,8 +105,44 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
 
     return false
   }
+  $scope.evaluate = function() {
+    var question = $scope.data.questions[$scope.data.index]
+    if (question != null) {
+      if ($scope.needsUserEntry()) {
+        if ($scope.data.userentry == question.answers[0]) {
+          $scope.data.score = $scope.data.score + 1
+        }
+      } else if ($scope.hasMultipleAnswers()) {
+        var correctAnswerCount = 0
+        var attempted = 0
+
+        for (var j = 0; j < $scope.data.options.length; j++) {
+          var currentOption = $scope.data.options[j]
+          if (currentOption.checked == true) {
+            attempted++
+            for (var i = 0; i < question.answers.length; i++) {
+              var currentAnswer = question.answers[i]
+              if (currentOption.text.startsWith(currentAnswer)) {
+                correctAnswerCount++
+              }
+            }
+
+          }
+        }
+        if (correctAnswerCount == question.answers.length && correctAnswerCount == attempted) {
+          $scope.data.score++
+        }
+      } else {
+        if ($scope.data.singleChoice == question.answers[0]) {
+          $scope.data.score = $scope.data.score + 1
+        }
+      }
+    }
+  }
   $scope.submit = function() {
+    $scope.evaluate()
     $scope.data.index = $scope.data.index + 1
+    $scope.configureOptions()
   }
   $scope.startQuiz = function() {
     $state.go('quiz', {

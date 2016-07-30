@@ -6,7 +6,7 @@ subTopicsModule.service('SubTopicService', function(SubTopics, $q) {
       var get = SubTopics.query({
         topicId: theTopicId
       }, {}, function() {
-        console.log(JSON.stringify(get))
+        //console.log(JSON.stringify(get))
         deferred.resolve(get)
       }, function() {
         console.log(JSON.stringify(get))

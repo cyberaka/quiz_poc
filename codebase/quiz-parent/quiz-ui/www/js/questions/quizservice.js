@@ -9,7 +9,7 @@ questionsModule.service('QuestionService', function(Questions, $q) {
         level: theLevel,
         count: theCount
       }, {}, function() {
-        console.log(JSON.stringify(get))
+      //  console.log(JSON.stringify(get))
         deferred.resolve(get)
       }, function() {
         console.log(JSON.stringify(get))

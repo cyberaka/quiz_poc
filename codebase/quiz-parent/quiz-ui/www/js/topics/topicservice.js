@@ -4,8 +4,7 @@ topicsModule.service('TopicService', function(Topics, $q) {
       var payload = {}
       var deferred = $q.defer()
       var get = Topics.query({}, {}, function() {
-
-        console.log(JSON.stringify(get))
+        //  console.log(JSON.stringify(get))
         deferred.resolve(get)
       }, function() {
         console.log(JSON.stringify(get))
