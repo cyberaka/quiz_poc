@@ -1,10 +1,10 @@
 package com.cyberaka.quiz.dto;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import com.cyberaka.quiz.domain.Question;
+import com.cyberaka.quiz.dto.common.QuestionParser;
 
 public class QuestionDto {
 	private Integer questionId;
@@ -17,7 +17,6 @@ public class QuestionDto {
 
 	public QuestionDto() {
 		super();
-
 	}
 
 	public void clone(Question question) {
@@ -25,22 +24,24 @@ public class QuestionDto {
 			this.questionId = question.getQuestionId();
 			this.question = question.getQuestion();
 			this.difficultyLevel = question.getDifficultyLevel();
+			QuestionParser qp = new QuestionParser();
 			if (question.getAnswers() != null) {
-				this.answers = new ArrayList<String>();
-				String answers = question.getAnswers();
-				StringTokenizer st = new StringTokenizer(answers, ",");
-				while (st.hasMoreTokens()) {
-					this.answers.add(st.nextToken());
-				}
+				this.answers = Arrays.asList(qp.parseAnswers(question.getAnswers()));
+//				this.answers = new ArrayList<String>();
+//				String answers = question.getAnswers();
+//				StringTokenizer st = new StringTokenizer(answers, ",");
+//				while (st.hasMoreTokens()) {
+//					this.answers.add(st.nextToken());
+//				}
 			}
 			if (question.getOptions() != null) {
-				
-				this.options = new ArrayList<String>();
-				String options = question.getOptions();
-				StringTokenizer st = new StringTokenizer(options, "\n");
-				while (st.hasMoreTokens()) {
-					this.options.add(st.nextToken());
-				}
+				this.options = Arrays.asList(qp.parseOptions(question.getOptions()));
+//				this.options = new ArrayList<String>();
+//				String options = question.getOptions();
+//				StringTokenizer st = new StringTokenizer(options, "\n");
+//				while (st.hasMoreTokens()) {
+//					this.options.add(st.nextToken());
+//				}
 			}
 			if (question.getTopic() != null) {
 				this.topicId = question.getTopic().getTopicId();

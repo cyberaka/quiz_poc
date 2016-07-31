@@ -48,10 +48,15 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
 
           }
         }
+      } else {
+        $scope.data.userentry = ''
+        $scope.data.singleChoice = ''
+        $scope.data.options = []
       }
       console.log(JSON.stringify(question.answers))
-      console.log(JSON.stringify($scope.data.options))
-
+      // console.log(JSON.stringify($scope.data.options))
+      // console.log(JSON.stringify(question.options.length))
+      // console.log(JSON.stringify(question.options))
     }
   }
 

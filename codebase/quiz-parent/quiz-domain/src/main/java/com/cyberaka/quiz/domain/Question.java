@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "quiz_question")
-
 public class Question {
 
 	@Id
@@ -38,7 +37,6 @@ public class Question {
 
 	public Question() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Integer getQuestionId() {

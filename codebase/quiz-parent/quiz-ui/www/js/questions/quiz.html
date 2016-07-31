@@ -1,20 +1,24 @@
 <ion-view view-title="Quiz">
-  <ion-nav-buttons side="right">
-    <button class="button button-calm" ng-click="submit()">Submit</button>
+
+  <ion-nav-buttons side="right" >
+    <button class="button button-calm" ng-show="quizEnded()==false" ng-click="submit()">Submit</button>
   </ion-nav-buttons>
+
+
   <ion-content class="padding">
     <ion-scroll direction="x" has-bouncing="true">
-      <div ng-show="noQuestions()">
-        <div class="list">
-          <div class="item item-text-wrap">
-            No questions
-          </div>
-        </div>
-      </div>
       <div ng-show="quizEnded()">
         <div class="list">
           <div class="item item-text-wrap">
             You scored: {{data.score}}
+          </div>
+        </div>
+      </div>
+
+      <div ng-show="noQuestions()">
+        <div class="list">
+          <div class="item item-text-wrap">
+            No questions
           </div>
         </div>
       </div>
@@ -33,7 +37,7 @@
               Options
             </div>
             <div ng-repeat="option in data.options">
-              <ion-checkbox ng-model="option.checked" class="item item-text-wrap">{{option.text}}</ion-checkbox>
+              <ion-checkbox ng-model="option.checked" class="item item-text-wrap"><pre>{{option.text}}</pre></ion-checkbox>
             </div>
 
           </div>
@@ -43,7 +47,7 @@
               Options
             </div>
             <div ng-repeat="option in data.options">
-              <ion-radio ng-model="data.singleChoice" ng-value="option.value" class="item item-text-wrap">{{option.text}}</ion-radio>
+              <ion-radio ng-model="data.singleChoice" ng-value="option.value" class="item item-text-wrap"><pre>{{option.text}}</pre></ion-radio>
             </div>
           </div>
 

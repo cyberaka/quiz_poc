@@ -22,7 +22,7 @@ public class QuestionServiceImpl implements QuestionService {
 		List<Question> questions = (List<Question>) questionRepo.findQuiz(topicId, subTopicId,level);
 		int total = questions.size();
 		Random rand = new Random();
-		List<Question> results = new ArrayList<Question>();
+		List<Question> results = new ArrayList<>();
 		if (count > total) {
 			count = total;
 		}
