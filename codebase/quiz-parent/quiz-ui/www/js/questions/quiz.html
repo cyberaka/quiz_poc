@@ -1,27 +1,18 @@
 <ion-view view-title="Quiz">
 
-  <ion-nav-buttons side="right" >
+  <ion-nav-buttons side="right">
     <button class="button button-calm" ng-show="quizEnded()==false" ng-click="submit()">Submit</button>
   </ion-nav-buttons>
 
 
-  <ion-content class="padding">
-    <ion-scroll direction="x" has-bouncing="true">
-      <div ng-show="quizEnded()">
-        <div class="list">
-          <div class="item item-text-wrap">
-            You scored: {{data.score}}
-          </div>
-        </div>
-      </div>
-
-      <div ng-show="noQuestions()">
-        <div class="list">
-          <div class="item item-text-wrap">
-            No questions
-          </div>
-        </div>
-      </div>
+  <ion-content >
+    <ion-list>
+      <ion-item class="item-text-wrap" ng-show="quizEnded()">
+        You scored: {{data.score}}
+      </ion-item>
+      <ion-item class="item-text-wrap" ng-show="noQuestions()">
+        No questions
+      </ion-item>
       <div ng-show="validCurrentQuestion()">
 
         <div class="list">
@@ -57,9 +48,60 @@
             </label>
           </div>
         </div>
-        <!-- <button class="button button-block button-calm" ng-click="submit()">Submit</button> -->
-
       </div>
-    </ion-scroll>
+    </ion-list>
+    <!-- <ion-scroll direction="x" has-bouncing="true"> -->
+      <!-- <div ng-show="quizEnded()">
+        <div class="list">
+          <div class="item item-text-wrap">
+            You scored: {{data.score}}
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div ng-show="noQuestions()">
+        <div class="list">
+          <div class="item item-text-wrap">
+            No questions
+          </div>
+        </div>
+      </div> -->
+      <!-- <div ng-show="validCurrentQuestion()">
+
+        <div class="list">
+          <div class="item item-divider">
+            Question {{data.index+1}}
+          </div>
+          <div class="item item-text-wrap">
+            <pre>    {{data.questions[data.index].question}}</pre>
+          </div>
+
+          <div ng-show="hasMultipleAnswers()">
+            <div class="item item-divider">
+              Options
+            </div>
+            <div ng-repeat="option in data.options">
+              <ion-checkbox ng-model="option.checked" class="item item-text-wrap"><pre>{{option.text}}</pre></ion-checkbox>
+            </div>
+
+          </div>
+
+          <div ng-show="hasSingleChoice()">
+            <div class="item item-divider">
+              Options
+            </div>
+            <div ng-repeat="option in data.options">
+              <ion-radio ng-model="data.singleChoice" ng-value="option.value" class="item item-text-wrap"><pre>{{option.text}}</pre></ion-radio>
+            </div>
+          </div>
+
+          <div ng-show="needsUserEntry()">
+            <label class="item item-input">
+              <input type="text" ng-model="data.userentry" placeholder="Provide Answer">
+            </label>
+          </div>
+        </div>
+      </div> -->
+    <!-- </ion-scroll> -->
   </ion-content>
 </ion-view>
