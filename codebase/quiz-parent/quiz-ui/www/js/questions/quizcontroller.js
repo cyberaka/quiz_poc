@@ -42,7 +42,7 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
       if (question != null && question.options != null && question.options.length > 0) {
         for (var i = 0; i < question.options.length; i++) {
           $scope.data.options[i] = {
-            text: question.options[i],
+            text: question.options[i].substring(3),
             value: question.options[i].charAt(0),
             checked: false
 
@@ -123,11 +123,15 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
 
         for (var j = 0; j < $scope.data.options.length; j++) {
           var currentOption = $scope.data.options[j]
+
           if (currentOption.checked == true) {
             attempted++
             for (var i = 0; i < question.answers.length; i++) {
               var currentAnswer = question.answers[i]
-              if (currentOption.text.startsWith(currentAnswer)) {
+              // if (currentOption.text.startsWith(currentAnswer)) {
+              //   correctAnswerCount++
+              // }
+              if (currentOption.value.startsWith(currentAnswer)) {
                 correctAnswerCount++
               }
             }

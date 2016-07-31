@@ -19,16 +19,22 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public Iterable<Question> findQuiz(int topicId, int subTopicId, int level, int count) {
-		List<Question> questions = (List<Question>) questionRepo.findQuiz(topicId, subTopicId,level);
+		List<Question> questions = (List<Question>) questionRepo.findQuiz(topicId, subTopicId, level);
 		int total = questions.size();
 		Random rand = new Random();
 		List<Question> results = new ArrayList<>();
 		if (count > total) {
 			count = total;
 		}
+		List<Integer> options = new ArrayList<Integer>();
 		for (int i = 0; i < count; i++) {
+
 			int index = rand.nextInt(total);
-			results.add(questions.get(index));
+			if (!options.contains(index)) {
+				results.add(questions.get(index));
+				options.add(index);
+			}
+
 		}
 
 		return results;
