@@ -1,4 +1,8 @@
-<ion-view view-title="Quiz Settings" >
+<ion-view view-title="Quiz Settings">
+  <ion-nav-buttons side="right">
+    <button class="button button-calm" ng-click="startQuiz()">Start Quiz</button>
+  </ion-nav-buttons>
+
   <ion-content class="padding">
     <div class="list">
       <div class="item item-divider">
@@ -9,13 +13,13 @@
       <ion-radio ng-model="data.level" ng-value="'2'">Intermediate</ion-radio>
       <ion-radio ng-model="data.level" ng-value="'3'">Expert</ion-radio>
       <div class="item item-divider">
-      Others
+        Others
       </div>
       <label class="item item-input">
-          <input type="text" placeholder="No Of Questions" ng-model="data.count">
+        <input type="text" placeholder="No Of Questions" ng-model="data.count">
       </label>
 
     </div>
-    <button class="button button-block button-calm" ng-click="startQuiz()">Start Quiz</button>
+
   </ion-content>
 </ion-view>

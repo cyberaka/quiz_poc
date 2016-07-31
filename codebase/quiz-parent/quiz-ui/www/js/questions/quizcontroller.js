@@ -5,14 +5,14 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
     index: -1,
     count: 0,
     score: 0,
-    level: 1,
+    level: 2,
     options: [],
     userentry: '',
     singleChoice: ''
   }
 
   if ($state.current.name == "quizsettings") {
-    $scope.data.level = 1
+    $scope.data.level = 2
     $scope.data.count = 10
   } else if ($state.current.name == "quiz") {
     var theTopicId = $stateParams.topicId
