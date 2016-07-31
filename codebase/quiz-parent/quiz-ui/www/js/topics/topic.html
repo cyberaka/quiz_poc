@@ -1,7 +1,7 @@
 <ion-view view-title="Topic">
   <ion-content>
     <ion-list>
-      <ion-item class="item-icon-right" ng-repeat="topic in data.topics" type="item-text-wrap" ng-click="showSubTopics(topic.topicId)">
+      <ion-item class="item-icon-right" ng-repeat="topic in data.topics | orderBy : title" type="item-text-wrap" ng-click="showSubTopics(topic.topicId)">
         {{topic.title}}
         <i class="icon ion-chevron-right icon-accessory "></i>
       </ion-item>
