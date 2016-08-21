@@ -5,14 +5,17 @@ create database quiz;
 create user quiz_dev;
 grant all on quiz.* to 'quiz_dev'@'localhost' identified by 'quiz_dev';
 flush privileges;
+use quiz;
+source <relevant path>/quiz_poc/documents/scripts/Quiz.sql
 
 To Bootup the application
 =========================
 Export an environment variable
-set QUIZ_DATA_FOLDER="C:\Abhinav\Quiz\quiz_poc\documents\questions"
-set ANDROID_HOME="C:\Abhinav\Tools\Android\sdk"
-
-And then execute the following command from quiz-ws module:
+set QUIZ_CONNECTION_USER=quiz_dev
+set QUIZ_CONNECTION_PASSWORD=quiz_dev
+set QUIZ_CONNECTION_STRING=jdbc:mysql://localhost/quiz
+set QUIZ_DATA_FOLDER=<relevant path>/quiz_poc/documents/questions
+execute the following command from quiz_poc/quiz-parent/quiz-ws
 mvn spring-boot:run
 
 To install ionic
