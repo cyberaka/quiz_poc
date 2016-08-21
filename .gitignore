@@ -14,8 +14,8 @@ hs_err_pid*
 /codebase/quiz-parent/.project
 
 #eclipse specific files removed
-*.classpath
-*.project
+.classpath
+.project
 .settings
 
 #maven specific folders removed
