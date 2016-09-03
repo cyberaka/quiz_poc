@@ -102,5 +102,12 @@ public class Question {
 	public void setDifficultyLevel(Integer difficultyLevel) {
 		this.difficultyLevel = difficultyLevel;
 	}
+        
+        public boolean isValid() {
+            return topic != null && subTopic != null && contributer != null &&
+                    difficultyLevel != null && options != null && !options.isEmpty() && 
+                    answers != null && !answers.isEmpty() && question != null &&
+                    !question.isEmpty();
+        }
 
 }
