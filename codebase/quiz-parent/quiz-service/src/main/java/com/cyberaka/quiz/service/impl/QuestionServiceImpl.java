@@ -30,13 +30,15 @@ public class QuestionServiceImpl implements QuestionService {
 		for (int i = 0; i < count; i++) {
 
 			int index = rand.nextInt(total);
-			if (!options.contains(index)) {
-				results.add(questions.get(index));
-				options.add(index);
+			while (options.contains(index)) {
+				System.err.println("Duplicate Index Ignored >> " + index);
+				index = rand.nextInt(total);
 			}
-
+			results.add(questions.get(index));
+			options.add(index);
+			System.out.println("Index Added >> " + index);
 		}
-
+		System.out.println("Total Questions Selected >> " + results.size());
 		return results;
 	}
 
