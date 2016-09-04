@@ -31,14 +31,14 @@ public class QuestionServiceImpl implements QuestionService {
 
 			int index = rand.nextInt(total);
 			while (options.contains(index)) {
-				System.err.println("Duplicate Index Ignored >> " + index);
+//				System.err.println("Duplicate Index Ignored >> " + index);
 				index = rand.nextInt(total);
 			}
 			results.add(questions.get(index));
 			options.add(index);
-			System.out.println("Index Added >> " + index);
+//			System.out.println("Index Added >> " + index);
 		}
-		System.out.println("Total Questions Selected >> " + results.size());
+//		System.out.println("Total Questions Selected >> " + results.size());
 		return results;
 	}
 
