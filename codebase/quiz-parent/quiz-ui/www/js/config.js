@@ -1,4 +1,5 @@
+//alert(location.host + "\n" + location.hostname + "\n" + location.href)
 angular.module('quiz.constants',[])
 		.constant('CONFIG',{
-		url: 'http://localhost:7070/'
+		url: 'http://' + location.hostname + ':7070/'
 		});
