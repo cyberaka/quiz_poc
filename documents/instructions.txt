@@ -1,7 +1,7 @@
 To create a new database and user account
 =========================================
 
-create database quiz;
+create database quiz character set utf8;
 create user quiz_dev;
 grant all on quiz.* to 'quiz_dev'@'localhost' identified by 'quiz_dev';
 flush privileges;
@@ -13,7 +13,7 @@ To Bootup the application
 Export an environment variable
 set QUIZ_CONNECTION_USER=quiz_dev
 set QUIZ_CONNECTION_PASSWORD=quiz_dev
-set QUIZ_CONNECTION_STRING=jdbc:mysql://localhost/quiz
+set QUIZ_CONNECTION_STRING=jdbc:mysql://localhost:3306/quiz?useUnicode=yes&characterEncoding=UTF-8
 set QUIZ_DATA_FOLDER=<relevant path>/quiz_poc/documents/questions
 execute the following command from quiz_poc/quiz-parent/quiz-ws
 mvn spring-boot:run
@@ -27,3 +27,8 @@ To install ionic
  ionic build android
  ionic emulate android
  ionic serve
+
+To run ionic UI
+===============
+cd codebase\quiz-parent\quiz-ui
+ionic serve --lab
