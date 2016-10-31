@@ -1,13 +1,6 @@
 package com.cyberaka.quiz.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "quiz_question")
@@ -102,12 +95,12 @@ public class Question {
     public void setDifficultyLevel(Integer difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
     }
-        
-        public boolean isValid() {
-            return topic != null && subTopic != null && contributer != null &&
-                    difficultyLevel != null && options != null && !options.isEmpty() && 
-                    answers != null && !answers.isEmpty() && question != null &&
-                    !question.isEmpty();
-        }
+
+    public boolean isValid() {
+        return topic != null && subTopic != null && contributer != null &&
+                difficultyLevel != null && options != null && !options.isEmpty() &&
+                answers != null && !answers.isEmpty() && question != null &&
+                !question.isEmpty();
+    }
 
 }

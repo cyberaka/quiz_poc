@@ -1,10 +1,10 @@
 package com.cyberaka.quiz.dto;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.cyberaka.quiz.domain.Question;
 import com.cyberaka.quiz.dto.common.QuestionParser;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class QuestionDto {
     private Integer questionId;

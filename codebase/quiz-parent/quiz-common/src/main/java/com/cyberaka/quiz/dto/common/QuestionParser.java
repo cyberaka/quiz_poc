@@ -1,22 +1,20 @@
 package com.cyberaka.quiz.dto.common;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is a utility class to parse questions, answers and options.<br/>
  * <br>
  * Logic<br>
  * =====<br>
- * Options:<br> 
+ * Options:<br>
  * Every option starts on a new line and the first three characters<br>
  * follow the format "A. " wherein the first character is a capital letter followed by ". "<br>
- * 
+ * <p>
  * Answes:<br>
  * The answers are separated by ",".
- * 
- * @author anindita
  *
+ * @author anindita
  */
 public class QuestionParser {
 
@@ -59,7 +57,7 @@ public class QuestionParser {
                 optionList.add(options.substring(lastIndex, newIndex).trim());
                 lastIndex = newIndex;
             }
-        } while(true);
+        } while (true);
         return optionList.toArray(new String[0]);
     }
 }

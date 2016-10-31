@@ -1,16 +1,5 @@
 package com.cyberaka.quiz;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-
 import com.cyberaka.quiz.dao.QuestionRepository;
 import com.cyberaka.quiz.dao.SubTopicRepository;
 import com.cyberaka.quiz.dao.TopicRepository;
@@ -20,18 +9,24 @@ import com.cyberaka.quiz.domain.SubTopic;
 import com.cyberaka.quiz.domain.Topic;
 import com.cyberaka.quiz.domain.User;
 import com.cyberaka.quiz.service.AppConstants;
-import java.io.FileInputStream;
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class QuizBootupRunner implements CommandLineRunner {
-    
+
     static final Logger LOG = Logger.getLogger(QuizBootupRunner.class.getName());
 
     @Autowired
@@ -62,78 +57,78 @@ public class QuizBootupRunner implements CommandLineRunner {
         user.setName("Abhinav Anand");
         userRepo.save(user);
 
-                File file = new File(dataFile);
-                if (file.isDirectory()) {
-                    processDirectory(user, file);
-                } else {
-                    processFile(user, file);
-                }
+        File file = new File(dataFile);
+        if (file.isDirectory()) {
+            processDirectory(user, file);
+        } else {
+            processFile(user, file);
         }
-        
-        private void processFile(User user, File file) throws IOException {
-            FileInputStream fis = new FileInputStream(file);
+    }
 
-            // Finds the workbook instance for XLSX file
-            XSSFWorkbook myWorkBook = new XSSFWorkbook (fis);
-           
-            // Return subject sheet from the XLSX workbook
-            XSSFSheet subjectSheet = myWorkBook.getSheet("Subjects");
-           
-            // Get iterator to all the rows in current sheet
-            Iterator<Row> rowIterator = subjectSheet.iterator();
-           
-            Cell categoryCell, subCategoryCell, sheetNameCell, processCell = null;
-            String categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr = null;
-                
-            // Verify the header
-            if (rowIterator.hasNext()) {
-                Row headerRow = rowIterator.next();
-                categoryCell = headerRow.getCell(0);
-                categoryCellStr = readStringCellValue(categoryCell);
-                subCategoryCell = headerRow.getCell(1);
-                subCategoryCellStr = readStringCellValue(subCategoryCell);
-                sheetNameCell = headerRow.getCell(2);
-                sheetNameCellStr = readStringCellValue(sheetNameCell);
-                processCell = headerRow.getCell(3);
-                processCellStr = readStringCellValue(processCell);
-                if (checkSubjectSheetHeader(categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr)) {
-                    while (rowIterator.hasNext()) {
-                        Row row = rowIterator.next();
-                        categoryCell = row.getCell(0);
-                        categoryCellStr = readStringCellValue(categoryCell);
-                        subCategoryCell = row.getCell(1);
-                        subCategoryCellStr = readStringCellValue(subCategoryCell);
-                        sheetNameCell = row.getCell(2);
-                        sheetNameCellStr = readStringCellValue(sheetNameCell);
-                        processCell = row.getCell(3);
-                        processCellStr = readStringCellValue(processCell);
-                        
-                        if (processCellStr.equalsIgnoreCase("yes") && sheetNameCellStr != null) {
-                            LOG.log(Level.INFO, "Processing Subject >> {0}", categoryCellStr);
-                            XSSFSheet subjectQuestionAnswerSheet = myWorkBook.getSheet(sheetNameCellStr);
-                            if (subjectQuestionAnswerSheet != null) { 
-                                processQuestionAnswerSheet(user, categoryCellStr, subCategoryCellStr, subjectQuestionAnswerSheet);
-                            } else {
-                                LOG.log(Level.SEVERE, "Subject sheet not found >> {0}", sheetNameCellStr);
-                            }
+    private void processFile(User user, File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+
+        // Finds the workbook instance for XLSX file
+        XSSFWorkbook myWorkBook = new XSSFWorkbook(fis);
+
+        // Return subject sheet from the XLSX workbook
+        XSSFSheet subjectSheet = myWorkBook.getSheet("Subjects");
+
+        // Get iterator to all the rows in current sheet
+        Iterator<Row> rowIterator = subjectSheet.iterator();
+
+        Cell categoryCell, subCategoryCell, sheetNameCell, processCell = null;
+        String categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr = null;
+
+        // Verify the header
+        if (rowIterator.hasNext()) {
+            Row headerRow = rowIterator.next();
+            categoryCell = headerRow.getCell(0);
+            categoryCellStr = readStringCellValue(categoryCell);
+            subCategoryCell = headerRow.getCell(1);
+            subCategoryCellStr = readStringCellValue(subCategoryCell);
+            sheetNameCell = headerRow.getCell(2);
+            sheetNameCellStr = readStringCellValue(sheetNameCell);
+            processCell = headerRow.getCell(3);
+            processCellStr = readStringCellValue(processCell);
+            if (checkSubjectSheetHeader(categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr)) {
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    categoryCell = row.getCell(0);
+                    categoryCellStr = readStringCellValue(categoryCell);
+                    subCategoryCell = row.getCell(1);
+                    subCategoryCellStr = readStringCellValue(subCategoryCell);
+                    sheetNameCell = row.getCell(2);
+                    sheetNameCellStr = readStringCellValue(sheetNameCell);
+                    processCell = row.getCell(3);
+                    processCellStr = readStringCellValue(processCell);
+
+                    if (processCellStr.equalsIgnoreCase("yes") && sheetNameCellStr != null) {
+                        LOG.log(Level.INFO, "Processing Subject >> {0}", categoryCellStr);
+                        XSSFSheet subjectQuestionAnswerSheet = myWorkBook.getSheet(sheetNameCellStr);
+                        if (subjectQuestionAnswerSheet != null) {
+                            processQuestionAnswerSheet(user, categoryCellStr, subCategoryCellStr, subjectQuestionAnswerSheet);
                         } else {
-                            LOG.log(Level.FINE, "Skipping Subject >> {0}", categoryCellStr);
+                            LOG.log(Level.SEVERE, "Subject sheet not found >> {0}", sheetNameCellStr);
                         }
-                        
+                    } else {
+                        LOG.log(Level.FINE, "Skipping Subject >> {0}", categoryCellStr);
                     }
+
                 }
             }
-            myWorkBook.close();
-            fis.close();
         }
-        
-        private void processDirectory(User user, File file) {
+        myWorkBook.close();
+        fis.close();
+    }
+
+    private void processDirectory(User user, File file) {
         Topic topic = new Topic();
         topic.setTitle("Java");
         topicRepo.save(topic);
 
         File[] childFiles = file.listFiles();
-        for (File childFile: childFiles) {
+        for (File childFile : childFiles) {
             if (childFile.isFile() && childFile.canRead() && childFile.getName().endsWith(".txt")) {
                 System.out.println("Processing File: " + childFile.getAbsolutePath());
 
@@ -164,12 +159,12 @@ public class QuizBootupRunner implements CommandLineRunner {
         return categoryCellStr.equalsIgnoreCase("Category") && subCategoryCellStr.equalsIgnoreCase("Sub Category") &&
                 sheetNameCellStr.equalsIgnoreCase("Sheet Name") && processCellStr.equalsIgnoreCase("Process");
     }
-    
+
     private boolean checkQuestionBankSheetHeader(String questionCellStr, String optionACellStr, String optionBCellStr, String optionCCellStr,
-            String optionDCellStr, String optionECellStr, String answerCellStr) {
+                                                 String optionDCellStr, String optionECellStr, String answerCellStr) {
         return questionCellStr.equalsIgnoreCase("Question") && optionACellStr.equalsIgnoreCase("Option A") &&
                 optionBCellStr.equalsIgnoreCase("Option B") && optionCCellStr.equalsIgnoreCase("Option C") &&
-                optionDCellStr.equalsIgnoreCase("Option D") && optionECellStr.equalsIgnoreCase("Option E") && 
+                optionDCellStr.equalsIgnoreCase("Option D") && optionECellStr.equalsIgnoreCase("Option E") &&
                 answerCellStr.equalsIgnoreCase("Answer");
     }
 
@@ -183,72 +178,72 @@ public class QuizBootupRunner implements CommandLineRunner {
         subTopic.setTopic(topic);
         subtopicRepo.save(subTopic);
 
-            Iterator<Row> rowIterator = questionAnswerSheet.iterator();
-           
-            Cell questionCell, optionACell, optionBCell, optionCCell, optionDCell, optionECell, answerCell = null;
-            String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr = null;
-            StringBuilder optionBuilder = new StringBuilder();
-            char optionIndex = 0;
-                
-            // Verify the header
-            if (rowIterator.hasNext()) {
-                Row headerRow = rowIterator.next();
-                questionCell = headerRow.getCell(0);
-                questionCellStr = readStringCellValue(questionCell);
-                optionACell = headerRow.getCell(1);
-                optionACellStr = readStringCellValue(optionACell);
-                optionBCell = headerRow.getCell(2);
-                optionBCellStr = readStringCellValue(optionBCell);
-                optionCCell = headerRow.getCell(3);
-                optionCCellStr = readStringCellValue(optionCCell);
-                optionDCell = headerRow.getCell(4);
-                optionDCellStr = readStringCellValue(optionDCell);
-                optionECell = headerRow.getCell(5);
-                optionECellStr = readStringCellValue(optionECell);
-                answerCell = headerRow.getCell(6);
-                answerCellStr = readStringCellValue(answerCell);
-                if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr)) {
-                    while (rowIterator.hasNext()) {
-                        Row row = rowIterator.next();
-                        questionCell = row.getCell(0);
-                        questionCellStr = readStringCellValue(questionCell);
-                        optionACell = row.getCell(1);
-                        optionACellStr = readStringCellValue(optionACell);
-                        optionBCell = row.getCell(2);
-                        optionBCellStr = readStringCellValue(optionBCell);
-                        optionCCell = row.getCell(3);
-                        optionCCellStr = readStringCellValue(optionCCell);
-                        optionDCell = row.getCell(4);
-                        optionDCellStr = readStringCellValue(optionDCell);
-                        optionECell = row.getCell(5);
-                        optionECellStr = readStringCellValue(optionECell);
-                        answerCell = row.getCell(6);
-                        answerCellStr = readStringCellValue(answerCell);
-                        
-                        optionIndex = 0;
-                        optionBuilder.setLength(0);
-                        optionBuilder.append(optionACellStr.isEmpty()? "": ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
-                        optionBuilder.append(optionBCellStr.isEmpty()? "": ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
-                        optionBuilder.append(optionCCellStr.isEmpty()? "": ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
-                        optionBuilder.append(optionDCellStr.isEmpty()? "": ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
-                        optionBuilder.append(optionECellStr.isEmpty()? "": ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
-                        
-                        Question quest = new Question();
-                        quest.setTopic(topic);
-                        quest.setSubTopic(subTopic);
-                        quest.setContributer(user);
-                        quest.setQuestion(questionCellStr);
-                        quest.setOptions(optionBuilder.toString());
-                        quest.setAnswers(answerCellStr);
-                        quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
-                        if (quest.isValid()) {
-                            questionRepo.save(quest);
-                        } else {
-                            LOG.log(Level.SEVERE, "Invalid question skipped >> {0}", quest.getQuestion());
-                        }
+        Iterator<Row> rowIterator = questionAnswerSheet.iterator();
+
+        Cell questionCell, optionACell, optionBCell, optionCCell, optionDCell, optionECell, answerCell = null;
+        String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr = null;
+        StringBuilder optionBuilder = new StringBuilder();
+        char optionIndex = 0;
+
+        // Verify the header
+        if (rowIterator.hasNext()) {
+            Row headerRow = rowIterator.next();
+            questionCell = headerRow.getCell(0);
+            questionCellStr = readStringCellValue(questionCell);
+            optionACell = headerRow.getCell(1);
+            optionACellStr = readStringCellValue(optionACell);
+            optionBCell = headerRow.getCell(2);
+            optionBCellStr = readStringCellValue(optionBCell);
+            optionCCell = headerRow.getCell(3);
+            optionCCellStr = readStringCellValue(optionCCell);
+            optionDCell = headerRow.getCell(4);
+            optionDCellStr = readStringCellValue(optionDCell);
+            optionECell = headerRow.getCell(5);
+            optionECellStr = readStringCellValue(optionECell);
+            answerCell = headerRow.getCell(6);
+            answerCellStr = readStringCellValue(answerCell);
+            if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr)) {
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    questionCell = row.getCell(0);
+                    questionCellStr = readStringCellValue(questionCell);
+                    optionACell = row.getCell(1);
+                    optionACellStr = readStringCellValue(optionACell);
+                    optionBCell = row.getCell(2);
+                    optionBCellStr = readStringCellValue(optionBCell);
+                    optionCCell = row.getCell(3);
+                    optionCCellStr = readStringCellValue(optionCCell);
+                    optionDCell = row.getCell(4);
+                    optionDCellStr = readStringCellValue(optionDCell);
+                    optionECell = row.getCell(5);
+                    optionECellStr = readStringCellValue(optionECell);
+                    answerCell = row.getCell(6);
+                    answerCellStr = readStringCellValue(answerCell);
+
+                    optionIndex = 0;
+                    optionBuilder.setLength(0);
+                    optionBuilder.append(optionACellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
+                    optionBuilder.append(optionBCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
+                    optionBuilder.append(optionCCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
+                    optionBuilder.append(optionDCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
+                    optionBuilder.append(optionECellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
+
+                    Question quest = new Question();
+                    quest.setTopic(topic);
+                    quest.setSubTopic(subTopic);
+                    quest.setContributer(user);
+                    quest.setQuestion(questionCellStr);
+                    quest.setOptions(optionBuilder.toString());
+                    quest.setAnswers(answerCellStr);
+                    quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
+                    if (quest.isValid()) {
+                        questionRepo.save(quest);
+                    } else {
+                        LOG.log(Level.SEVERE, "Invalid question skipped >> {0}", quest.getQuestion());
                     }
                 }
             }
+        }
     }
 
     class TextToSqlConverter {
@@ -263,7 +258,7 @@ public class QuizBootupRunner implements CommandLineRunner {
             ArrayList<String> lines = readFile();
             ArrayList<String[]> list = parseQuestions(lines.toArray(new String[0]));
 
-            for (int i=0; i<list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String[] line = list.get(i);
 //                System.out.println(String.format("Question:\n%s\n Options:\n%s\n Answers:\n%s\n=========\n",
 //                        line[1], line[3], line[4]));
@@ -282,7 +277,7 @@ public class QuizBootupRunner implements CommandLineRunner {
         }
 
         private void dumpInsertStatements(ArrayList<String[]> list) {
-            for (int i=0; i<list.size(); i++) {
+            for (int i = 0; i < list.size(); i++) {
                 String[] line = list.get(i);
                 System.out.println(String.format("Question:\n%s\n Options:\n%s\n Answers:\n%s\n=========\n",
                         line[1], line[3], line[4]));
@@ -292,7 +287,7 @@ public class QuizBootupRunner implements CommandLineRunner {
         private ArrayList<String[]> parseQuestions(String[] lines) {
             ArrayList<String[]> questions = new ArrayList<>();
             StringBuilder questionLines = new StringBuilder();
-            for (int i=0; i<lines.length; i++) {
+            for (int i = 0; i < lines.length; i++) {
                 if (lines[i].startsWith("Q. ")) {
                     if (questionLines.length() != 0) {
                         questions.add(parseQuestion(0, questionLines.toString()));
@@ -404,7 +399,7 @@ public class QuizBootupRunner implements CommandLineRunner {
             try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-                   lines.add(line);
+                    lines.add(line);
                 }
             }
             return lines;

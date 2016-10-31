@@ -1,16 +1,15 @@
 package com.cyberaka.quiz.rest;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.cyberaka.quiz.domain.Topic;
+import com.cyberaka.quiz.dto.TopicDto;
+import com.cyberaka.quiz.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cyberaka.quiz.domain.Topic;
-import com.cyberaka.quiz.dto.TopicDto;
-import com.cyberaka.quiz.service.TopicService;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class TopicController {

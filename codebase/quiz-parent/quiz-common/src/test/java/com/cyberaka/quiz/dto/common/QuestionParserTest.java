@@ -1,11 +1,11 @@
 package com.cyberaka.quiz.dto.common;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 public class QuestionParserTest {
 
@@ -48,7 +48,7 @@ public class QuestionParserTest {
     @Test
     public void parseSingleLineOptions() {
         QuestionParser parser = new QuestionParser();
-        String[] optionsArr = parser.parseOptions("A. arr[n].length();\n"+
+        String[] optionsArr = parser.parseOptions("A. arr[n].length();\n" +
                 "B. arr.size;\n" +
                 "C. arr.size -1;\n" +
                 "D. arr[n][size];\n" +
