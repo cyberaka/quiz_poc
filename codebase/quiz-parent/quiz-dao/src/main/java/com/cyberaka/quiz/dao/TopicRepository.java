@@ -6,5 +6,5 @@ import com.cyberaka.quiz.domain.Topic;
 
 public interface TopicRepository extends CrudRepository<Topic, Integer> {
 
-	
+
 }

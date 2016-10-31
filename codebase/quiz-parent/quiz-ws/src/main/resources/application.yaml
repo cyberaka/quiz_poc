@@ -15,4 +15,5 @@ spring:
       dialect: org.hibernate.dialect.MySQL5Dialect
 data:
   file: ${QUIZ_DATA_FOLDER}
+  result_output: ${QUIZ_RESULT_FOLDER}
   

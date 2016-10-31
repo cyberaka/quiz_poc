@@ -16,21 +16,21 @@ import com.cyberaka.quiz.service.QuestionService;
 @RestController
 public class QuestionController {
 
-	@Autowired
-	QuestionService questionService;
+    @Autowired
+    QuestionService questionService;
 
-	@RequestMapping("/quiz/{topicId}/{subTopicId}/{level}/{count}")
-	@ResponseBody
-	public List<QuestionDto> getQuiz(@PathVariable("topicId") int topicId, @PathVariable("subTopicId") int subTopicId,
-			@PathVariable("level") int level, @PathVariable("count") int count) {
-		Iterable<Question> questions = questionService.findQuiz(topicId, subTopicId, level, count);
-		List<QuestionDto> results = new ArrayList<QuestionDto>();
-		for (Question question : questions) {
-			QuestionDto dto = new QuestionDto();
-			dto.clone(question);
-			results.add(dto);
-		}
-		return results;
-	}
+    @RequestMapping("/quiz/{topicId}/{subTopicId}/{level}/{count}")
+    @ResponseBody
+    public List<QuestionDto> getQuiz(@PathVariable("topicId") int topicId, @PathVariable("subTopicId") int subTopicId,
+            @PathVariable("level") int level, @PathVariable("count") int count) {
+        Iterable<Question> questions = questionService.findQuiz(topicId, subTopicId, level, count);
+        List<QuestionDto> results = new ArrayList<QuestionDto>();
+        for (Question question : questions) {
+            QuestionDto dto = new QuestionDto();
+            dto.clone(question);
+            results.add(dto);
+        }
+        return results;
+    }
 
 }

@@ -15,19 +15,19 @@ import com.cyberaka.quiz.service.TopicService;
 @RestController
 public class TopicController {
 
-	@Autowired
-	TopicService topicService;
+    @Autowired
+    TopicService topicService;
 
-	@RequestMapping("/topics")
-	@ResponseBody
-	public List<TopicDto> listTopics() {
-		Iterable<Topic> topics = topicService.findAll();
-		List<TopicDto> results = new ArrayList<TopicDto>();
-		for (Topic topic : topics) {
-			TopicDto dto = new TopicDto();
-			dto.clone(topic);
-			results.add(dto);
-		}
-		return results;
-	}
+    @RequestMapping("/topics")
+    @ResponseBody
+    public List<TopicDto> listTopics() {
+        Iterable<Topic> topics = topicService.findAll();
+        List<TopicDto> results = new ArrayList<TopicDto>();
+        for (Topic topic : topics) {
+            TopicDto dto = new TopicDto();
+            dto.clone(topic);
+            results.add(dto);
+        }
+        return results;
+    }
 }

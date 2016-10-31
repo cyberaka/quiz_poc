@@ -9,11 +9,11 @@ import com.cyberaka.quiz.service.SubTopicService;
 
 @Service
 public class SubTopicServiceImpl implements SubTopicService {
-	@Autowired
-	SubTopicRepository subTopicRepo;
+    @Autowired
+    SubTopicRepository subTopicRepo;
 
-	public Iterable<SubTopic> findByTopic(Integer topicId) {
-		return subTopicRepo.findByTopic(topicId);
+    public Iterable<SubTopic> findByTopic(Integer topicId) {
+        return subTopicRepo.findByTopic(topicId);
 
-	}
+    }
 }

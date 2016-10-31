@@ -9,11 +9,11 @@ import com.cyberaka.quiz.service.TopicService;
 
 @Service
 public class TopicServiceImpl implements TopicService {
-	@Autowired
-	TopicRepository topicRepo;
+    @Autowired
+    TopicRepository topicRepo;
 
-	public Iterable<Topic> findAll() {
-		return topicRepo.findAll();
+    public Iterable<Topic> findAll() {
+        return topicRepo.findAll();
 
-	}
+    }
 }

@@ -34,34 +34,34 @@ public class QuizBootupRunner implements CommandLineRunner {
     
     static final Logger LOG = Logger.getLogger(QuizBootupRunner.class.getName());
 
-	@Autowired
-	QuestionRepository questionRepo;
+    @Autowired
+    QuestionRepository questionRepo;
 
-	@Autowired
-	UserRepository userRepo;
+    @Autowired
+    UserRepository userRepo;
 
-	@Autowired
-	TopicRepository topicRepo;
+    @Autowired
+    TopicRepository topicRepo;
 
-	@Autowired
-	SubTopicRepository subtopicRepo;
-	
-	@Value("${data.file}")
-	String dataFile;
+    @Autowired
+    SubTopicRepository subtopicRepo;
 
-	@Override
-	public void run(String... args) throws Exception {
-		User user = new User();
-		user.setAdmin(true);
-		user.setConsumer(true);
-		user.setPublisher(true);
-		user.setEmail("cyberaka@gmail.com");
-		user.setPassword("1234");
-		user.setPhoneNo("1234");
-		user.setUserName("cyberaka");
-		user.setName("Abhinav Anand");
-		userRepo.save(user);
-		
+    @Value("${data.file}")
+    String dataFile;
+
+    @Override
+    public void run(String... args) throws Exception {
+        User user = new User();
+        user.setAdmin(true);
+        user.setConsumer(true);
+        user.setPublisher(true);
+        user.setEmail("cyberaka@gmail.com");
+        user.setPassword("1234");
+        user.setPhoneNo("1234");
+        user.setUserName("cyberaka");
+        user.setName("Abhinav Anand");
+        userRepo.save(user);
+
                 File file = new File(dataFile);
                 if (file.isDirectory()) {
                     processDirectory(user, file);
@@ -128,29 +128,29 @@ public class QuizBootupRunner implements CommandLineRunner {
         }
         
         private void processDirectory(User user, File file) {
-		Topic topic = new Topic();
-		topic.setTitle("Java");
-		topicRepo.save(topic);
-		
-		File[] childFiles = file.listFiles();
-		for (File childFile: childFiles) {
-			if (childFile.isFile() && childFile.canRead() && childFile.getName().endsWith(".txt")) {
-				System.out.println("Processing File: " + childFile.getAbsolutePath());
-				
-				SubTopic subTopic = new SubTopic();
-				subTopic.setTitle(childFile.getName().substring(0, childFile.getName().length() - 4));
-				subTopic.setTopic(topic);
-				subtopicRepo.save(subTopic);
-				
-				TextToSqlConverter converter = new TextToSqlConverter(childFile.getAbsolutePath());
-				try {
-					converter.bootup(topic, subTopic, user);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+        Topic topic = new Topic();
+        topic.setTitle("Java");
+        topicRepo.save(topic);
+
+        File[] childFiles = file.listFiles();
+        for (File childFile: childFiles) {
+            if (childFile.isFile() && childFile.canRead() && childFile.getName().endsWith(".txt")) {
+                System.out.println("Processing File: " + childFile.getAbsolutePath());
+
+                SubTopic subTopic = new SubTopic();
+                subTopic.setTitle(childFile.getName().substring(0, childFile.getName().length() - 4));
+                subTopic.setTopic(topic);
+                subtopicRepo.save(subTopic);
+
+                TextToSqlConverter converter = new TextToSqlConverter(childFile.getAbsolutePath());
+                try {
+                    converter.bootup(topic, subTopic, user);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     private String readStringCellValue(Cell cell) {
         if (cell == null) {
@@ -251,164 +251,164 @@ public class QuizBootupRunner implements CommandLineRunner {
             }
     }
 
-	class TextToSqlConverter {
+    class TextToSqlConverter {
 
-		private String fileName;
+        private String fileName;
 
-		public TextToSqlConverter(String fileName) {
-			this.fileName = fileName;
-		}
+        public TextToSqlConverter(String fileName) {
+            this.fileName = fileName;
+        }
 
-		public void bootup(Topic topic, SubTopic subTopic, User user) throws IOException {
-			ArrayList<String> lines = readFile();
-			ArrayList<String[]> list = parseQuestions(lines.toArray(new String[0]));
-			
-			for (int i=0; i<list.size(); i++) {
-				String[] line = list.get(i);
-//				System.out.println(String.format("Question:\n%s\n Options:\n%s\n Answers:\n%s\n=========\n",
-//						line[1], line[3], line[4]));
-			
-				Question quest = new Question();
-				quest.setTopic(topic);
-				quest.setSubTopic(subTopic);
-				quest.setContributer(user);
-				quest.setQuestion(line[1]);
-				quest.setOptions(line[3]);
-				quest.setAnswers(line[4]);
-				quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
-				questionRepo.save(quest);
-			}
-//			dumpInsertStatements(list);
-		}
+        public void bootup(Topic topic, SubTopic subTopic, User user) throws IOException {
+            ArrayList<String> lines = readFile();
+            ArrayList<String[]> list = parseQuestions(lines.toArray(new String[0]));
 
-		private void dumpInsertStatements(ArrayList<String[]> list) {
-			for (int i=0; i<list.size(); i++) {
-				String[] line = list.get(i);
-				System.out.println(String.format("Question:\n%s\n Options:\n%s\n Answers:\n%s\n=========\n",
-						line[1], line[3], line[4]));
-			}
-		}
+            for (int i=0; i<list.size(); i++) {
+                String[] line = list.get(i);
+//                System.out.println(String.format("Question:\n%s\n Options:\n%s\n Answers:\n%s\n=========\n",
+//                        line[1], line[3], line[4]));
 
-		private ArrayList<String[]> parseQuestions(String[] lines) {
-			ArrayList<String[]> questions = new ArrayList<>();
-			StringBuilder questionLines = new StringBuilder();
-			for (int i=0; i<lines.length; i++) {
-				if (lines[i].startsWith("Q. ")) {
-					if (questionLines.length() != 0) {
-						questions.add(parseQuestion(0, questionLines.toString()));
-						questionLines.setLength(0);
-					}
-				}
-				questionLines.append(lines[i] + "\n");
-			}
-			if (questionLines.length() != 0) {
-				questions.add(parseQuestion(0, questionLines.toString()));
-			}
-			return questions;
-		}
-		
-		// This function reads the complete mixed up question/exhibit/answer
-		// text and assigns them into the currentExamQuestionList array
-		private String[] parseQuestion(int sectionNo, String mixedUp) {
-			String[] parsedQuestion = new String[8];
-			boolean isExhibit = false;
-			int exhibitPos = 0;
-			boolean isOptions = false;
-			int optionsPos = 0;
-			boolean isAnswer = false;
-			int answerPos = 0;
-			String tempQuestion = "";
-			String tempExhibit = "";
-			String tempOptions = "";
-			String tempAnswer = "";
-			parsedQuestion[0] = "";
-			parsedQuestion[1] = "";
-			parsedQuestion[2] = "";
-			parsedQuestion[3] = "";
-			parsedQuestion[4] = "";
-			parsedQuestion[5] = "";
-			parsedQuestion[6] = "";
-			parsedQuestion[7] = "";
+                Question quest = new Question();
+                quest.setTopic(topic);
+                quest.setSubTopic(subTopic);
+                quest.setContributer(user);
+                quest.setQuestion(line[1]);
+                quest.setOptions(line[3]);
+                quest.setAnswers(line[4]);
+                quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
+                questionRepo.save(quest);
+            }
+//            dumpInsertStatements(list);
+        }
 
-			exhibitPos = mixedUp.indexOf("<EXHIBIT>");
-			if (exhibitPos != -1)
-				isExhibit = true;
+        private void dumpInsertStatements(ArrayList<String[]> list) {
+            for (int i=0; i<list.size(); i++) {
+                String[] line = list.get(i);
+                System.out.println(String.format("Question:\n%s\n Options:\n%s\n Answers:\n%s\n=========\n",
+                        line[1], line[3], line[4]));
+            }
+        }
 
-			optionsPos = mixedUp.indexOf("A. ");
-			if (optionsPos != -1)
-				isOptions = true;
+        private ArrayList<String[]> parseQuestions(String[] lines) {
+            ArrayList<String[]> questions = new ArrayList<>();
+            StringBuilder questionLines = new StringBuilder();
+            for (int i=0; i<lines.length; i++) {
+                if (lines[i].startsWith("Q. ")) {
+                    if (questionLines.length() != 0) {
+                        questions.add(parseQuestion(0, questionLines.toString()));
+                        questionLines.setLength(0);
+                    }
+                }
+                questionLines.append(lines[i] + "\n");
+            }
+            if (questionLines.length() != 0) {
+                questions.add(parseQuestion(0, questionLines.toString()));
+            }
+            return questions;
+        }
 
-			answerPos = mixedUp.indexOf("ANSWER:");
-			if (answerPos != -1)
-				isAnswer = true;
+        // This function reads the complete mixed up question/exhibit/answer
+        // text and assigns them into the currentExamQuestionList array
+        private String[] parseQuestion(int sectionNo, String mixedUp) {
+            String[] parsedQuestion = new String[8];
+            boolean isExhibit = false;
+            int exhibitPos = 0;
+            boolean isOptions = false;
+            int optionsPos = 0;
+            boolean isAnswer = false;
+            int answerPos = 0;
+            String tempQuestion = "";
+            String tempExhibit = "";
+            String tempOptions = "";
+            String tempAnswer = "";
+            parsedQuestion[0] = "";
+            parsedQuestion[1] = "";
+            parsedQuestion[2] = "";
+            parsedQuestion[3] = "";
+            parsedQuestion[4] = "";
+            parsedQuestion[5] = "";
+            parsedQuestion[6] = "";
+            parsedQuestion[7] = "";
 
-			// Set the section no.
-			parsedQuestion[0] = (new Integer(sectionNo)).toString();
+            exhibitPos = mixedUp.indexOf("<EXHIBIT>");
+            if (exhibitPos != -1)
+                isExhibit = true;
 
-			// Now we will extract the question
-			if (isExhibit) {
-				tempQuestion = mixedUp.substring(0, exhibitPos - 1);
-			} else if (isOptions) {
-				tempQuestion = mixedUp.substring(0, optionsPos - 1);
-			} else if (isAnswer) {
-				tempQuestion = mixedUp.substring(0, answerPos - 1);
-			}
-			// Set the question
-			parsedQuestion[1] = tempQuestion.substring(3,
-					tempQuestion.length()).trim();
+            optionsPos = mixedUp.indexOf("A. ");
+            if (optionsPos != -1)
+                isOptions = true;
 
-			// Now we will extract the exhibit
-			if (isExhibit) {
-				if (isOptions) {
-					tempExhibit = mixedUp.substring(exhibitPos, optionsPos - 1);
-				} else if (isAnswer) {
-					tempExhibit = mixedUp.substring(exhibitPos, answerPos - 1);
-				}
-			}
-			// Set the exhibit
-			parsedQuestion[2] = tempExhibit.trim();
+            answerPos = mixedUp.indexOf("ANSWER:");
+            if (answerPos != -1)
+                isAnswer = true;
 
-			// Now we will extract the options
-			if (isOptions) {
-				if (isAnswer) {
-					tempOptions = mixedUp.substring(optionsPos, answerPos - 1);
-				}
-			}
-			// Set the options
-			parsedQuestion[3] = tempOptions.trim();
+            // Set the section no.
+            parsedQuestion[0] = (new Integer(sectionNo)).toString();
 
-			// Now we will extract the answer
-			if (isAnswer) {
-				tempAnswer = mixedUp.substring(answerPos, mixedUp.length());
-			}
-			// Set the options
-			parsedQuestion[4] = tempAnswer.substring(7,
-					tempAnswer.length()).trim();
+            // Now we will extract the question
+            if (isExhibit) {
+                tempQuestion = mixedUp.substring(0, exhibitPos - 1);
+            } else if (isOptions) {
+                tempQuestion = mixedUp.substring(0, optionsPos - 1);
+            } else if (isAnswer) {
+                tempQuestion = mixedUp.substring(0, answerPos - 1);
+            }
+            // Set the question
+            parsedQuestion[1] = tempQuestion.substring(3,
+                    tempQuestion.length()).trim();
 
-			parsedQuestion[5] = "";
-			parsedQuestion[6] = "";
+            // Now we will extract the exhibit
+            if (isExhibit) {
+                if (isOptions) {
+                    tempExhibit = mixedUp.substring(exhibitPos, optionsPos - 1);
+                } else if (isAnswer) {
+                    tempExhibit = mixedUp.substring(exhibitPos, answerPos - 1);
+                }
+            }
+            // Set the exhibit
+            parsedQuestion[2] = tempExhibit.trim();
 
-			// parsedQuestion
-			// section no.
-			// Question
-			// Exhibit
-			// Options
-			// Answer key
-			// Status - Answer given list (a,b,c,d / a / 0x6)
-			// Marked - Marked
-			return parsedQuestion;
-		}
+            // Now we will extract the options
+            if (isOptions) {
+                if (isAnswer) {
+                    tempOptions = mixedUp.substring(optionsPos, answerPos - 1);
+                }
+            }
+            // Set the options
+            parsedQuestion[3] = tempOptions.trim();
 
-		private ArrayList<String> readFile() throws IOException {
-			ArrayList<String> lines = new ArrayList<String>();
-			try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-			    String line;
-			    while ((line = br.readLine()) != null) {
-			       lines.add(line);
-			    }
-			}
-			return lines;
-		}
+            // Now we will extract the answer
+            if (isAnswer) {
+                tempAnswer = mixedUp.substring(answerPos, mixedUp.length());
+            }
+            // Set the options
+            parsedQuestion[4] = tempAnswer.substring(7,
+                    tempAnswer.length()).trim();
 
-	}
+            parsedQuestion[5] = "";
+            parsedQuestion[6] = "";
+
+            // parsedQuestion
+            // section no.
+            // Question
+            // Exhibit
+            // Options
+            // Answer key
+            // Status - Answer given list (a,b,c,d / a / 0x6)
+            // Marked - Marked
+            return parsedQuestion;
+        }
+
+        private ArrayList<String> readFile() throws IOException {
+            ArrayList<String> lines = new ArrayList<String>();
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                   lines.add(line);
+                }
+            }
+            return lines;
+        }
+
+    }
 }

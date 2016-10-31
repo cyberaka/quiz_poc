@@ -18,6 +18,10 @@ hs_err_pid*
 .project
 .settings
 
+#IntelliJ specific files removed
+**/.idea
+*.iml
+
 #maven specific folders removed
 target
 bin
