@@ -46,30 +46,37 @@ public class QuizBootupRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user = new User();
-        user.setAdmin(true);
-        user.setConsumer(true);
-        user.setPublisher(true);
-        user.setEmail("cyberaka@gmail.com");
-        user.setPassword("1234");
-        user.setPhoneNo("1234");
-        user.setUserName("cyberaka");
-        user.setName("Abhinav Anand");
-        userRepo.save(user);
-
         File file = new File(dataFile);
         if (file.isDirectory()) {
+            LOG.log(Level.SEVERE, "ATTENTION!! Directory parsing is deprecated. Try switching to excel mode. ");
+            User user = new User();
+            user.setAdmin(true);
+            user.setConsumer(true);
+            user.setPublisher(true);
+            user.setEmail("cyberaka@gmail.com");
+            user.setPassword("1234");
+            user.setPhoneNo("1234");
+            user.setUserName("cyberaka");
+            user.setName("Abhinav Anand");
+            userRepo.save(user);
             processDirectory(user, file);
         } else {
-            processFile(user, file);
+            processFile(file);
         }
     }
 
-    private void processFile(User user, File file) throws IOException {
+    private void processFile(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
 
         // Finds the workbook instance for XLSX file
         XSSFWorkbook myWorkBook = new XSSFWorkbook(fis);
+
+        // Persist the user information
+        User user = persistUserInformation(myWorkBook.getSheet("Users"));
+        if (user == null) {
+            LOG.log(Level.SEVERE, "No admin user found. Terminating bootup process.");
+            return;
+        }
 
         // Return subject sheet from the XLSX workbook
         XSSFSheet subjectSheet = myWorkBook.getSheet("Subjects");
@@ -103,7 +110,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                     processCell = row.getCell(3);
                     processCellStr = readStringCellValue(processCell);
 
-                    if (processCellStr.equalsIgnoreCase("yes") && sheetNameCellStr != null) {
+                    if (isYes(processCellStr) && sheetNameCellStr != null) {
                         LOG.log(Level.INFO, "Processing Subject >> {0}", categoryCellStr);
                         XSSFSheet subjectQuestionAnswerSheet = myWorkBook.getSheet(sheetNameCellStr);
                         if (subjectQuestionAnswerSheet != null) {
@@ -121,6 +128,103 @@ public class QuizBootupRunner implements CommandLineRunner {
         myWorkBook.close();
         fis.close();
     }
+
+    private boolean isYes(String msg) {
+        return msg.equalsIgnoreCase("yes");
+    }
+
+    /**
+     * Persist the user information found in the 'Users' sheet into the database.
+     *
+     * @param users The users sheet.
+     * @return The admin user if any.
+     */
+    private User persistUserInformation(XSSFSheet users) {
+        User adminUser = null;
+        User user = null;
+        // Get iterator to all the rows in current sheet
+        Iterator<Row> rowIterator = users.iterator();
+
+        Cell userIdCell, passwordCell, nameCell, emailCell, phoneCell, adminCell, publisherCell, consumerCell, processCell = null;
+        String userIdCellStr, passwordCellStr, nameCellStr, emailCellStr, phoneCellStr, adminCellStr, publisherCellStr, consumerCellStr, processCellStr = null;
+
+        // Verify the header
+        if (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+            userIdCell = row.getCell(0);
+            userIdCellStr = readStringCellValue(userIdCell);
+            passwordCell = row.getCell(1);
+            passwordCellStr = readStringCellValue(passwordCell);
+            nameCell = row.getCell(2);
+            nameCellStr = readStringCellValue(nameCell);
+            emailCell = row.getCell(3);
+            emailCellStr = readStringCellValue(emailCell);
+            phoneCell = row.getCell(4);
+            phoneCellStr = readStringCellValue(phoneCell);
+            adminCell = row.getCell(5);
+            adminCellStr = readStringCellValue(adminCell);
+            publisherCell = row.getCell(6);
+            publisherCellStr = readStringCellValue(publisherCell);
+            consumerCell = row.getCell(7);
+            consumerCellStr = readStringCellValue(consumerCell);
+            processCell = row.getCell(8);
+            processCellStr = readStringCellValue(processCell);
+            if (checkUserSheetHeader(userIdCellStr, passwordCellStr, nameCellStr, emailCellStr, phoneCellStr, adminCellStr, publisherCellStr, consumerCellStr, processCellStr)) {
+                while (rowIterator.hasNext()) {
+                    row = rowIterator.next();
+                    userIdCell = row.getCell(0);
+                    userIdCellStr = readStringCellValue(userIdCell);
+                    passwordCell = row.getCell(1);
+                    passwordCellStr = readStringCellValue(passwordCell);
+                    nameCell = row.getCell(2);
+                    nameCellStr = readStringCellValue(nameCell);
+                    emailCell = row.getCell(3);
+                    emailCellStr = readStringCellValue(emailCell);
+                    phoneCell = row.getCell(4);
+                    phoneCellStr = readStringCellValue(phoneCell);
+                    adminCell = row.getCell(5);
+                    adminCellStr = readStringCellValue(adminCell);
+                    publisherCell = row.getCell(6);
+                    publisherCellStr = readStringCellValue(publisherCell);
+                    consumerCell = row.getCell(7);
+                    consumerCellStr = readStringCellValue(consumerCell);
+                    processCell = row.getCell(8);
+                    processCellStr = readStringCellValue(processCell);
+
+                    if (userIdCellStr != null && passwordCellStr != null && nameCellStr != null
+                            && emailCellStr != null && phoneCellStr != null && adminCellStr != null && publisherCellStr != null
+                            && consumerCellStr != null && processCellStr != null && isYes(processCellStr)) {
+                        LOG.log(Level.INFO, "Processing User >> {0}", userIdCellStr);
+                        user = new User();
+                        user.setUserName(userIdCellStr);
+                        user.setPassword(passwordCellStr);
+                        user.setName(nameCellStr);
+                        user.setEmail(emailCellStr);
+                        user.setPhoneNo(phoneCellStr);
+                        user.setAdmin(isYes(adminCellStr));
+                        user.setPublisher(isYes(publisherCellStr));
+                        user.setConsumer(isYes(consumerCellStr));
+                        userRepo.save(user);
+                        if (user.isAdmin()) {
+                            adminUser = user;
+                        }
+                    } else {
+                        LOG.log(Level.FINE, "Skipping User >> {0}", userIdCell);
+                    }
+                }
+            }
+        }
+        return adminUser;
+    }
+
+    private boolean checkUserSheetHeader(String userIdCellStr, String passwordCellStr, String nameCellStr, String emailCellStr,
+                                         String phoneCellStr, String adminCellStr, String publisherCellStr, String consumerCellStr, String processCellStr) {
+        return userIdCellStr.equalsIgnoreCase("User ID") && passwordCellStr.equalsIgnoreCase("Password") && nameCellStr.equalsIgnoreCase("Name") &&
+                emailCellStr.equalsIgnoreCase("E-Mail") && phoneCellStr.equalsIgnoreCase("Phone") && adminCellStr.equalsIgnoreCase("Admin") &&
+                publisherCellStr.equalsIgnoreCase("Publisher") && consumerCellStr.equalsIgnoreCase("Consumer") &&
+                processCellStr.equalsIgnoreCase("Process");
+    }
+
 
     private void processDirectory(User user, File file) {
         Topic topic = new Topic();

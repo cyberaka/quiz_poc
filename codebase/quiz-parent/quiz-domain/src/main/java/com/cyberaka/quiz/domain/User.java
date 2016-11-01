@@ -3,27 +3,27 @@ package com.cyberaka.quiz.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "quiz_user")
+@Table(name = "quiz_user", uniqueConstraints = @UniqueConstraint(name="unique_user_id", columnNames = {"user_name"}))
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false, unique =  true)
     private String userName;
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name = "phone_no")
+    @Column(name = "phone_no", nullable = false)
     private String phoneNo;
-    @Column(name = "admin")
+    @Column(name = "admin", nullable = false)
     private boolean admin;
-    @Column(name = "publisher")
+    @Column(name = "publisher", nullable = false)
     private boolean publisher;
-    @Column(name = "consumer")
+    @Column(name = "consumer", nullable = false)
     private boolean consumer;
 
     public User() {
