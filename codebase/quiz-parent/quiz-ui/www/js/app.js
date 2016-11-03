@@ -3,7 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('quiz', ['ionic','quiz.constants','quiz.module.login','quiz.module.topics','quiz.module.subtopics','quiz.module.questions'])
+angular.module('quiz', ['ionic','quiz.constants','quiz.module.login','quiz.module.topics',
+        'quiz.module.subtopics','quiz.module.questions'])
 .config(function($urlRouterProvider,$locationProvider,$stateProvider,$windowProvider){
 $urlRouterProvider.otherwise('/login')
   $stateProvider
