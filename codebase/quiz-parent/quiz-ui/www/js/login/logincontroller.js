@@ -1,7 +1,7 @@
 var loginModule = angular.module('quiz.module.login', ['quiz.resources.logins'])
 loginModule.controller('LoginController', function($scope, $state, LoginService) {
   $scope.data = {
-    username: "9686111382",
+    username: "cyberaka",
     password: "abcd1234",
     logins: []
   }
@@ -18,6 +18,7 @@ loginModule.controller('LoginController', function($scope, $state, LoginService)
           console.log("Result is null.")
         }
       }, function() {
+      alert("Invalid Login Credentials.");
         console.log("We have a problem.");
       })
   }
