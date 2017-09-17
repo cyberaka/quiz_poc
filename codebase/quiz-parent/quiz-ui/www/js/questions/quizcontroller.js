@@ -114,13 +114,14 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
     var question = $scope.data.questions[$scope.data.index]
     if (question != null) {
       if ($scope.needsUserEntry()) {
+        question.userAnswers = $scope.data.userentry;
         if ($scope.data.userentry == question.answers[0]) {
           $scope.data.score = $scope.data.score + 1
         }
       } else if ($scope.hasMultipleAnswers()) {
         var correctAnswerCount = 0
         var attempted = 0
-
+        question.userAnswers = $scope.data.options;
         for (var j = 0; j < $scope.data.options.length; j++) {
           var currentOption = $scope.data.options[j]
 
@@ -142,6 +143,7 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
           $scope.data.score++
         }
       } else {
+        question.userAnswers = $scope.data.singleChoice;
         if ($scope.data.singleChoice == question.answers[0]) {
           $scope.data.score = $scope.data.score + 1
         }
@@ -152,6 +154,11 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
     $scope.evaluate()
     $scope.data.index = $scope.data.index + 1
     $scope.configureOptions()
+  }
+  $scope.publishScore = function() {
+    console.log(JSON.stringify($scope.data.questions));
+    alert("Published Successfully! Close Window.");
+    $state.go('topics',{})
   }
   $scope.startQuiz = function() {
     $state.go('quiz', {

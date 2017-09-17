@@ -2,6 +2,7 @@
 
   <ion-nav-buttons side="right">
     <button class="button button-calm" ng-show="quizEnded()==false" ng-click="submit()">Submit</button>
+    <button class="button button-calm" ng-show="quizEnded()==true" ng-click="publishScore()">Publish</button>
   </ion-nav-buttons>
   <ion-content>
     <ion-scroll direction="xy">

@@ -18,7 +18,7 @@ loginModule.controller('LoginController', function($scope, $state, LoginService)
           console.log("Result is null.")
         }
       }, function() {
-      alert("Invalid Login Credentials.");
+        alert("Invalid Login Credentials.");
         console.log("We have a problem.");
       })
   }
