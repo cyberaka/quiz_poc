@@ -108,4 +108,16 @@ public class QuestionDto {
         this.subTopicId = subTopicId;
     }
 
+    @Override
+    public String toString() {
+        return "QuestionDto{" +
+                "questionId=" + questionId +
+                ", question='" + question + '\'' +
+                ", answers=" + answers +
+                ", options=" + options +
+                ", difficultyLevel=" + difficultyLevel +
+                ", topicId=" + topicId +
+                ", subTopicId=" + subTopicId +
+                '}';
+    }
 }

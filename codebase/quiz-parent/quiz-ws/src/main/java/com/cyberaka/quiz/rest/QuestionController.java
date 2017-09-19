@@ -1,11 +1,15 @@
 package com.cyberaka.quiz.rest;
 
 import com.cyberaka.quiz.domain.Question;
+import com.cyberaka.quiz.dto.QuestionAnswerDto;
 import com.cyberaka.quiz.dto.QuestionDto;
 import com.cyberaka.quiz.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,6 +34,13 @@ public class QuestionController {
             results.add(dto);
         }
         return results;
+    }
+
+    @RequestMapping(value="/quiz/{userId}", method=RequestMethod.POST)
+    @ResponseBody
+    public void submitQuizAnswer(@PathVariable("userId") String userId, @RequestBody QuestionAnswerDto body) {
+        System.out.println("Received answer submitted by user " + userId);
+        System.out.println(body);
     }
 
 }

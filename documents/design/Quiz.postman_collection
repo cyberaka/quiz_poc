@@ -1,0 +1,76 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Quiz",
+		"_postman_id": "71e654f0-b999-27c5-3f32-6a6705bd0ed5",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"description": "",
+			"item": [
+				{
+					"name": "Quiz Login",
+					"request": {
+						"url": {
+							"raw": "http://localhost:7070/login?userName=cyberaka&password=abcd1234",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7070",
+							"path": [
+								"login"
+							],
+							"query": [
+								{
+									"key": "userName",
+									"value": "cyberaka",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "password",
+									"value": "abcd1234",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "http://localhost:7070/quiz/cyberaka/",
+			"request": {
+				"url": "http://localhost:7070/quiz/cyberaka/",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"questionId\":992,\n   \"question\":\"If 16 24 is divided by 17, the remainder is \",\n   \"answers\":[\n      \"A\"\n   ],\n   \"options\":[\n      \"A. 1\",\n      \"B. 3\",\n      \"C. 4\",\n      \"D. 8\"\n   ],\n   \"difficultyLevel\":2,\n   \"topicId\":2,\n   \"subTopicId\":2,\n   \"userAnswers\":[\"A\"]\n},\n{\n   \"questionId\":968,\n   \"question\":\"What should come in place of  ?   \\n   8, 31,  122,  485,  1936,  7739,  ?\",\n   \"answers\":[\n      \"D\"\n   ],\n   \"options\":[\n      \"A. 30460\",\n      \"B. 30720\",\n      \"C. 30840\",\n      \"D. 30950\",\n      \"E. None\"\n   ],\n   \"difficultyLevel\":2,\n   \"topicId\":2,\n   \"subTopicId\":2,\n   \"userAnswers\":\"B\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
