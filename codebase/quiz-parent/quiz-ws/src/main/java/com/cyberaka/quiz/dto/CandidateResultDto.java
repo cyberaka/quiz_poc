@@ -9,11 +9,22 @@ public class CandidateResultDto {
 
     private String question;
 
+    private String answer;
+
     private String candidateAnswer;
 
     private String correct;
 
     public CandidateResultDto() {
+    }
+
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
     public int getQuestionNumber() {
@@ -53,6 +64,7 @@ public class CandidateResultDto {
         return "CandidateResultDto{" +
                 "questionNumber=" + questionNumber +
                 ", question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
                 ", candidateAnswer='" + candidateAnswer + '\'' +
                 ", correct='" + correct + '\'' +
                 '}';

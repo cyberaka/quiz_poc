@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class QuestionController {
@@ -76,20 +77,57 @@ public class QuestionController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formatDateTime = now.format(formatter);
         data.put("date_of_examination", formatDateTime);
-        data.put("candidate_score", "1");
 
         ArrayList<CandidateResultDto> resultList = new ArrayList<>();
         int sl = 0;
+        int score = 0;
         for (QuestionAnswerDto dto: body) {
             CandidateResultDto templateDto = new CandidateResultDto();
             templateDto.setQuestionNumber(++sl);
             templateDto.setQuestion(dto.getQuestion());
-            templateDto.setCandidateAnswer(dto.getUserAnswers().toString());
-            templateDto.setCorrect("Yes");
+            templateDto.setAnswer(dto.getAnswers().stream().map(Object::toString).collect(Collectors.joining(",")));
+            templateDto.setCandidateAnswer(dto.getUserAnswers().stream().map(Object::toString).collect(Collectors.joining(",")));
+
+            boolean correct = false;
+            if (dto.getAnswers().size() == 1 && (dto.getOptions() == null || dto.getOptions().size() == 0)) {
+                // User entry.
+                if (dto.getAnswers().get(0).equalsIgnoreCase(dto.getUserAnswers().get(0))) {
+                    correct = true;
+                }
+            } else {
+                if (dto.getAnswers().size() == 1) {
+                    // Single choice.
+                    if (dto.getAnswers().get(0).equalsIgnoreCase(dto.getUserAnswers().get(0))) {
+                        correct = true;
+                    }
+                } else {
+                    // Multiple choice.
+                    int correctAnswerCount = 0;
+                    for (int j = 0; j < dto.getAnswers().size(); j++) {
+                        String questionAnswer = dto.getAnswers().get(j);
+
+                        for (int i = 0; i < dto.getUserAnswers().size(); i++) {
+                            String userAnswer = dto.getUserAnswers().get(i);
+                            if (questionAnswer.equalsIgnoreCase(userAnswer)) {
+                                correctAnswerCount++;
+                            }
+                        }
+                    }
+                    if (correctAnswerCount == dto.getAnswers().size()) {
+                        correct = true;
+                    }
+                }
+            }
+            if (correct) {
+                templateDto.setCorrect("Yes");
+                score++;
+            } else {
+                templateDto.setCorrect("No");
+            }
             resultList.add(templateDto);
         }
+        data.put("candidate_score", score + "");
         data.put("answertable", resultList);
-        model.addAttribute("answertable", resultList);
 
         String fileName = dataResultOutputFolder + File.separator + user.getName() + ".pdf";
         try {
