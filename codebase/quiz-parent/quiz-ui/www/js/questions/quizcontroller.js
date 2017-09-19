@@ -1,5 +1,5 @@
 var questionsModule = angular.module('quiz.module.questions', ['quiz.resources.questions'])
-questionsModule.controller('QuestionController', function($scope, $state, $stateParams, QuestionService) {
+questionsModule.controller('QuestionController', function($scope, $http, CONFIG, $state, $stateParams, QuestionService) {
   $scope.data = {
     questions: [],
     index: -1,
@@ -113,8 +113,9 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
   $scope.evaluate = function() {
     var question = $scope.data.questions[$scope.data.index]
     if (question != null) {
+      question.userAnswers = new Array();
       if ($scope.needsUserEntry()) {
-        question.userAnswers = $scope.data.userentry;
+        question.userAnswers[0] = $scope.data.userentry;
         if ($scope.data.userentry == question.answers[0]) {
           $scope.data.score = $scope.data.score + 1
         }
@@ -143,7 +144,7 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
           $scope.data.score++
         }
       } else {
-        question.userAnswers = $scope.data.singleChoice;
+        question.userAnswers[0] = $scope.data.singleChoice;
         if ($scope.data.singleChoice == question.answers[0]) {
           $scope.data.score = $scope.data.score + 1
         }
@@ -158,20 +159,19 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
   $scope.publishScore = function() {
     console.log(JSON.stringify($scope.data.questions));
     // use $.param jQuery function to serialize data from JSON
-    var data = $.param({
-        fName: $scope.firstName,
-        lName: $scope.lastName
-    });
+    var data = JSON.stringify($scope.data.questions);
 
     var config = {
-        headers : {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
-        }
+//        headers : {
+//            'Content-Type': 'application/json;'
+//        }
     }
 
-    $http.post('/ServerRequest/PostDataResponse', data, config)
+    $http.post(CONFIG.url + 'quiz/cyberaka/', data, config)
     .success(function (data, status, headers, config) {
-        $scope.PostDataResponse = data;
+        //$scope.PostDataResponse = data;
+        alert("Published Successfully! Close Window.");
+        $state.go('topics',{})
     })
     .error(function (data, status, header, config) {
         $scope.ResponseDetails = "Data: " + data +
@@ -179,8 +179,6 @@ questionsModule.controller('QuestionController', function($scope, $state, $state
             "<hr />headers: " + header +
             "<hr />config: " + config;
     });
-    alert("Published Successfully! Close Window.");
-    $state.go('topics',{})
   }
   $scope.startQuiz = function() {
     $state.go('quiz', {

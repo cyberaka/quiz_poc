@@ -38,7 +38,7 @@ public class QuestionController {
 
     @RequestMapping(value="/quiz/{userId}", method=RequestMethod.POST)
     @ResponseBody
-    public void submitQuizAnswer(@PathVariable("userId") String userId, @RequestBody QuestionAnswerDto body) {
+    public void submitQuizAnswer(@PathVariable("userId") String userId, @RequestBody QuestionAnswerDto[] body) {
         System.out.println("Received answer submitted by user " + userId);
         System.out.println(body);
     }
