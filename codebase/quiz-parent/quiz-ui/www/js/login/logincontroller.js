@@ -1,5 +1,5 @@
 var loginModule = angular.module('quiz.module.login', ['quiz.resources.logins'])
-loginModule.controller('LoginController', function($scope, $state, LoginService) {
+loginModule.controller('LoginController', function($scope, $rootScope, $state, LoginService) {
   $scope.data = {
     username: "cyberaka",
     password: "abcd1234",
@@ -11,6 +11,7 @@ loginModule.controller('LoginController', function($scope, $state, LoginService)
         console.log("Result received >> " + results);
         if (results != null && results.email != null) {
           $scope.data.logins = angular.copy(results);
+          $rootScope.currentUser = $scope.data.logins;
           console.log("Login >> Result >> Email = " + $scope.data.logins.email);
           $state.go('topics',{});
         } else {

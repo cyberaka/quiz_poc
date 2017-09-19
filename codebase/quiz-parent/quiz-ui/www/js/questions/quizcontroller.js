@@ -1,5 +1,5 @@
 var questionsModule = angular.module('quiz.module.questions', ['quiz.resources.questions'])
-questionsModule.controller('QuestionController', function($scope, $http, CONFIG, $state, $stateParams, QuestionService) {
+questionsModule.controller('QuestionController', function($scope, $rootScope, $http, CONFIG, $state, $stateParams, QuestionService) {
   $scope.data = {
     questions: [],
     index: -1,
@@ -158,6 +158,7 @@ questionsModule.controller('QuestionController', function($scope, $http, CONFIG,
   }
   $scope.publishScore = function() {
     console.log(JSON.stringify($scope.data.questions));
+    console.log(JSON.stringify($rootScope.currentUser));
     // use $.param jQuery function to serialize data from JSON
     var data = JSON.stringify($scope.data.questions);
 
@@ -167,7 +168,7 @@ questionsModule.controller('QuestionController', function($scope, $http, CONFIG,
 //        }
     }
 
-    $http.post(CONFIG.url + 'quiz/cyberaka/', data, config)
+    $http.post(CONFIG.url + 'quiz/' + $rootScope.currentUser.userId + '/', data, config)
     .success(function (data, status, headers, config) {
         //$scope.PostDataResponse = data;
         alert("Published Successfully! Close Window.");
