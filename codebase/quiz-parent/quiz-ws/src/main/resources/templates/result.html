@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<p th:text="'Result for, ' + ${name} + '!'" />
+<p th:text="'Date of examination: ' + ${date_of_examination} + '!'" />
+<p th:text="'Score: ' + ${candidate_score} + '!'" />
+<table class="table" border="1">
+    <thead>
+    <tr>
+        <th>Sl No</th>
+        <th>Question</th>
+        <th>Candidate Answer</th>
+        <th>Correct</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="answertbl: ${answertable}">
+        <td th:text="${answertbl.questionNumber}" />
+        <td th:text="${answertbl.question}" />
+        <td th:text="${answertbl.candidateAnswer}" />
+        <td th:text="${answertbl.correct}" />
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
