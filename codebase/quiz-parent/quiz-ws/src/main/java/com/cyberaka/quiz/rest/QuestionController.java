@@ -74,9 +74,14 @@ public class QuestionController {
 
         //Get current date time
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formatDateTime = now.format(formatter);
-        data.put("date_of_examination", formatDateTime);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy h-mm-a");
+        String formatDate = now.format(dateFormatter);
+        String formatTime = now.format(timeFormatter);
+        String fileFormatterStr = now.format(fileFormatter);
+        data.put("date_of_examination", formatDate);
+        data.put("time_of_examination", formatTime);
 
         ArrayList<CandidateResultDto> resultList = new ArrayList<>();
         int sl = 0;
@@ -126,10 +131,10 @@ public class QuestionController {
             }
             resultList.add(templateDto);
         }
-        data.put("candidate_score", score + "");
+        data.put("candidate_score", score + " out of " + body.length);
         data.put("answertable", resultList);
 
-        String fileName = dataResultOutputFolder + File.separator + user.getName() + ".pdf";
+        String fileName = dataResultOutputFolder + File.separator + user.getName() + " " + fileFormatterStr + ".pdf";
         try {
             pdfGenaratorUtil.createPdf("result", fileName, data);
         } catch (Exception e) {

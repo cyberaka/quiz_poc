@@ -3,9 +3,11 @@
 <head>
 </head>
 <body>
-<p th:text="'Result for, ' + ${name} + '!'" />
-<p th:text="'Date of examination: ' + ${date_of_examination} + '!'" />
-<p th:text="'Score: ' + ${candidate_score} + '!'" />
+<h1>Examination Result</h1>
+<p th:text="'Name: ' + ${name}" />
+<p th:text="'Date: ' + ${date_of_examination}" />
+<p th:text="'Time: ' + ${time_of_examination}" />
+<p th:text="'Score: ' + ${candidate_score}" />
 <table class="table" border="1">
     <thead>
     <tr>
