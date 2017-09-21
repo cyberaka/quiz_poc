@@ -80,73 +80,77 @@ questionsModule.controller('QuestionController', function($scope, $rootScope, $h
     return false
   }
   $scope.hasMultipleAnswers = function() {
-    var question = $scope.data.questions[$scope.data.index]
-    if (question != null) {
-      if (question.answers != null && question.answers.length > 1 && question.options != null && question.options.length > 0) {
-        return true
+    if ($scope.data.questions != null) {
+      var question = $scope.data.questions[$scope.data.index]
+      if (question != null) {
+        if (question.answers != null && question.answers.length > 1 && question.options != null && question.options.length > 0) {
+          return true
+        }
       }
-
     }
     return false
   }
   $scope.hasSingleChoice = function() {
-    var question = $scope.data.questions[$scope.data.index]
-    if (question != null) {
-      if (question.answers != null && question.answers.length == 1 && question.options != null && question.options.length > 0) {
-        return true
+    if ($scope.data.questions != null) {
+      var question = $scope.data.questions[$scope.data.index]
+      if (question != null) {
+        if (question.answers != null && question.answers.length == 1 && question.options != null && question.options.length > 0) {
+          return true
+        }
       }
     }
-
     return false
   }
   $scope.needsUserEntry = function() {
-    var question = $scope.data.questions[$scope.data.index]
-    if (question != null) {
-      if (question.answers != null && question.answers.length == 1 && (question.options == null || question.options == undefined || question.options.length == 0)) {
-        return true
+    if ($scope.data.questions != null) {
+      var question = $scope.data.questions[$scope.data.index]
+      if (question != null) {
+        if (question.answers != null && question.answers.length == 1 && (question.options == null || question.options == undefined || question.options.length == 0)) {
+          return true
+        }
       }
-
     }
-
     return false
   }
   $scope.evaluate = function() {
-    var question = $scope.data.questions[$scope.data.index]
-    if (question != null) {
-      question.userAnswers = new Array();
-      if ($scope.needsUserEntry()) {
-        question.userAnswers[0] = $scope.data.userentry;
-        if ($scope.data.userentry == question.answers[0]) {
-          $scope.data.score = $scope.data.score + 1
-        }
-      } else if ($scope.hasMultipleAnswers()) {
-        var correctAnswerCount = 0
-        var attempted = 0
-        question.userAnswers = $scope.data.options;
-        for (var j = 0; j < $scope.data.options.length; j++) {
-          var currentOption = $scope.data.options[j]
-
-          if (currentOption.checked == true) {
-            attempted++
-            for (var i = 0; i < question.answers.length; i++) {
-              var currentAnswer = question.answers[i]
-              // if (currentOption.text.startsWith(currentAnswer)) {
-              //   correctAnswerCount++
-              // }
-              if (currentOption.value.startsWith(currentAnswer)) {
-                correctAnswerCount++
-              }
-            }
-
+    if ($scope.data.questions != null) {
+      var question = $scope.data.questions[$scope.data.index]
+      if (question != null) {
+        question.userAnswers = new Array();
+        if ($scope.needsUserEntry()) {
+          question.userAnswers[0] = $scope.data.userentry;
+          if ($scope.data.userentry == question.answers[0]) {
+            $scope.data.score = $scope.data.score + 1
           }
-        }
-        if (correctAnswerCount == question.answers.length && correctAnswerCount == attempted) {
-          $scope.data.score++
-        }
-      } else {
-        question.userAnswers[0] = $scope.data.singleChoice;
-        if ($scope.data.singleChoice == question.answers[0]) {
-          $scope.data.score = $scope.data.score + 1
+        } else if ($scope.hasMultipleAnswers()) {
+          var correctAnswerCount = 0
+          var attempted = 0
+          question.userAnswers = $scope.data.options;
+          for (var j = 0; j < $scope.data.options.length; j++) {
+            var currentOption = $scope.data.options[j]
+
+            if (currentOption.checked == true) {
+              attempted++
+              for (var i = 0; i < question.answers.length; i++) {
+                var currentAnswer = question.answers[i]
+                // if (currentOption.text.startsWith(currentAnswer)) {
+                //   correctAnswerCount++
+                // }
+                if (currentOption.value.startsWith(currentAnswer)) {
+                  correctAnswerCount++
+                }
+              }
+
+            }
+          }
+          if (correctAnswerCount == question.answers.length && correctAnswerCount == attempted) {
+            $scope.data.score++
+          }
+        } else {
+          question.userAnswers[0] = $scope.data.singleChoice;
+          if ($scope.data.singleChoice == question.answers[0]) {
+            $scope.data.score = $scope.data.score + 1
+          }
         }
       }
     }
@@ -172,7 +176,9 @@ questionsModule.controller('QuestionController', function($scope, $rootScope, $h
     .success(function (data, status, headers, config) {
         //$scope.PostDataResponse = data;
         alert("Published Successfully! Close Window.");
-        $state.go('topics',{})
+        $scope.data.questions = null;
+        $scope.data.index = null;
+        $state.go('login',{})
     })
     .error(function (data, status, header, config) {
         $scope.ResponseDetails = "Data: " + data +
