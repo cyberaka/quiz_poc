@@ -1,0 +1,12 @@
+Thymeleaf
+https://github.com/spring-projects/spring-boot/issues/34
+
+HTML
+https://www.w3schools.com/TagS/tag_img.asp
+https://www.w3schools.com/css/css_table.asp
+
+Flying Saucer
+https://stackoverflow.com/questions/12826881/flying-saucer-font-for-unicode-characters
+https://stackoverflow.com/questions/20497814/pdf-generation-from-html-having-multilingual-text-using-flying-sauceritext-onl/20501323#20501323
+
+
