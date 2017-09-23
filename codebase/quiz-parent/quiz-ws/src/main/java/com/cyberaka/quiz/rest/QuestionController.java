@@ -46,6 +46,9 @@ public class QuestionController {
     @Value("${data.result_output}")
     String dataResultOutputFolder;
 
+    @Value("${data.font_file}")
+    String dataFontFile;
+
     @RequestMapping("/quiz/{topicId}/{subTopicId}/{level}/{count}")
     @ResponseBody
     public List<QuestionDto> getQuiz(@PathVariable("topicId") int topicId, @PathVariable("subTopicId") int subTopicId,
@@ -74,9 +77,9 @@ public class QuestionController {
 
         //Get current date time
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
-        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy h-mm-a");
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy h-mm-a");
         String formatDate = now.format(dateFormatter);
         String formatTime = now.format(timeFormatter);
         String fileFormatterStr = now.format(fileFormatter);
@@ -136,7 +139,7 @@ public class QuestionController {
 
         String fileName = dataResultOutputFolder + File.separator + user.getName() + " " + fileFormatterStr + ".pdf";
         try {
-            pdfGenaratorUtil.createPdf("result", fileName, data);
+            pdfGenaratorUtil.createPdf("result", dataFontFile, fileName, data);
         } catch (Exception e) {
             e.printStackTrace();
         }

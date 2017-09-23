@@ -18,3 +18,4 @@ spring:
 data:
   file: ${QUIZ_DATA_FOLDER}
   result_output: ${QUIZ_RESULT_FOLDER}
+  font_file: ${QUIZ_FONT_FILE}
