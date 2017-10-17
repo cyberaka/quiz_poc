@@ -1,5 +1,6 @@
 package com.cyberaka.quiz;
 
+import com.cyberaka.quiz.common.QuizAppConstants;
 import com.cyberaka.quiz.dao.QuestionRepository;
 import com.cyberaka.quiz.dao.SubTopicRepository;
 import com.cyberaka.quiz.dao.TopicRepository;
@@ -8,7 +9,6 @@ import com.cyberaka.quiz.domain.Question;
 import com.cyberaka.quiz.domain.SubTopic;
 import com.cyberaka.quiz.domain.Topic;
 import com.cyberaka.quiz.domain.User;
-import com.cyberaka.quiz.service.AppConstants;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -339,7 +339,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                     quest.setQuestion(questionCellStr);
                     quest.setOptions(optionBuilder.toString());
                     quest.setAnswers(answerCellStr);
-                    quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
+                    quest.setDifficultyLevel(QuizAppConstants.DIFFICULTY_MEDIUM);
                     if (quest.isValid()) {
                         questionRepo.save(quest);
                     } else {
@@ -374,7 +374,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                 quest.setQuestion(line[1]);
                 quest.setOptions(line[3]);
                 quest.setAnswers(line[4]);
-                quest.setDifficultyLevel(AppConstants.DIFFICULTY_MEDIUM);
+                quest.setDifficultyLevel(QuizAppConstants.DIFFICULTY_MEDIUM);
                 questionRepo.save(quest);
             }
 //            dumpInsertStatements(list);
