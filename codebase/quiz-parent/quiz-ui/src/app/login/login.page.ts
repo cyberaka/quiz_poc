@@ -11,8 +11,8 @@ import { LoadingController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   pageTitle: string = "Login";
-  userName: string = '';
-  password: string = '';
+  userName: string = 'cyberaka';
+  password: string = 'abcd1234';
   constructor(
     private router : Router,
     private dialog :DialogService,

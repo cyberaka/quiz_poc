@@ -131,7 +131,7 @@ export class QuizPage implements OnInit {
       this.dialog.showAlertWithButtons('Published Successfully!', 'Ok', (c: any) => {
         this.nav.setDirection('forward');
         this.http.topicId = this.topics.topicId;
-        this.router.navigateByUrl('login', {
+        this.router.navigateByUrl('topics', {
           replaceUrl: true,
           });
         });
