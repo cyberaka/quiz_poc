@@ -1,0 +1,45 @@
+.header {
+    display: block;
+    background: #f2f2f2;
+    height: 40px;
+    padding: 10px;
+    padding-left: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #c8c7cc;
+    border-top: 1px solid #c8c7cc;
+}
+
+
+ion-toolbar {
+    --background: var(--ion-color-primary);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    --border-color: var(--ion-color-primary);
+}
+
+.headerRightBtn {
+    --background: #11c1f3;
+}
+
+.quesion {
+    white-space: inherit;
+    padding: 15px;
+    margin: 0;
+    line-height: 21px;
+}
+
+.answerItem {
+    --padding-start: 0px;
+}
+
+.textArea {
+    margin: 10px;
+    border: 1px solid #c8c7cc;
+    border-radius: 10px;
+    ion-textarea {
+        padding: 11px;
+        height: 210px;
+    }
+}

@@ -1,0 +1,22 @@
+
+ion-toolbar {
+    --background: var(--ion-color-primary);
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    --border-color: var(--ion-color-primary);
+}
+
+.loginCard {
+    ion-list {
+        margin: 10px;
+
+        ion-item {
+            padding: 5px;
+        }
+
+        ion-button {
+            margin: 5px;
+        }
+    }
+}

@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Login" color="light" defaultHref="login"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+     Topics
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item lines="full" button detail="true" *ngFor="let topic of topics" (click)="topicClick(topic)">
+      <ion-label>
+        {{topic.title}}
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Topics" color="light" defaultHref="topics"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+     Sub Topics
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-item lines="full" button detail="true" *ngFor="let subTopic of subTopics" (click)="subTopicClick(subTopic)">
+          <ion-label>{{subTopic.title}}</ion-label>
+        </ion-item>
+      </ion-list>
+</ion-content>

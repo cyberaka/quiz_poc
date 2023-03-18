@@ -1,0 +1,36 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="Sub Topics" color="light" defaultHref="sub-topics"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+     Quiz Settings
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-label class="header">Difficulty Level</ion-label>
+    <ion-radio-group [(ngModel)]="quizType">
+      <ion-item lines="full">
+        <ion-label>Beginner</ion-label>
+        <ion-radio slot="end" value="1"></ion-radio>
+      </ion-item>
+  
+      <ion-item lines="full">
+        <ion-label>Intermediate</ion-label>
+        <ion-radio slot="end" value="2"></ion-radio>
+      </ion-item>
+  
+      <ion-item lines="full">
+        <ion-label>Expert</ion-label>
+        <ion-radio slot="end" value="3"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+    <ion-label class="header">Others</ion-label>
+    <ion-input type="number" value="10" [(ngModel)]="cntQAs"></ion-input>
+    
+    <ion-button expand="block" (click)="startQuiz()">Start Quiz</ion-button>
+  </ion-list>
+</ion-content>

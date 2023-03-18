@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="primary">
+      <ion-button *ngIf="!reachEnd" class="headerRightBtn" fill="solid" (click)="NextClick()">
+        <span *ngIf="currentQusIndex < QAs.length -1">
+          Next
+        </span>
+        <span *ngIf="currentQusIndex == QAs.length -1 ">
+          Submit
+        </span>
+        <ion-icon slot="end" name="chevron-forward-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="reachEnd" class="headerRightBtn" fill="solid" (click)="publishAnswer()">
+        <span *ngIf="currentQusIndex != QAs.length">
+          Publish
+        </span>
+        <ion-icon slot="end" name="chevron-forward-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      Quiz
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ng-container *ngIf="reachEnd">
+    <ion-label class="header">
+      Your Score:
+      <span>{{score}}</span>
+    </ion-label>
+  </ng-container>
+  <ng-container *ngIf="!reachEnd && QAs.length">
+    <ion-label class="header">
+      Question
+      <span>{{currentQusIndex + 1}}</span>
+    </ion-label>
+    <pre class="quesion">
+        Q. {{QAs[currentQusIndex].question}}
+      </pre>
+    <ion-label class="header" *ngIf="QAs[currentQusIndex]?.options.length != 0">
+      Options
+    </ion-label>
+    <ng-container *ngIf="QAs[currentQusIndex]?.answers.length > 1">
+      <ion-item lines="full" *ngFor="let option of QAs[currentQusIndex]?.customOptions">
+        <ion-checkbox slot="start" [(ngModel)]="option.checked"></ion-checkbox>
+        <pre class="quesion">
+                {{option.text}}
+              </pre>
+      </ion-item>
+    </ng-container>
+    <ng-container *ngIf="QAs[currentQusIndex]?.answers.length == 1">
+      <ion-radio-group [(ngModel)]="singleAns">
+        <ion-item class="answerItem" lines="full" *ngFor="let option of QAs[currentQusIndex]?.customOptions;let i = index">
+          <pre class="quesion">
+                  {{option.text}}
+                </pre>
+          <ion-radio slot="end" [value]="option.value"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+
+    </ng-container>
+    <ng-container *ngIf="QAs[currentQusIndex]?.options.length == 0">
+      <div class="textArea">
+        <ion-textarea rows="9" placeholder="Provide Answer" [(ngModel)]="customAns"></ion-textarea>
+      </div>
+
+
+    </ng-container>
+  </ng-container>
+
+
+
+  <div>
+
+  </div>
+</ion-content>
