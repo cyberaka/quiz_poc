@@ -28,6 +28,11 @@ export class SubTopicsPage implements OnInit {
     } else {
       this.topicId = this.http.topicId || 0;
     }
+    if(!this.http.userDet) {
+      this.router.navigateByUrl('login', {
+        replaceUrl: true
+      });
+    }
   }
 
   ngOnInit() {
