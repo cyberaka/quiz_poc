@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.logging.Logger;
+
 @RestController
 public class UserController {
+
+    private Logger log = Logger.getLogger(getClass().getName());
 
     @Autowired
     UserService userService;
@@ -20,6 +24,7 @@ public class UserController {
     @RequestMapping(value="/login", method= RequestMethod.GET)
     @ResponseBody
     public UserDto login(@RequestParam("userName") String userName, @RequestParam("userPassword") String userPassword) throws QuizSecurityException {
+        log.info("login(" + userName + ", " + userPassword + ")");
         User user = userService.login(userName, userPassword);
         if (user == null) {
             throw new QuizSecurityException("Invalid User");

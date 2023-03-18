@@ -29,10 +29,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @RestController
 public class QuestionController {
+
+    private Logger log = Logger.getLogger(getClass().getName());
 
     @Autowired
     QuestionService questionService;
@@ -53,6 +56,7 @@ public class QuestionController {
     @ResponseBody
     public List<QuestionDto> getQuiz(@PathVariable("topicId") int topicId, @PathVariable("subTopicId") int subTopicId,
                                      @PathVariable("level") int level, @PathVariable("count") int count) {
+        log.info("getQuiz(" + topicId + ", " + subTopicId + ", " + level + ", " + count + ")");
         Iterable<Question> questions = questionService.findQuiz(topicId, subTopicId, level, count);
         List<QuestionDto> results = new ArrayList<QuestionDto>();
         for (Question question : questions) {
