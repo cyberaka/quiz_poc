@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
+//@Component
 public class QuizBootupRunner implements CommandLineRunner {
 
     static final Logger LOG = Logger.getLogger(QuizBootupRunner.class.getName());
