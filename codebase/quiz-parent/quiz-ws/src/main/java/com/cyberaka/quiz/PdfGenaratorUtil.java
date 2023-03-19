@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by Abhinav on 9/20/17.
@@ -21,10 +22,13 @@ import java.util.Map;
 @Component
 public class PdfGenaratorUtil {
 
+    private Logger log = Logger.getLogger(getClass().getName());
+
     @Autowired
     private TemplateEngine templateEngine;
 
     public void createPdf(String templateName, String fontFile, String fileName, Map map) throws Exception {
+        log.info("createPdf(" + templateName + ", " + fontFile + ", " + fileName + ", " + map + ")");
         Assert.notNull(templateName, "The templateName can not be null");
         Context ctx = new Context();
         if (map != null) {
@@ -50,7 +54,7 @@ public class PdfGenaratorUtil {
             renderer.layout();
             renderer.createPDF(os, false);
             renderer.finishPDF();
-            System.out.println("PDF created successfully");
+            log.info("PDF created successfully >> " + fileName);
         }
         finally {
             if (os != null) {

@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -84,11 +85,12 @@ public class QuizBootupRunner implements CommandLineRunner {
         // Get iterator to all the rows in current sheet
         Iterator<Row> rowIterator = subjectSheet.iterator();
 
-        Cell categoryCell, subCategoryCell, sheetNameCell, processCell = null;
-        String categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr = null;
+        Cell categoryCell, subCategoryCell, sheetNameCell, processCell, versionCell = null;
+        String categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr, versionCellStr = null;
 
         // Verify the header
         if (rowIterator.hasNext()) {
+            // Expected Field >> Category	Sub Category	Sheet Name	Process
             Row headerRow = rowIterator.next();
             categoryCell = headerRow.getCell(0);
             categoryCellStr = readStringCellValue(categoryCell);
@@ -98,7 +100,9 @@ public class QuizBootupRunner implements CommandLineRunner {
             sheetNameCellStr = readStringCellValue(sheetNameCell);
             processCell = headerRow.getCell(3);
             processCellStr = readStringCellValue(processCell);
-            if (checkSubjectSheetHeader(categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr)) {
+            versionCell = headerRow.getCell(4);
+            versionCellStr = readStringCellValue(versionCell);
+            if (checkSubjectSheetHeader(categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr, versionCellStr)) {
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
                     categoryCell = row.getCell(0);
@@ -109,12 +113,14 @@ public class QuizBootupRunner implements CommandLineRunner {
                     sheetNameCellStr = readStringCellValue(sheetNameCell);
                     processCell = row.getCell(3);
                     processCellStr = readStringCellValue(processCell);
+                    versionCell = row.getCell(4);
+                    versionCellStr = readStringCellValue(versionCell);
 
                     if (isYes(processCellStr) && sheetNameCellStr != null) {
-                        LOG.log(Level.INFO, "Processing Subject >> {0}", categoryCellStr);
+                        LOG.log(Level.INFO, "Processing Subject >> {0} ", categoryCellStr + " - " + subCategoryCellStr);
                         XSSFSheet subjectQuestionAnswerSheet = myWorkBook.getSheet(sheetNameCellStr);
                         if (subjectQuestionAnswerSheet != null) {
-                            processQuestionAnswerSheet(user, categoryCellStr, subCategoryCellStr, subjectQuestionAnswerSheet);
+                            processQuestionAnswerSheet(user, categoryCellStr, subCategoryCellStr, versionCellStr, subjectQuestionAnswerSheet);
                         } else {
                             LOG.log(Level.SEVERE, "Subject sheet not found >> {0}", sheetNameCellStr);
                         }
@@ -123,6 +129,8 @@ public class QuizBootupRunner implements CommandLineRunner {
                     }
 
                 }
+            } else {
+                LOG.info("Skipping subject import as header doesn't match...");
             }
         }
         myWorkBook.close();
@@ -259,11 +267,16 @@ public class QuizBootupRunner implements CommandLineRunner {
         return cell.getStringCellValue();
     }
 
-    private boolean checkSubjectSheetHeader(String categoryCellStr, String subCategoryCellStr, String sheetNameCellStr, String processCellStr) {
+    private boolean checkSubjectSheetHeader(String categoryCellStr, String subCategoryCellStr, String sheetNameCellStr, String processCellStr, String versionCellStr) {
         return categoryCellStr.equalsIgnoreCase("Category") && subCategoryCellStr.equalsIgnoreCase("Sub Category") &&
-                sheetNameCellStr.equalsIgnoreCase("Sheet Name") && processCellStr.equalsIgnoreCase("Process");
+                sheetNameCellStr.equalsIgnoreCase("Sheet Name") && processCellStr.equalsIgnoreCase("Process") &&
+                versionCellStr.equalsIgnoreCase("Version");
     }
 
+    /**
+     * Version 1 of header.
+     *
+     */
     private boolean checkQuestionBankSheetHeader(String questionCellStr, String optionACellStr, String optionBCellStr, String optionCCellStr,
                                                  String optionDCellStr, String optionECellStr, String answerCellStr) {
         return questionCellStr.equalsIgnoreCase("Question") && optionACellStr.equalsIgnoreCase("Option A") &&
@@ -272,10 +285,43 @@ public class QuizBootupRunner implements CommandLineRunner {
                 answerCellStr.equalsIgnoreCase("Answer");
     }
 
-    private void processQuestionAnswerSheet(User user, String categoryCellStr, String subCategoryCellStr, XSSFSheet questionAnswerSheet) {
-        Topic topic = new Topic();
-        topic.setTitle(categoryCellStr);
-        topicRepo.save(topic);
+    /**
+     * Version 2 of header.
+     *
+     */
+    private boolean checkQuestionBankSheetHeader(String questionCellStr, String optionACellStr, String optionBCellStr, String optionCCellStr,
+                                                 String optionDCellStr, String optionECellStr, String optionFCellStr, String answerCellStr,
+                                                 String explanationCellStr, String chapterCellStr, String pageCellStr, String bookCellStr) {
+        return questionCellStr.equalsIgnoreCase("Question") && optionACellStr.equalsIgnoreCase("Option A") &&
+                optionBCellStr.equalsIgnoreCase("Option B") && optionCCellStr.equalsIgnoreCase("Option C") &&
+                optionDCellStr.equalsIgnoreCase("Option D") && optionECellStr.equalsIgnoreCase("Option E") &&
+                optionFCellStr.equalsIgnoreCase("Option F") && answerCellStr.equalsIgnoreCase("Answer") &&
+                explanationCellStr.equalsIgnoreCase("Explanation") && chapterCellStr.equalsIgnoreCase("Chapter") &&
+                pageCellStr.equalsIgnoreCase("Page") && bookCellStr.equalsIgnoreCase("Book");
+    }
+
+    /**
+     * Invoked for every sheet which has to be processed as per the control set in the subject sheet.
+     *
+     * @param user
+     * @param categoryCellStr
+     * @param subCategoryCellStr
+     * @param questionAnswerSheet
+     */
+    private void processQuestionAnswerSheet(User user, String categoryCellStr, String subCategoryCellStr, String versionCellStr, XSSFSheet questionAnswerSheet) {
+        Topic topic = null;
+        List<Topic> topicList = topicRepo.findByTitle(categoryCellStr);
+        if (topicList.isEmpty()) {
+            topic = new Topic();
+            topic.setTitle(categoryCellStr);
+            topicRepo.save(topic);
+        } else {
+            if (topicList.size() == 1) {
+                topic = topicList.get(0);
+            } else {
+                throw new IllegalArgumentException("Unable to find unique topic. Multiple topics found. >> " + topicList.size() + " >> " + topicList);
+            }
+        }
 
         SubTopic subTopic = new SubTopic();
         subTopic.setTitle(subCategoryCellStr);
@@ -284,11 +330,18 @@ public class QuizBootupRunner implements CommandLineRunner {
 
         Iterator<Row> rowIterator = questionAnswerSheet.iterator();
 
+        if (versionCellStr.equalsIgnoreCase("1")) {
+            extractV1Format(user, topic, subTopic, rowIterator);
+        } else {
+            extractV2Format(user, topic, subTopic, rowIterator);
+        }
+    }
+
+    private void extractV1Format(User user, Topic topic, SubTopic subTopic, Iterator<Row> rowIterator) {
         Cell questionCell, optionACell, optionBCell, optionCCell, optionDCell, optionECell, answerCell = null;
         String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr = null;
         StringBuilder optionBuilder = new StringBuilder();
         char optionIndex = 0;
-
         // Verify the header
         if (rowIterator.hasNext()) {
             Row headerRow = rowIterator.next();
@@ -341,6 +394,102 @@ public class QuizBootupRunner implements CommandLineRunner {
                     quest.setAnswers(answerCellStr);
                     quest.setDifficultyLevel(QuizAppConstants.DIFFICULTY_MEDIUM);
                     if (quest.isValid()) {
+                        questionRepo.save(quest);
+                    } else {
+                        LOG.log(Level.SEVERE, "Invalid question skipped >> {0}", quest.getQuestion());
+                    }
+                }
+            }
+        }
+    }
+
+    private void extractV2Format(User user, Topic topic, SubTopic subTopic, Iterator<Row> rowIterator) {
+        // Question	Option A	Option B	Option C	Option D	Option E	Option F	Answer	Explanation	Chapter	Page	Book
+        Cell questionCell, optionACell, optionBCell, optionCCell, optionDCell, optionECell, optionFCell, answerCell, explanationCell, chapterCell, pageCell, bookCell = null;
+        String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr, answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr = null;
+        StringBuilder optionBuilder = new StringBuilder();
+        char optionIndex = 0;
+        // Verify the header
+        if (rowIterator.hasNext()) {
+            Row headerRow = rowIterator.next();
+            questionCell = headerRow.getCell(0);
+            questionCellStr = readStringCellValue(questionCell);
+            optionACell = headerRow.getCell(1);
+            optionACellStr = readStringCellValue(optionACell);
+            optionBCell = headerRow.getCell(2);
+            optionBCellStr = readStringCellValue(optionBCell);
+            optionCCell = headerRow.getCell(3);
+            optionCCellStr = readStringCellValue(optionCCell);
+            optionDCell = headerRow.getCell(4);
+            optionDCellStr = readStringCellValue(optionDCell);
+            optionECell = headerRow.getCell(5);
+            optionECellStr = readStringCellValue(optionECell);
+            optionFCell = headerRow.getCell(6);
+            optionFCellStr = readStringCellValue(optionFCell);
+            answerCell = headerRow.getCell(7);
+            answerCellStr = readStringCellValue(answerCell);
+            explanationCell = headerRow.getCell(8);
+            explanationCellStr = readStringCellValue(explanationCell);
+            chapterCell = headerRow.getCell(9);
+            chapterCellStr = readStringCellValue(chapterCell);
+            pageCell = headerRow.getCell(10);
+            pageCellStr = readStringCellValue(pageCell);
+            bookCell = headerRow.getCell(11);
+            bookCellStr = readStringCellValue(bookCell);
+            if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr,
+                    answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr)) {
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
+                    questionCell = row.getCell(0);
+                    questionCellStr = readStringCellValue(questionCell);
+                    optionACell = row.getCell(1);
+                    optionACellStr = readStringCellValue(optionACell);
+                    optionBCell = row.getCell(2);
+                    optionBCellStr = readStringCellValue(optionBCell);
+                    optionCCell = row.getCell(3);
+                    optionCCellStr = readStringCellValue(optionCCell);
+                    optionDCell = row.getCell(4);
+                    optionDCellStr = readStringCellValue(optionDCell);
+                    optionECell = row.getCell(5);
+                    optionECellStr = readStringCellValue(optionECell);
+                    optionFCell = row.getCell(6);
+                    optionFCellStr = readStringCellValue(optionFCell);
+                    answerCell = row.getCell(7);
+                    answerCellStr = readStringCellValue(answerCell);
+                    explanationCell = row.getCell(8);
+                    explanationCellStr = readStringCellValue(explanationCell);
+                    chapterCell = row.getCell(9);
+                    chapterCellStr = readStringCellValue(chapterCell);
+                    pageCell = row.getCell(10);
+                    pageCellStr = readStringCellValue(pageCell);
+                    bookCell = row.getCell(11);
+                    bookCellStr = readStringCellValue(bookCell);
+
+                    if (!chapterCellStr.equalsIgnoreCase(subTopic.getTitle())) {
+                        continue;
+                    }
+                    optionIndex = 0;
+                    optionBuilder.setLength(0);
+                    optionBuilder.append(optionACellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
+                    optionBuilder.append(optionBCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
+                    optionBuilder.append(optionCCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
+                    optionBuilder.append(optionDCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
+                    optionBuilder.append(optionECellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
+                    optionBuilder.append(optionFCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionFCellStr + "\n"));
+
+                    Question quest = new Question();
+                    quest.setTopic(topic);
+                    quest.setSubTopic(subTopic);
+                    quest.setContributer(user);
+                    quest.setQuestion(questionCellStr);
+                    quest.setOptions(optionBuilder.toString());
+                    quest.setAnswers(answerCellStr);
+                    quest.setDifficultyLevel(QuizAppConstants.DIFFICULTY_MEDIUM);
+                    quest.setExplanation(explanationCellStr);
+                    quest.setChapter(chapterCellStr);
+                    quest.setPage(pageCellStr);
+                    quest.setBook(bookCellStr);
+                    if (quest.isValidV2()) {
                         questionRepo.save(quest);
                     } else {
                         LOG.log(Level.SEVERE, "Invalid question skipped >> {0}", quest.getQuestion());
