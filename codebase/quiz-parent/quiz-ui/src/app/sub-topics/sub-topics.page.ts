@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
+import { UtilsService } from '../services/utils.service';
 
 export interface subTopic {
   subTopicId: Number,
@@ -19,7 +20,8 @@ export class SubTopicsPage implements OnInit {
   topicId: Number;
   constructor(
     private router: Router,
-    private http: HttpService
+    private http: HttpService,
+    private utils: UtilsService
   ) { 
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state && state['topicId']) {
@@ -42,15 +44,16 @@ export class SubTopicsPage implements OnInit {
     this.http.getSubTopics(this.topicId).subscribe((list: any) => {
       console.log(list);
       this.subTopics = [...list];
-    })
+      this.utils.stopLoader();
+    });
   }
 
-  subTopicClick(subTopic: subTopic) {
-    this.router.navigateByUrl('quiz-settings', {
+  subTopicClick(subTopic: any) {
+    subTopic['quizType'] = 2;
+    subTopic['count'] = 10;
+    this.router.navigateByUrl('quiz', {
       replaceUrl: true,
-      state : {
-        subTopic
-      }
+      state : {...subTopic}
     });
   }
 

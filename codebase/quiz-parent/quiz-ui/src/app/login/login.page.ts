@@ -2,7 +2,7 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
 import { DialogService } from '../services/dialog.service';
-import { LoadingController } from '@ionic/angular';
+import { UtilsService } from '../services/utils.service';
 
 @Component({
   selector: 'app-login',
@@ -11,33 +11,43 @@ import { LoadingController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   pageTitle: string = "Login";
-  userName: string = '';
-  password: string = '';
+  userName: string = 'cyberaka';
+  password: string = 'abcd1234';
   constructor(
-    private router : Router,
-    private dialog :DialogService,
+    private router: Router,
+    private dialog: DialogService,
     private http: HttpService,
-    private loader: LoadingController,
+    private utils: UtilsService
   ) { }
 
   ngOnInit() {
   }
 
+  /**
+   * Login clicked Hit the API Based on response redirected to Topics screen
+   * 
+   */
   async login() {
-    const loading = await this.loader.create({
-      message: 'Loading...'
-    });
+
+    this.utils.showLoader();
     this.http.login(this.userName, this.password).subscribe(c => {
       this.http.userDet = c;
-      loading.dismiss();
       this.router.navigateByUrl('topics', {
-        replaceUrl : true
+        replaceUrl: true
       });
-    }, (err) => {
-      loading.dismiss();
-      this.dialog.showAlertWithButtons('Invalid Credentials', 'OK', (c: boolean) => {
+    }, (_) => {
+      this.dialog.showAlert(
+        'Invalid Credentials',
+        [
+          {
+            text: 'Ok',
+            handlerReturn: 'ok'
+          }
+        ]
+      ).then((c) => {
         console.log(c);
       });
+      this.utils.stopLoader();
     });
   }
 
