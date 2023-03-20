@@ -1,0 +1,27 @@
+<ion-content class="ion-padding">
+  <div class="header">
+    Quiz Results
+  </div>
+  <div class="subHeader">
+    Congratulations
+  </div>
+  <ion-img class="img" src="./../../assets/award.png">
+
+  </ion-img>
+  <div class="score">
+    Your Score
+  </div>
+  <div class="scoreDetail">
+    <span class="userScore">
+      {{userScore}}
+    </span>
+    <span>
+      / {{userAnswers.length}}
+    </span>
+  </div>
+  <div class="buttons">
+    <ion-button fill="outline" color="tertiary" (click)="summay()">Summary Quiz</ion-button>
+    <ion-button (click)="publish()">Publish Quiz</ion-button>
+
+  </div>
+</ion-content>

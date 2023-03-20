@@ -6,9 +6,10 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { ScorePipe } from './score.pipe';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ScorePipe],
   imports: [BrowserModule, IonicModule.forRoot(
     {
       mode: 'ios'
