@@ -1,6 +1,9 @@
 server:
   port: 7070
-spring: 
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource: 
     autoReconnect: true
     driver-class-name: com.mysql.jdbc.Driver

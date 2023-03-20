@@ -74,8 +74,8 @@ public class QuestionRepositoryTest {
     // write test cases here
     @Test
     public void whenFindByName_thenReturnTopic() {
-        User user = userRepository.findOne(1);
-        SubTopic subtopic = subTopicRepository.findOne(1);
+        User user = userRepository.findById(1).get();
+        SubTopic subtopic = subTopicRepository.findById(1).get();
         Topic topic = subtopic.getTopic();
 
         // given
@@ -95,7 +95,7 @@ public class QuestionRepositoryTest {
         entityManager.flush();
 
         // when
-        Question foundQuestion = questionRepository.findOne(1);
+        Question foundQuestion = questionRepository.findById(1).get();
 
         // then
         assertThat(foundQuestion.getQuestion())
