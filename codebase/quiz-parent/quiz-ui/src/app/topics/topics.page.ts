@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
 import { HttpService } from '../services/http.service';
+import { UtilsService } from '../services/utils.service';
 
 export interface topic {
   topicId: Number,
@@ -18,7 +18,8 @@ export class TopicsPage implements OnInit {
   topics: topic[] =  []
   constructor(
     private router: Router,
-    private http: HttpService
+    private http: HttpService,
+    private utils: UtilsService
   ) { 
 
   }
@@ -27,14 +28,16 @@ export class TopicsPage implements OnInit {
     this.http.topicId = 0;
     this.getTopics();
   }
+
   getTopics() {
     this.http.getTopics().subscribe((topics: any) => {
-      console.log(topics);
       this.topics = [...topics];
+      this.utils.stopLoader();
     });
   }
 
   topicClick(getTopic: topic) {
+    this.utils.showLoader();
     this.router.navigateByUrl('sub-topics', {
       replaceUrl : true,
       state : {
