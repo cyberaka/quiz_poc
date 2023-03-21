@@ -41,24 +41,31 @@ export class ScorePage implements OnInit {
           if (c.checked) {
             ans.push(c.value);
           }
-          if(c.checked && question.answers.includes(c.value)) {
+          if(c.checked && (question.answers.includes(c.value.toLowerCase()) || question.answers.includes(c.value.toUpperCase()))) {
             userAnswers.push(c.value);
           }
         }
         if (userAnswers.length == question.answers.length) {
           ++this.userScore;
+          this.userAnswers[idx]['correct'] = true;
         }
         this.userAnswers[idx]['userAnswers'] = ans;
       }  else if (question.answers && question.answers.length == 1 && question.options && question.options.length > 0) {
         let selectedOptions = question.customOptions.filter((c: any) => c.checked);
-        if(selectedOptions.length && question.answers[0] == selectedOptions[0].value) {
+        if(selectedOptions.length && question.answers[0].toLowerCase() == selectedOptions[0].value.toLowerCase()) {
           ++this.userScore;
+          this.userAnswers[idx]['correct'] = true;
         } 
-        this.userAnswers[idx]['userAnswers'] = [...selectedOptions[0].value];
+        if(selectedOptions.length) {
+          this.userAnswers[idx]['userAnswers'] = [...selectedOptions[0].value];
+        } else {
+          this.userAnswers[idx]['userAnswers'] = [];
+        }
 
       } else {
         if(this.freeTextAns[idx].toLowerCase() == question.answers[0].toLowerCase()) {
           ++this.userScore;
+          this.userAnswers[idx]['correct'] = true;
         }
         this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
       } 
@@ -74,7 +81,12 @@ export class ScorePage implements OnInit {
   }
 
   summay() {
-    this.showAlert('Yet to develop!');
+    this.router.navigateByUrl('summary-quiz', {
+      replaceUrl: true,
+      state : {
+        allDet : this.userAnswers
+      }
+    });
   }
 
   showAlert(message: string, type: string = '') {

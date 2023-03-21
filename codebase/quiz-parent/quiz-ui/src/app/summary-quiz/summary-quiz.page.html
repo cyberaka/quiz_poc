@@ -1,0 +1,99 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Summary Quiz</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-accordion-group expand="inset" [multiple]="true" mode="md">
+    <ion-accordion toggleIconSlot="start" *ngFor="let item of  this.userAnswers;let i = index" value={{i}}>
+      <ion-item slot="header" color="light">
+        <ion-label>Question {{i + 1}}
+        </ion-label>
+        <ion-img class="image" *ngIf="item?.correct" src="./../../assets/right.png">
+
+        </ion-img>
+        <ion-img class="image" *ngIf="!item.correct" src="./../../assets/wrong.png">
+
+        </ion-img>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <div class="header">
+          {{item.question}}
+        </div>
+        <ng-container *ngIf="!item?.correct">
+          <div class="ansHeader">
+            Your Answer(s) :
+          </div>
+          <!-- Mutiple Answers -->
+          <ng-container *ngIf="item.answers.length > 1">
+            <ng-container *ngFor="let custom of item?.customOptions">
+              <div class="options" *ngIf="custom.checked">
+                <span>
+                  {{custom.value}}.
+                </span> {{custom.text}}
+              </div>
+            </ng-container>
+          </ng-container>
+          <!-- Single Answers -->
+          <ng-container *ngIf="item.answers.length == 1 && item.options.length > 0">
+            <ng-container *ngFor="let custom of item?.customOptions">
+              <div class="options" *ngIf="custom.checked">
+                <span>
+                  {{custom.value}}.
+                </span> {{custom.text}}
+              </div>
+            </ng-container>
+          </ng-container>
+          <!-- Custom User Input -->
+          <ng-container *ngIf="item.answers.length == 1 && item.options.length == 0">
+            <ng-container *ngFor="let custom of item?.userAnswers">
+              <div class="options">
+                {{custom}}
+              </div>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+          <div class="ansHeader">
+            <span *ngIf="!item?.correct">
+              Correct Answer(s) :
+            </span>
+            <span *ngIf="item?.correct">
+              Answer(s) :
+            </span>
+          </div>
+          <!-- Mutiple/Single Correct Answers -->
+          <ng-container *ngIf="item.answers.length > 0 && item.options.length > 0 ">
+            <ng-container *ngFor="let ans of item?.answers">
+              <ng-container *ngFor="let custom of item?.customOptions">
+                <div *ngIf="ans.toLowerCase() == custom.value.toLowerCase()" class="options">
+                  <span>
+                    {{custom.value}}.
+                  </span> {{custom.text}}
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="item.answers.length == 1 && item.options.length == 0">
+            <ng-container *ngFor="let custom of item?.answers">
+              <div class="options">
+                {{custom}}
+              </div>
+            </ng-container>
+          </ng-container>
+        
+        <div class="ansHeader">
+          Explanation :
+        </div>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+</ion-content>
+
+<ion-footer class="ion-no-border footer">
+  <div class="buttons">
+    <ion-button fill="outline" color="tertiary" (click)="quitQuiz()">Quit Quiz</ion-button>
+    <ion-button (click)="publishQuiz()">Publish Quiz</ion-button>
+
+  </div>
+</ion-footer>
