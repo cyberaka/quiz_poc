@@ -59,15 +59,16 @@ export class ScorePage implements OnInit {
         if(selectedOptions.length) {
           this.userAnswers[idx]['userAnswers'] = [...selectedOptions[0].value];
         } else {
-          this.userAnswers[idx]['userAnswers'] = [];
+          this.userAnswers[idx]['userAnswers'] = [''];
         }
 
       } else {
         if(this.freeTextAns[idx].toLowerCase() == question.answers[0].toLowerCase()) {
           ++this.userScore;
           this.userAnswers[idx]['correct'] = true;
+          this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
         }
-        this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
+        this.userAnswers[idx]['userAnswers'] = [''];
       } 
     });
   }
