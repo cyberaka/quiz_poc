@@ -19,10 +19,10 @@ import { AuthModule } from '@auth0/auth0-angular';
         mode: 'ios'
       }
     ), AuthModule.forRoot({
-      domain: 'qajit.com',
+      domain: 'https://quiz-dev-qfyy7zspmvytp6j0.us.auth0.com/authorize',
       clientId: 'PzCYYKck97fVNCgK8pMzm6TV9Rjr3r8b',
       authorizationParams: {
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.href
       }
     }), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

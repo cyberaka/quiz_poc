@@ -63,12 +63,11 @@ export class ScorePage implements OnInit {
         }
 
       } else {
-        if(this.freeTextAns[idx].toLowerCase() == question.answers[0].toLowerCase()) {
+        if(this.freeTextAns[idx].trim().toLowerCase() == question.answers[0].toLowerCase()) {
           ++this.userScore;
           this.userAnswers[idx]['correct'] = true;
-          this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
         }
-        this.userAnswers[idx]['userAnswers'] = [''];
+        this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
       } 
     });
   }
