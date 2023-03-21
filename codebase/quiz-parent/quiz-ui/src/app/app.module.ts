@@ -7,14 +7,24 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ScorePipe } from './score.pipe';
+import { AuthModule } from '@auth0/auth0-angular';
+
 
 @NgModule({
   declarations: [AppComponent, ScorePipe],
-  imports: [BrowserModule, IonicModule.forRoot(
-    {
-      mode: 'ios'
-    }
-  ), AppRoutingModule, HttpClientModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(
+      {
+        mode: 'ios'
+      }
+    ), AuthModule.forRoot({
+      domain: '{yourDomain}',
+      clientId: '{yourClientId}',
+      authorizationParams: {
+        redirect_uri: window.location.origin
+      }
+    }), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
