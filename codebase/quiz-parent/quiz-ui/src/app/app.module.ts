@@ -19,8 +19,8 @@ import { AuthModule } from '@auth0/auth0-angular';
         mode: 'ios'
       }
     ), AuthModule.forRoot({
-      domain: '{yourDomain}',
-      clientId: '{yourClientId}',
+      domain: 'qajit.com',
+      clientId: 'PzCYYKck97fVNCgK8pMzm6TV9Rjr3r8b',
       authorizationParams: {
         redirect_uri: window.location.origin
       }

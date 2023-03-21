@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
 import { DialogService } from '../services/dialog.service';
 import { UtilsService } from '../services/utils.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginPage implements OnInit {
     private router: Router,
     private dialog: DialogService,
     private http: HttpService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private auth: AuthService
   ) { }
 
   ngOnInit() {
@@ -28,8 +30,10 @@ export class LoginPage implements OnInit {
    * 
    */
   async login() {
-
-    this.utils.showLoader();
+    this.auth.loginWithRedirect().subscribe(c => {
+      console.log(c);
+    });
+    /* this.utils.showLoader();
     this.http.login(this.userName, this.password).subscribe(c => {
       this.http.userDet = c;
       this.router.navigateByUrl('topics', {
@@ -48,7 +52,7 @@ export class LoginPage implements OnInit {
         console.log(c);
       });
       this.utils.stopLoader();
-    });
+    }); */
   }
 
 }
