@@ -5,7 +5,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-accordion-group expand="inset" [multiple]="false" mode="md">
+  <ion-accordion-group expand="inset" [multiple]="true" mode="md">
     <ion-accordion toggleIconSlot="start" *ngFor="let item of  this.userAnswers;let i = index" value={{i}}>
       <ion-item slot="header" color="light">
         <ion-label>Question {{i + 1}}
