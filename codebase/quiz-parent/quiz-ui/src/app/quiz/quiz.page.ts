@@ -177,7 +177,7 @@ export class QuizPage implements OnInit {
         this.utils.stopLoader();
       }, 100);
        this.dialog.showAlert(
-      `You are missed ${missedAns.length} question(s) to answer`,
+        `You have not attempted ${missedAns.length} question(s)`,
       [
         {
           text: 'Show Question',
