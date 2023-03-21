@@ -18,12 +18,17 @@ export class UtilsService {
       this.loader = await this.loadingController.create({
         message: 'Please wait...'
       });
-      return await this.loader.present();
+      await this.loader.present();
     }
   }
   async stopLoader() {
-    if (this.loader) {
-      this.loader.dismiss()
+    if (this.isShowingLoader) {
+      const loader = this.loadingController;
+      const load = await loader.getTop();
+      if(load) {
+        loader.dismiss();
+      }
+      this.loader?.dismiss()
       this.loader = null
       this.isShowingLoader = false
     }
