@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { LoadingController, NavController } from '@ionic/angular';
 import { DialogService } from '../services/dialog.service';
 import { HttpService } from '../services/http.service';
+import { UtilsService } from '../services/utils.service';
 
 @Component({
   selector: 'app-quiz',
@@ -23,6 +24,7 @@ export class QuizPage implements OnInit {
     private http: HttpService,
     private loader: LoadingController,
     private nav: NavController,
+    private utils : UtilsService,
     private dialog: DialogService,
   ) {
     let state = this.router.getCurrentNavigation()?.extras.state;
@@ -30,12 +32,12 @@ export class QuizPage implements OnInit {
     if (state) {
       this.topics = state;
     }
-    if (!this.http.userDet) {
+    /* if (!this.http.userDet) {
       this.nav.setDirection('back');
       this.router.navigateByUrl('login', {
         replaceUrl: true
       });
-    }
+    } */
     setTimeout(() => {
       this.questionNoShow = true;
     }, 500);
@@ -144,49 +146,48 @@ export class QuizPage implements OnInit {
   }
 
   submitAns() {
-    this.router.navigateByUrl('score', {
-      replaceUrl: true,
-      state : {
-        answers: this.QAs,
-        customAns : this.customAns
-      }
-    })
-  }
-
-  checkAnswer(idx: any) {
-    console.log(this.QAs);
-    let question = { ...this.QAs[idx] };
-    //Mutiple Options
-    if (question.answers && question.answers.length > 1 && question.options && question.options.length > 0) {
-      let ans: any = [];
-      let userAnswers = question.customOptions.filter((c: any) => {
-        if (c.checked) {
-          ans.push(c.value);
+    this.utils.showLoader();
+    let missedAns: any = [];
+    this.QAs.forEach((qa: any, idx: any) => {
+      if(qa.options.length > 0) {
+        let len = qa.customOptions.filter((ele: any) => ele.checked);
+        if(len == 0) {
+          missedAns.push(idx);
         }
-        return c.checked && question.answers.includes(c.value);
-      });
-      if (userAnswers.length == question.answers.length) {
-        this.score += 1;
+      } else {
+        if(this.customAns[idx] == '') {
+          missedAns.push(idx);
+        }
       }
-      this.QAs[idx]['userAnswers'] = ans;
+    });
+    console.log(missedAns);
+    if(!missedAns.length) {
+      setTimeout(() => {
+        this.utils.stopLoader();
+      }, 100);
+      this.router.navigateByUrl('score', {
+         replaceUrl: true,
+         state : {
+           answers: this.QAs,
+           customAns : this.customAns
+         }
+       });
+    } else {
+      setTimeout(() => {
+        this.utils.stopLoader();
+      }, 100);
+       this.dialog.showAlert(
+      `You are missed ${missedAns.length} question(s) to answer`,
+      [
+        {
+          text: 'Show Question',
+          handlerReturn: 'ok'
+        }
+      ]
+    ).then((c: any) => {
+      this.currentQusIndex = missedAns[0];
+    });
     }
-    //Single Options 
-    else if (question.answers && question.answers.length == 1 && question.options && question.options.length > 0) {
-      if (question.answers[0] == this.singleAns) {
-        this.score += 1;
-      } 
-      this.QAs[idx]['userAnswers'] = [...this.singleAns];
-    }
-    //Manual Entry 
-    else {
-      if (this.customAns == question.answers[0]) {
-        this.score += 1;
-      }
-      this.QAs[idx]['userAnswers'] = [...this.customAns];
-    }
-    delete this.QAs[idx]['customOptions'];
-    this.singleAns = undefined;
-    this.customAns = [];
   }
 
   publishAnswer() {
