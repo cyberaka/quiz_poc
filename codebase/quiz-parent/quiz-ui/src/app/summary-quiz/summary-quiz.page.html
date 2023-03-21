@@ -54,37 +54,71 @@
             </ng-container>
           </ng-container>
         </ng-container>
-          <div class="ansHeader">
-            <span *ngIf="!item?.correct">
-              Correct Answer(s) :
-            </span>
-            <span *ngIf="item?.correct">
-              Answer(s) :
-            </span>
-          </div>
-          <!-- Mutiple/Single Correct Answers -->
-          <ng-container *ngIf="item.answers.length > 0 && item.options.length > 0 ">
-            <ng-container *ngFor="let ans of item?.answers">
-              <ng-container *ngFor="let custom of item?.customOptions">
-                <div *ngIf="ans.toLowerCase() == custom.value.toLowerCase()" class="options">
-                  <span>
-                    {{custom.value}}.
-                  </span> {{custom.text}}
-                </div>
-              </ng-container>
-            </ng-container>
-          </ng-container>
-          <ng-container *ngIf="item.answers.length == 1 && item.options.length == 0">
-            <ng-container *ngFor="let custom of item?.answers">
-              <div class="options">
-                {{custom}}
+        <div class="ansHeader">
+          <span *ngIf="!item?.correct">
+            Correct Answer(s) :
+          </span>
+          <span *ngIf="item?.correct">
+            Answer(s) :
+          </span>
+        </div>
+        <!-- Mutiple/Single Correct Answers -->
+        <ng-container *ngIf="item.answers.length > 0 && item.options.length > 0 ">
+          <ng-container *ngFor="let ans of item?.answers">
+            <ng-container *ngFor="let custom of item?.customOptions">
+              <div *ngIf="ans.toLowerCase() == custom.value.toLowerCase()" class="options">
+                <span>
+                  {{custom.value}}.
+                </span> {{custom.text}}
               </div>
             </ng-container>
           </ng-container>
-        
+        </ng-container>
+        <ng-container *ngIf="item.answers.length == 1 && item.options.length == 0">
+          <ng-container *ngFor="let custom of item?.answers">
+            <div class="options">
+              {{custom}}
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="item.explanation">
+          <div class="ansHeader">
+            Explanation :
+          </div>
+          <div class="options">
+            {{item.explanation}}
+          </div>
+        </ng-container>
         <div class="ansHeader">
-          Explanation :
+          Source :
         </div>
+        <div class="options">
+          <ng-container *ngIf="item.page">
+            <span>
+              Page:
+            </span>
+            <span class="span">
+              {{item.page}},
+            </span>
+          </ng-container>
+          <ng-container *ngIf="item.chapter">
+            <span>
+              Chapter:
+            </span>
+            <span class="span">
+              {{item.chapter}},
+            </span>
+          </ng-container>
+          <ng-container *ngIf="item.chapter">
+            <span>
+              Book:
+            </span>
+            <span class="span">
+              {{item.book}},
+            </span>
+          </ng-container>
+        </div>
+
       </div>
     </ion-accordion>
   </ion-accordion-group>
