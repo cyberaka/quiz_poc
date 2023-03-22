@@ -32,12 +32,6 @@ export class QuizPage implements OnInit {
     if (state) {
       this.topics = state;
     }
-    /* if (!this.http.userDet) {
-      this.nav.setDirection('back');
-      this.router.navigateByUrl('login', {
-        replaceUrl: true
-      });
-    } */
     setTimeout(() => {
       this.questionNoShow = true;
     }, 500);
