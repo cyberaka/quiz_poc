@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 import { HttpService } from '../services/http.service';
 import { UtilsService } from '../services/utils.service';
 
@@ -19,9 +20,11 @@ export class TopicsPage implements OnInit {
   constructor(
     private router: Router,
     private http: HttpService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private auth: AuthService,
   ) { 
 
+    
   }
 
   ngOnInit() {

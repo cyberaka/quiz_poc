@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ScorePipe } from './score.pipe';
-import { AuthModule } from '@auth0/auth0-angular';
-
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
+import { ErrorComponent } from './components/error/error.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 @NgModule({
-  declarations: [AppComponent, ScorePipe],
+  declarations: [AppComponent, ScorePipe, ErrorComponent, LoadingComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(
@@ -19,13 +20,24 @@ import { AuthModule } from '@auth0/auth0-angular';
         mode: 'ios'
       }
     ), AuthModule.forRoot({
-      domain: 'https://quiz-dev-qfyy7zspmvytp6j0.us.auth0.com/authorize',
-      clientId: 'PzCYYKck97fVNCgK8pMzm6TV9Rjr3r8b',
+      domain: 'dev-ybfald6zel3sqp5d.us.auth0.com',
+      clientId: 'I6irZPjiEJxxCsjrVAIzfhgWChw43abd',
       authorizationParams: {
-        redirect_uri: window.location.href
-      }
+        redirect_uri: window.location.origin
+      },
+      "errorPath": "/error",
     }), AppRoutingModule, HttpClientModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthHttpInterceptor,
+      multi: true,
+    },
+    { 
+      provide: RouteReuseStrategy, 
+      useClass: IonicRouteStrategy 
+    }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

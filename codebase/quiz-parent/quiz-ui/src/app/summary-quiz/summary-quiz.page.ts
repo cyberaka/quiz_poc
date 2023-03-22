@@ -18,7 +18,6 @@ export class SummaryQuizPage implements OnInit {
     private dialog: DialogService
   ) { 
     let state = this.router.getCurrentNavigation()?.extras.state;
-    console.log(state);
     if(state && state['allDet']) {
       this.userAnswers = state['allDet'];
     }
