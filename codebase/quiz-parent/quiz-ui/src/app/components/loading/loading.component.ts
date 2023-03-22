@@ -29,10 +29,14 @@ export class LoadingComponent  implements OnInit {
   }
 
   getDetails() {
+
     this.auth.user$.subscribe((c) => {
       console.log(c);
     });
     this.auth.getAccessTokenSilently().subscribe((c) => {
+      console.log(c);
+    });
+    this.auth.handleRedirectCallback().subscribe(c => {
       console.log(c);
     });
   }

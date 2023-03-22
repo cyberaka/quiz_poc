@@ -10,6 +10,8 @@ import { ScorePipe } from './score.pipe';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { environment as env } from '../environments/environment';
+
 
 @NgModule({
   declarations: [AppComponent, ScorePipe, ErrorComponent, LoadingComponent],
@@ -19,14 +21,23 @@ import { LoadingComponent } from './components/loading/loading.component';
       {
         mode: 'ios'
       }
-    ), AuthModule.forRoot({
+    ), 
+    AuthModule.forRoot({
       domain: 'dev-ybfald6zel3sqp5d.us.auth0.com',
       clientId: 'I6irZPjiEJxxCsjrVAIzfhgWChw43abd',
       authorizationParams: {
         redirect_uri: window.location.origin
       },
-      "errorPath": "/error",
-    }), AppRoutingModule, HttpClientModule],
+      httpInterceptor: {
+        allowedList : [
+          {
+            uri: `${env.baseURL}/*`,
+          }
+        ]
+      },
+      errorPath: "/error",
+    }), 
+    AppRoutingModule, HttpClientModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
