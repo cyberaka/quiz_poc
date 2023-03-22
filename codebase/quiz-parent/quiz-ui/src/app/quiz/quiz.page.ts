@@ -155,12 +155,11 @@ export class QuizPage implements OnInit {
           missedAns.push(idx);
         }
       } else {
-        if(this.customAns[idx] == '') {
+        if(this.customAns[idx].trim() == '') {
           missedAns.push(idx);
         }
       }
     });
-    console.log(missedAns);
     if(!missedAns.length) {
       setTimeout(() => {
         this.utils.stopLoader();
