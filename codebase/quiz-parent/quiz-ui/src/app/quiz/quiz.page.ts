@@ -28,7 +28,6 @@ export class QuizPage implements OnInit {
     private dialog: DialogService,
   ) {
     let state = this.router.getCurrentNavigation()?.extras.state;
-    console.log(state);
     if (state) {
       this.topics = state;
     }
@@ -62,7 +61,6 @@ export class QuizPage implements OnInit {
             return question;
           });
           loading.dismiss();
-          console.log(this.QAs);
         }
       });
     }
@@ -126,12 +124,23 @@ export class QuizPage implements OnInit {
     if (this.currentQusIndex == this.QAs.length - 1) {
       this.reachEnd = true;
     }
+    this.qaCircleMove();
   }
   
   previousClick() {
     this.resetModal();
     if(this.currentQusIndex > 0) {
       this.currentQusIndex -= 1;
+    }
+    this.qaCircleMove();
+  }
+
+  qaCircleMove() {
+    let ele = document.getElementById(`qaNo-${this.currentQusIndex}`);
+    if(ele) {
+      ele.scrollIntoView({
+        behavior: 'smooth',
+      });
     }
   }
 

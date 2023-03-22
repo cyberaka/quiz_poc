@@ -40,7 +40,7 @@ export class TopicsPage implements OnInit {
   }
 
   topicClick(getTopic: topic) {
-    this.utils.showLoader();
+    // this.utils.showLoader();
     this.router.navigateByUrl('sub-topics', {
       replaceUrl : true,
       state : {
