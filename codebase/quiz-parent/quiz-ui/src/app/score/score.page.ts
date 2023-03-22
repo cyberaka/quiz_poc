@@ -20,7 +20,6 @@ export class ScorePage implements OnInit {
     private dialog: DialogService
   ) { 
     let state = this.router.getCurrentNavigation()?.extras.state;
-    console.log(state);
     if(state) {
       this.userAnswers = state['answers'];
       this.freeTextAns = state['customAns'];

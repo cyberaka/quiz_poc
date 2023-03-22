@@ -34,6 +34,10 @@ export class LoginPage implements OnInit {
     this.auth.loginWithRedirect().subscribe(c => {
       console.log(c);
     });
+/*     this.auth.handleRedirectCallback(window.location.origin).subscribe(c => {
+      console.log(c);
+      console.log('handleRedirectCallback');
+    }); */
     /* this.utils.showLoader();
     this.http.login(this.userName, this.password).subscribe(c => {
       this.http.userDet = c;

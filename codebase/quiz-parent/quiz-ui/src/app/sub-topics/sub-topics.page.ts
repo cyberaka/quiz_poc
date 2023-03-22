@@ -37,9 +37,7 @@ export class SubTopicsPage implements OnInit {
   }
   getSubTopics() {
     this.http.getSubTopics(this.topicId).subscribe((list: any) => {
-      console.log(list);
       this.subTopics = [...list];
-      this.utils.stopLoader();
     });
   }
 

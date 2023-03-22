@@ -24,7 +24,6 @@ export class QuizSettingsPage implements OnInit {
   }
 
   startQuiz() {
-    console.log(this.quizType);
     this.subTopic['quizType'] = this.quizType;
     this.subTopic['count'] = this.cntQAs;
     this.router.navigateByUrl('quiz', {
