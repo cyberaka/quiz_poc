@@ -1,6 +1,28 @@
 server:
-  port: 7070
-spring: 
+  port: ${QUIZ_PORT}
+logging:
+  level:
+    root: INFO
+    org.springframework.web: ERROR
+    com.auth0.example: TRACE
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          auth0:
+            client-id: ${QUIZ_AUTH_CLIENT_ID}
+            client-secret: ${QUIZ_AUTH_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          auth0:
+            issuer-uri: ${QUIZ_AUTH_ISSUER_URI}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource: 
     autoReconnect: true
     driver-class-name: com.mysql.jdbc.Driver

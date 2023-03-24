@@ -3,6 +3,7 @@ package com.cyberaka.quiz.dto;
 import com.cyberaka.quiz.domain.Question;
 import com.cyberaka.quiz.dto.common.QuestionParser;
 
+import javax.persistence.Column;
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,6 +15,10 @@ public class QuestionDto {
     private Integer difficultyLevel;
     private Integer topicId;
     private Integer subTopicId;
+    private String explanation;
+    private String chapter;
+    private String page;
+    private String book;
 
     public QuestionDto() {
         super();
@@ -24,6 +29,10 @@ public class QuestionDto {
             this.questionId = question.getQuestionId();
             this.question = question.getQuestion();
             this.difficultyLevel = question.getDifficultyLevel();
+            this.explanation = question.getExplanation();
+            this.chapter = question.getChapter();
+            this.page = question.getPage();
+            this.book = question.getBook();
             QuestionParser qp = new QuestionParser();
             if (question.getAnswers() != null) {
                 this.answers = Arrays.asList(qp.parseAnswers(question.getAnswers()));
@@ -108,6 +117,38 @@ public class QuestionDto {
         this.subTopicId = subTopicId;
     }
 
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
+    public String getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(String chapter) {
+        this.chapter = chapter;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public String getBook() {
+        return book;
+    }
+
+    public void setBook(String book) {
+        this.book = book;
+    }
+
     @Override
     public String toString() {
         return "QuestionDto{" +
@@ -118,6 +159,10 @@ public class QuestionDto {
                 ", difficultyLevel=" + difficultyLevel +
                 ", topicId=" + topicId +
                 ", subTopicId=" + subTopicId +
+                ", explanation='" + explanation + '\'' +
+                ", chapter='" + chapter + '\'' +
+                ", page='" + page + '\'' +
+                ", book='" + book + '\'' +
                 '}';
     }
 }

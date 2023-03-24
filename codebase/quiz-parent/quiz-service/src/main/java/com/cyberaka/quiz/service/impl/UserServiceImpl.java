@@ -20,6 +20,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User find(int id) {
-        return userRepo.findOne(id);
+        return userRepo.findById(id).get();
     }
 }

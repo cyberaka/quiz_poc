@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "quiz_question")
 public class Question {
-
+    // Question	Option A	Option B	Option C	Option D	Option E	Option F	Answer	Explanation	Chapter	Page	Book
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ques_id", nullable = false)
@@ -18,6 +18,14 @@ public class Question {
     private String options;
     @Column(name = "difficulty_level")
     private Integer difficultyLevel;
+    @Column(name = "explanation")
+    private String explanation;
+    @Column(name = "chapter")
+    private String chapter;
+    @Column(name = "page")
+    private String page;
+    @Column(name = "book")
+    private String book;
     @ManyToOne
     @JoinColumn(name = "topic_id", referencedColumnName = "topic_id")
     private Topic topic;
@@ -96,11 +104,54 @@ public class Question {
         this.difficultyLevel = difficultyLevel;
     }
 
+    public String getExplanation() {
+        return explanation;
+    }
+
+    public void setExplanation(String explanation) {
+        this.explanation = explanation;
+    }
+
+    public String getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(String chapter) {
+        this.chapter = chapter;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public String getBook() {
+        return book;
+    }
+
+    public void setBook(String book) {
+        this.book = book;
+    }
+
     public boolean isValid() {
         return topic != null && subTopic != null && contributer != null &&
                 difficultyLevel != null && options != null && !options.isEmpty() &&
                 answers != null && !answers.isEmpty() && question != null &&
                 !question.isEmpty();
+    }
+
+    public boolean isValidV2() {
+        return topic != null && subTopic != null && contributer != null &&
+                difficultyLevel != null && options != null &&
+                answers != null && question != null &&
+                !question.isEmpty() &&
+                explanation != null &&
+                chapter != null && !chapter.isEmpty() &&
+                page != null && !page.isEmpty() &&
+                book != null && !book.isEmpty();
     }
 
 }
