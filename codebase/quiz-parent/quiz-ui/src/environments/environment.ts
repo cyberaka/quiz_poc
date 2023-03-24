@@ -20,13 +20,16 @@ export const environment = {
     domain,
     clientId,
     authorizationParams: {
-      ...(audience && audience !== 'YOUR_API_IDENTIFIER' ? { audience } : null),
       redirect_uri: window.location.origin,
     },
     errorPath,
   },
   httpInterceptor: {
-    allowedList: [`${apiUri}/*`],
+    allowedList: [ 
+      {
+        uri: `${apiUri}*`
+      }
+    ],
   },
 };
 
