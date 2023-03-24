@@ -11,8 +11,6 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { ErrorComponent } from './components/error/error.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import { environment as env } from '../environments/environment';
-
-
 @NgModule({
   declarations: [AppComponent, ScorePipe, ErrorComponent, LoadingComponent],
   imports: [
