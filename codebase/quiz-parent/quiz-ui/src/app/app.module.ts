@@ -23,19 +23,10 @@ import { environment as env } from '../environments/environment';
       }
     ), 
     AuthModule.forRoot({
-      domain: 'dev-ybfald6zel3sqp5d.us.auth0.com',
-      clientId: 'I6irZPjiEJxxCsjrVAIzfhgWChw43abd',
-      authorizationParams: {
-        redirect_uri: window.location.origin
-      },
+      ...env.auth,
       httpInterceptor: {
-        allowedList : [
-          {
-            uri: `${env.baseURL}/*`,
-          }
-        ]
+        ...env.httpInterceptor,
       },
-      errorPath: "/error",
     }), 
     AppRoutingModule, HttpClientModule],
   providers: [
