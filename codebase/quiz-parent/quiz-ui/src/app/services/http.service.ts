@@ -30,6 +30,6 @@ export class HttpService {
   }
 
   publishAnswers(data: any) {
-    return this.http.post(`${this.apiURL}quiz/${this.userDet.userId}`, data);
+    return this.http.post(`${this.apiURL}quiz/publish`, data);
   }
 }
