@@ -6,6 +6,11 @@ logging:
     org.springframework.web: ERROR
     com.auth0.example: TRACE
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${QUIZ_AUTH_ISSUER_URI}
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -27,3 +32,5 @@ data:
   file: ${QUIZ_DATA_FOLDER}
   result_output: ${QUIZ_RESULT_FOLDER}
   font_file: ${QUIZ_FONT_FILE}
+auth0:
+  audience: ${QUIZ_AUTH_AUDIENCE}

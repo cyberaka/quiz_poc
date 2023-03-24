@@ -5,15 +5,12 @@ import com.cyberaka.quiz.dto.UserDto;
 import com.cyberaka.quiz.dto.common.exception.QuizSecurityException;
 import com.cyberaka.quiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.logging.Logger;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private Logger log = Logger.getLogger(getClass().getName());

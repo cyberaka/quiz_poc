@@ -4,6 +4,7 @@ import com.cyberaka.quiz.domain.Topic;
 import com.cyberaka.quiz.dto.TopicDto;
 import com.cyberaka.quiz.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class TopicController {
 
     private Logger log = Logger.getLogger(getClass().getName());

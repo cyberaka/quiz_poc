@@ -4,16 +4,14 @@ import com.cyberaka.quiz.domain.SubTopic;
 import com.cyberaka.quiz.dto.SubTopicDto;
 import com.cyberaka.quiz.service.SubTopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class SubTopicController {
 
     private Logger log = Logger.getLogger(getClass().getName());
