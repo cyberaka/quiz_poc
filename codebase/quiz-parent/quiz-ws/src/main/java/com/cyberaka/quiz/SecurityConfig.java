@@ -29,11 +29,11 @@ public class SecurityConfig {
         an OAuth2 Resource Server, using JWT validation.
         */
         http.authorizeRequests()
-                .mvcMatchers("/api/public").permitAll()
-                .mvcMatchers("/api/login").permitAll()
-                .mvcMatchers("/api/quiz").authenticated()
-                .mvcMatchers("/api/topics").authenticated()
-                .mvcMatchers("/api/subtopics").authenticated()
+                .mvcMatchers("/public").permitAll()
+                .mvcMatchers("/login").permitAll()
+                .mvcMatchers("/quiz").authenticated()
+                .mvcMatchers("/topics").authenticated()
+                .mvcMatchers("/subtopics").authenticated()
                 //.mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 .and().cors()
                 .and().oauth2ResourceServer().jwt();
