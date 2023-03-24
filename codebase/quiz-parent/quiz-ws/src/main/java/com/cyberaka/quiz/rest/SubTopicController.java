@@ -11,15 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 public class SubTopicController {
+
+    private Logger log = Logger.getLogger(getClass().getName());
+
     @Autowired
     SubTopicService subTopicService;
 
     @RequestMapping("/subtopics/{topicID}")
     @ResponseBody
     public List<SubTopicDto> findByTopic(@PathVariable("topicID") int topicId) {
+        log.info("findByTopic(" + topicId + ")");
         Iterable<SubTopic> subTopics = subTopicService.findByTopic(topicId);
         List<SubTopicDto> results = new ArrayList<SubTopicDto>();
         for (SubTopic subTopic : subTopics) {
