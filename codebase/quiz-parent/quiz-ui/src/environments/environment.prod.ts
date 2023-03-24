@@ -23,6 +23,10 @@ export const environment = {
     errorPath,
   },
   httpInterceptor: {
-    allowedList: [`${apiUri}/*`],
+    allowedList: [ 
+      {
+        uri: `${apiUri}*`
+      }
+    ],
   },
 };
