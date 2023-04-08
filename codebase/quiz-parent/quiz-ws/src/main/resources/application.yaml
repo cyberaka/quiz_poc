@@ -32,5 +32,10 @@ data:
   file: ${QUIZ_DATA_FOLDER}
   result_output: ${QUIZ_RESULT_FOLDER}
   font_file: ${QUIZ_FONT_FILE}
+  google:
+    app_name: ${QUIZ_GOOGLE_APP_NAME}
+    tokens_dir: ${QUIZ_GOOGLE_TOKENS_DIR}
+    credentials_json: ${QUIZ_GOOGLE_CREDENTIALS_JSON}
+    spreadsheet_id: ${QUIZ_GOOGLE_SPREADSHEET_ID}
 auth0:
   audience: ${QUIZ_AUTH_AUDIENCE}
