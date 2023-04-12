@@ -85,8 +85,15 @@ public class QuizBootupRunner implements CommandLineRunner {
     @Value("${data.google.spreadsheet_id}")
     String spreadsheetId;
 
+    // QUIZ_JPA_DDL_AUTO
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    String ddlAuto;
+
     @Override
     public void run(String... args) throws Exception {
+        if (!ddlAuto.equalsIgnoreCase("create")) {
+            return;
+        }
         googleProcessFile();
 //        File file = new File(dataFile);
 //        if (file.isDirectory()) {
@@ -727,7 +734,7 @@ public class QuizBootupRunner implements CommandLineRunner {
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
-    
+
     private void googleProcessFile() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         final NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();

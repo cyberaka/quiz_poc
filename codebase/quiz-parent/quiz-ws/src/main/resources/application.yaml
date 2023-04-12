@@ -24,7 +24,7 @@ spring:
     validationQuery: "SELECT 1"
   jpa: 
     hibernate:
-      ddl-auto: create
+      ddl-auto: ${QUIZ_JPA_DDL_AUTO}
       dialect: org.hibernate.dialect.MySQL5Dialect
   thymeleaf:
     cache: false
