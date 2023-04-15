@@ -1,10 +1,7 @@
 {
-  "name": "QuizApp",
+  "name": "Quiz App",
   "integrations": {
-    "capacitor": {
-      "enabled": false
-    },
-    "cordova": {}
+    "capacitor": {}
   },
   "type": "angular"
 }

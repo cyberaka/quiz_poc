@@ -7,17 +7,25 @@
 </ion-header>
  -->
 <ion-content>
-    <ion-card class="loginCard">
-      <ion-list>
-       <!--  <ion-item fill="outline" mode="md">
-          <ion-label position="floating">User Name</ion-label>
-          <ion-input [(ngModel)]="userName" placeholder="User Name"></ion-input>
-        </ion-item>
-        <ion-item fill="outline" mode="md">
-          <ion-label position="floating">Password</ion-label>
-          <ion-input type="password" [(ngModel)]="password" placeholder="Password"></ion-input> 
-        </ion-item>-->
-          <ion-button expand="block" (click)="login()">Login</ion-button>
-      </ion-list>
-    </ion-card>
+   <ng-container  *ngIf="!isAuthenticated && !loading">
+     <ion-card class="loginCard">
+       <ion-list>
+        <!--  <ion-item fill="outline" mode="md">
+           <ion-label position="floating">User Name</ion-label>
+           <ion-input [(ngModel)]="userName" placeholder="User Name"></ion-input>
+         </ion-item>
+         <ion-item fill="outline" mode="md">
+           <ion-label position="floating">Password</ion-label>
+           <ion-input type="password" [(ngModel)]="password" placeholder="Password"></ion-input> 
+         </ion-item>-->
+           <ion-button expand="block" (click)="login()">Login</ion-button>
+       </ion-list>
+     </ion-card>
+   </ng-container>
+   <ng-container *ngIf="loading">
+    <div class="loading">
+      <img src="./../../assets/loading.svg" alt="Loading..." />
+      <div class="detail">Fetching your details...</div>
+    </div>
+   </ng-container>
 </ion-content>
