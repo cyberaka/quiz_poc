@@ -12,13 +12,13 @@ import { UtilsService } from '../services/utils.service';
 })
 export class QuizPage implements OnInit {
   QAs: any = [];
-  questionNoShow: boolean;
+  questionNoShow: boolean = false;
   currentQusIndex: number = 0;
   score = 0;
   topics: any;
   customAns: any[] = []; //user enter the value
   singleAns: any; //user single selection
-  reachEnd: boolean;
+  reachEnd: boolean = false;
   constructor(
     private router: Router,
     private http: HttpService,
@@ -33,7 +33,7 @@ export class QuizPage implements OnInit {
     }
     setTimeout(() => {
       this.questionNoShow = true;
-    }, 500);
+    }, 700);
   }
 
   async ngOnInit() {

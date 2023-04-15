@@ -7,7 +7,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 const routes: Routes = [
   {
     path: '',
-    component: LoadingComponent,
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {

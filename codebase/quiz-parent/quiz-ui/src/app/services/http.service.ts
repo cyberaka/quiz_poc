@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class HttpService {
-  topicId: Number;
+  topicId: Number = 0;
   userDet: any;
   apiURL: string = environment.baseURL;
   constructor(
