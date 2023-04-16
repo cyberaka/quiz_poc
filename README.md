@@ -1,9 +1,6 @@
 # quiz_poc
 Quiz POC
 
-# quiz_poc
-Quiz POC
-
 
 ## Quiz POC -- UI
 
