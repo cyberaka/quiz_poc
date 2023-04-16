@@ -72,7 +72,7 @@ public class QuizBootupRunner implements CommandLineRunner {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
+    List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
 
     @Value("${data.google.credentials_json}")
     String credentialsFilePath;
@@ -845,14 +845,6 @@ public class QuizBootupRunner implements CommandLineRunner {
             SubjectImport subjectImport = subjectImportItr.next();
             LOG.info("Subject Import >> " + subjectImport);
 
-            // Find the topic id.
-//            List<Topic> topicList = topicRepo.findByTitle(subjectImport.getSubject());
-//            if (topicList.isEmpty()) {
-//                LOG.info("Skipping subjectImport >> " + subjectImport.getSubject() + " as it does not match with anything in database.");
-//                continue;
-//            }
-//            Topic topic = topicList.get(0);
-
             // Find the target sheet.
             LOG.info("Loading Target Sheet");
             Sheet targetSheet = targetSheetMap.get(subjectImport.getTargetSheet());
@@ -861,6 +853,13 @@ public class QuizBootupRunner implements CommandLineRunner {
                 continue;
             }
             int totalTargetRows = targetSheet.getProperties().getGridProperties().getRowCount();
+            LOG.info("Loading target sheet values");
+            String targetRange = subjectImport.getTargetSheet() + "!A1:L";
+            ValueRange targetResponse = service.spreadsheets().values()
+                    .get(spreadsheetId, targetRange)
+                    .execute();
+            List<List<Object>> targetResponseValues = targetResponse.getValues();
+            totalTargetRows = targetResponseValues.size();
 
             // Load Data from the source sheet.
             LOG.info("Loading source sheet values");
@@ -877,24 +876,28 @@ public class QuizBootupRunner implements CommandLineRunner {
 
             // Delete the rows from the target sheet.
             LOG.info("Deleting rows from the target sheet.");
-            BatchUpdateSpreadsheetRequest content = new BatchUpdateSpreadsheetRequest();
-            Request request = new Request()
-                    .setDeleteDimension(new DeleteDimensionRequest()
-                            .setRange(new DimensionRange()
-                                    .setSheetId(targetSheet.getProperties().getSheetId())
-                                    .setDimension("ROWS")
-                                    .setStartIndex(1)
-                                    .setEndIndex(totalTargetRows)
-                            )
-                    );
-            List<Request> requests = new ArrayList<Request>();
-            requests.add(request);
-            content.setRequests(requests);
-            service.spreadsheets().batchUpdate(spreadsheetId, content).execute();
+            if (totalTargetRows > 1) {
+                int sheetId = targetSheet.getProperties().getSheetId();
+                LOG.info("Sheet ID >> " + sheetId);
+                BatchUpdateSpreadsheetRequest content = new BatchUpdateSpreadsheetRequest();
+                Request request = new Request()
+                        .setDeleteDimension(new DeleteDimensionRequest()
+                                .setRange(new DimensionRange()
+                                        .setSheetId(targetSheet.getProperties().getSheetId())
+                                        .setDimension("ROWS")
+                                        .setStartIndex(1)
+                                        .setEndIndex(totalTargetRows)
+                                )
+                        );
+                List<Request> requests = new ArrayList<Request>();
+                requests.add(request);
+                content.setRequests(requests);
+                service.spreadsheets().batchUpdate(spreadsheetId, content).execute();
+            }
 
             // Copy the content from source sheet to target sheet.
             LOG.info("Copying values from source sheet to target sheet.");
-            String targetRange = "A2:L";
+            targetRange = subjectImport.getTargetSheet() + "!A1:L";
             ValueRange requestBody = new ValueRange().setValues(sourceResponseValues);
             Sheets.Spreadsheets.Values.Append appendRequest = service.spreadsheets().values().append(spreadsheetId, targetRange, requestBody);
             appendRequest.setValueInputOption("USER_ENTERED");
@@ -902,7 +905,7 @@ public class QuizBootupRunner implements CommandLineRunner {
 
             AppendValuesResponse appendResult = appendRequest.execute();
             ValueRange total = appendResult.getUpdates().getUpdatedData();
-            LOG.info("Total Data Entered >> " + total.getValues().get(0).get(1));
+//            LOG.info("Total Data Entered >> " + total.getValues().get(0).get(1));
         }
     }
 
