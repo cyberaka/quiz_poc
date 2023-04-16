@@ -70,4 +70,10 @@ npx cap open ios
 
 **Note:** Using below comments to add custom URL scheme into your `Xcode project`
 
-This article assumes you will be using Custom URL Schemes to handle the callback within your application. To do this, register your YOUR_PACKAGE_ID as a URL scheme for your chosen platform. To learn more, read Defining a [Custom URL Scheme](https://github.com/auth0/Auth0.swift#configure-custom-url-scheme) for iOS.
+Back in Xcode, go to the **Info** tab of your app target settings. In the **URL Types** section, click the ＋ button to add a new entry. There, enter `auth0` into the Identifier field and `$(PRODUCT_BUNDLE_IDENTIFIER)` into the URL Schemes field.
+
+**Ref. below image**
+
+
+<img width="1327" alt="deep-linking-url-scheme" src="https://user-images.githubusercontent.com/30489397/232323001-b42cf5b6-14ca-4991-b6ff-4637a4588bc4.png">
+
