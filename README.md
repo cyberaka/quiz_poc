@@ -40,7 +40,7 @@ Now you are getting `www` folder, Use this folder and host.
 ```
 npm install 
 npx cap install @capacitor/android
-ionic capacitor add android
+npx cap add android
 ionic build --prod && npx cap sync
 npx cap open android
 ```
@@ -63,7 +63,7 @@ This article assumes you will be using Custom URL Schemes to handle the callback
 ```
 npm install 
 npx cap install @capacitor/ios
-ionic capacitor add ios
+npx cap add ios
 ionic build --prod && npx cap sync
 npx cap open ios
 ```
