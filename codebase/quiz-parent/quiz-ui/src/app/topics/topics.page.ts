@@ -77,7 +77,7 @@ export class TopicsPage implements OnInit {
         },
       }).subscribe((c) => {
         this.router
-        .navigateByUrl('home', { replaceUrl: true });
+        .navigateByUrl('login', { replaceUrl: true });
       });
     }
      
