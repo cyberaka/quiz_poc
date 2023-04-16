@@ -1,26 +1,11 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Login
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
- -->
 <ion-content>
    <ng-container  *ngIf="!isAuthenticated && !loading">
-     <ion-card class="loginCard">
-       <ion-list>
-        <!--  <ion-item fill="outline" mode="md">
-           <ion-label position="floating">User Name</ion-label>
-           <ion-input [(ngModel)]="userName" placeholder="User Name"></ion-input>
-         </ion-item>
-         <ion-item fill="outline" mode="md">
-           <ion-label position="floating">Password</ion-label>
-           <ion-input type="password" [(ngModel)]="password" placeholder="Password"></ion-input> 
-         </ion-item>-->
-           <ion-button expand="block" (click)="login()">Login</ion-button>
-       </ion-list>
-     </ion-card>
+    <div class="loginContainer">
+      <div class="title">Quiz Ajit</div>
+      <div class="subtitle">Share More to Learn More</div>
+      <ion-img src="./../../assets/logo.png" alt="home Logo"></ion-img>
+      <ion-button expand="block" (click)="login()">Get Started</ion-button>
+    </div>
    </ng-container>
    <ng-container *ngIf="loading">
     <div class="loading">
