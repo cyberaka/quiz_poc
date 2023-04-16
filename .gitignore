@@ -37,3 +37,4 @@ plugins
 *.swo
 *.log
 *.DS_Store
+**/history_*.txt
