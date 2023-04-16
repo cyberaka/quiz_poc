@@ -825,6 +825,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                 LOG.info("Skipping subject import as header doesn't match...");
             }
         }
+        LOG.info("Done with Google Process File.");
     }
 
     private void googleImportSubjects(ArrayList<SubjectImport> subjectImportList, Sheets service, ValueRange masterResponse) throws IOException {
