@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { DialogService } from '../services/dialog.service';
 import { HttpService } from '../services/http.service';
+import { UtilsService } from '../services/utils.service';
+
 
 @Component({
   selector: 'app-summary-quiz',
@@ -15,7 +17,8 @@ export class SummaryQuizPage implements OnInit {
     private router: Router,
     private http: HttpService,
     private nav: NavController,
-    private dialog: DialogService
+    private dialog: DialogService,
+    public utils: UtilsService
   ) { 
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state && state['allDet']) {
