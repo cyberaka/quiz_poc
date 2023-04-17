@@ -18,7 +18,7 @@ public class Question {
     private String options;
     @Column(name = "difficulty_level")
     private Integer difficultyLevel;
-    @Column(name = "explanation")
+    @Column(name = "explanation", length = 3000)
     private String explanation;
     @Column(name = "chapter")
     private String chapter;

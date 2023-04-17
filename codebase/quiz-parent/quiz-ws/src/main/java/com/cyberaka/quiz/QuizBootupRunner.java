@@ -5,14 +5,12 @@ import com.cyberaka.quiz.dao.QuestionRepository;
 import com.cyberaka.quiz.dao.SubTopicRepository;
 import com.cyberaka.quiz.dao.TopicRepository;
 import com.cyberaka.quiz.dao.UserRepository;
-import com.cyberaka.quiz.domain.Question;
-import com.cyberaka.quiz.domain.SubTopic;
-import com.cyberaka.quiz.domain.Topic;
-import com.cyberaka.quiz.domain.User;
+import com.cyberaka.quiz.domain.*;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,18 +28,15 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
-import com.google.api.services.sheets.v4.model.ValueRange;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,7 +72,7 @@ public class QuizBootupRunner implements CommandLineRunner {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
+    List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS);
 
     @Value("${data.google.credentials_json}")
     String credentialsFilePath;
@@ -281,6 +276,13 @@ public class QuizBootupRunner implements CommandLineRunner {
                 processCellStr.equalsIgnoreCase("Process");
     }
 
+    private boolean checkSubjectImportSheetHeader(String subjectCellStr, String targetSheetStr, String workSheetIdStr, String sheetIdCellStr, String processCellStr) {
+        return subjectCellStr.equalsIgnoreCase("Subject") &&
+                targetSheetStr.equalsIgnoreCase("Target Sheet") &&
+                workSheetIdStr.equalsIgnoreCase("Source Worksheet") &&
+                sheetIdCellStr.equalsIgnoreCase("Source Sheet") &&
+                processCellStr.equalsIgnoreCase("Process");
+    }
 
     private void processDirectory(User user, File file) {
         Topic topic = new Topic();
@@ -755,11 +757,15 @@ public class QuizBootupRunner implements CommandLineRunner {
             return;
         }
 
-//        // Return subject sheet from the XLSX workbook
-//        XSSFSheet subjectSheet = myWorkBook.getSheet("Subjects");
+        range = "Subject Import!A1:E";
+        response = service.spreadsheets().values()
+                .get(spreadsheetId, range)
+                .execute();
+        values = response.getValues();
 
-//        // Get iterator to all the rows in current sheet
-//        Iterator<Row> rowIterator = subjectSheet.iterator();
+        // Persist the user information
+        ArrayList<SubjectImport> subjectImportList = googleSubjectImport(values.iterator());
+        googleImportSubjects(subjectImportList, service, response);
 
         range = "Subjects!A1:E";
         response = service.spreadsheets().values()
@@ -819,6 +825,207 @@ public class QuizBootupRunner implements CommandLineRunner {
                 LOG.info("Skipping subject import as header doesn't match...");
             }
         }
+        LOG.info("Done with Google Process File.");
+    }
+
+    private void googleImportSubjects(ArrayList<SubjectImport> subjectImportList, Sheets service, ValueRange masterResponse) throws IOException {
+        // Find out all the sheets in the target sheet and build a map.
+        LOG.info("Loading sheets from target worksheet..");
+        Spreadsheet targetSpreadSheet = service.spreadsheets().get(spreadsheetId).execute();
+        List<Sheet> targetSheetList = targetSpreadSheet.getSheets();
+        HashMap<String, Sheet> targetSheetMap = new HashMap<>();
+        Iterator<Sheet> targetSheetItr = targetSheetList.iterator();
+        while (targetSheetItr.hasNext()) {
+            Sheet sheet = targetSheetItr.next();
+            targetSheetMap.put(sheet.getProperties().getTitle(), sheet);
+            LOG.info("Found >> " + sheet.getProperties().getTitle());
+        }
+
+        Iterator<SubjectImport> subjectImportItr = subjectImportList.iterator();
+        while (subjectImportItr.hasNext()) {
+            SubjectImport subjectImport = subjectImportItr.next();
+            LOG.info("Subject Import >> " + subjectImport);
+
+            // Find the target sheet.
+            LOG.info("Loading Target Sheet");
+            Sheet targetSheet = targetSheetMap.get(subjectImport.getTargetSheet());
+            if (targetSheet == null) {
+                LOG.info("Skipping subjectImport import. Invalid subjectImport target name >> " + subjectImport);
+                continue;
+            }
+            int totalTargetRows = targetSheet.getProperties().getGridProperties().getRowCount();
+            LOG.info("Loading target sheet values");
+            String targetRange = subjectImport.getTargetSheet() + "!A1:L";
+            ValueRange targetResponse = service.spreadsheets().values()
+                    .get(spreadsheetId, targetRange)
+                    .execute();
+            List<List<Object>> targetResponseValues = targetResponse.getValues();
+            totalTargetRows = targetResponseValues.size();
+
+            // Load Data from the source sheet.
+            LOG.info("Loading source sheet values");
+            String sourceRange = subjectImport.getSourceSheet() + "!A1:M";
+            ValueRange sourceResponse = service.spreadsheets().values()
+                    .get(subjectImport.getSourceWorkSheet(), sourceRange)
+                    .execute();
+            List<List<Object>> sourceResponseValues = sourceResponse.getValues();
+            Iterator<List<Object>> sourceRowIterator = sourceResponseValues.iterator();
+            while (sourceRowIterator.hasNext()) {
+                List<Object> row = sourceRowIterator.next();
+                row.remove(0); // Remove question number field.
+            }
+
+            // Delete the rows from the target sheet.
+            LOG.info("Deleting rows from the target sheet.");
+            if (totalTargetRows > 1) {
+                int sheetId = targetSheet.getProperties().getSheetId();
+                LOG.info("Sheet ID >> " + sheetId);
+                BatchUpdateSpreadsheetRequest content = new BatchUpdateSpreadsheetRequest();
+                Request request = new Request()
+                        .setDeleteDimension(new DeleteDimensionRequest()
+                                .setRange(new DimensionRange()
+                                        .setSheetId(targetSheet.getProperties().getSheetId())
+                                        .setDimension("ROWS")
+                                        .setStartIndex(0)
+                                        .setEndIndex(totalTargetRows)
+                                )
+                        );
+                List<Request> requests = new ArrayList<Request>();
+                requests.add(request);
+                content.setRequests(requests);
+                service.spreadsheets().batchUpdate(spreadsheetId, content).execute();
+            }
+
+            // Copy the content from source sheet to target sheet.
+            LOG.info("Copying values from source sheet to target sheet.");
+            targetRange = subjectImport.getTargetSheet() + "!A1:L";
+            ValueRange requestBody = new ValueRange().setValues(sourceResponseValues);
+            Sheets.Spreadsheets.Values.Append appendRequest = service.spreadsheets().values().append(spreadsheetId, targetRange, requestBody);
+            appendRequest.setValueInputOption("USER_ENTERED");
+            appendRequest.setInsertDataOption("INSERT_ROWS");
+
+            AppendValuesResponse appendResult = appendRequest.execute();
+            appendResult.getUpdates().getUpdatedData();
+
+            // Freeze 1st row
+            GridProperties targetSheetGridProperties = targetSheet.getProperties().getGridProperties();
+            targetSheetGridProperties.setFrozenRowCount(1);
+            UpdateSheetPropertiesRequest updateSheetPropertiesRequest = new UpdateSheetPropertiesRequest().setFields("gridProperties.frozenRowCount")
+                    .setProperties(new SheetProperties().setSheetId(targetSheet.getProperties().getSheetId())
+                            .setGridProperties(new GridProperties().setFrozenRowCount(1)));
+            List<Request> requests = List.of(new Request().setUpdateSheetProperties(updateSheetPropertiesRequest));
+            BatchUpdateSpreadsheetRequest apiRequest = new BatchUpdateSpreadsheetRequest().setRequests(requests);
+            service.spreadsheets().batchUpdate(spreadsheetId, apiRequest ).execute();
+        }
+    }
+
+    private void googleImportQuestions(User user, Topic topic, SubTopic subTopic, Iterator<List<Object>> rowIterator) {
+        String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr, answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr = null;
+        StringBuilder optionBuilder = new StringBuilder();
+        char optionIndex = 0;
+        ArrayList<Question> questionList = new ArrayList<>();
+        // Verify the header
+        if (rowIterator.hasNext()) {
+            List<Object> headerRow = rowIterator.next();
+            questionCellStr = googleReadStringCellValue(headerRow, 1);
+            optionACellStr = googleReadStringCellValue(headerRow, 2);
+            optionBCellStr = googleReadStringCellValue(headerRow, 3);
+            optionCCellStr = googleReadStringCellValue(headerRow, 4);
+            optionDCellStr = googleReadStringCellValue(headerRow, 5);
+            optionECellStr = googleReadStringCellValue(headerRow, 6);
+            optionFCellStr = googleReadStringCellValue(headerRow, 7);
+            answerCellStr = googleReadStringCellValue(headerRow, 8);
+            explanationCellStr = googleReadStringCellValue(headerRow, 9);
+            chapterCellStr = googleReadStringCellValue(headerRow, 10);
+            pageCellStr = googleReadStringCellValue(headerRow, 11);
+            bookCellStr = googleReadStringCellValue(headerRow, 12);
+            if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr,
+                    answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr)) {
+                while (rowIterator.hasNext()) {
+                    List<Object> row = rowIterator.next();
+                    questionCellStr = googleReadStringCellValue(row, 1);
+                    optionACellStr = googleReadStringCellValue(row, 2);
+                    optionBCellStr = googleReadStringCellValue(row, 3);
+                    optionCCellStr = googleReadStringCellValue(row, 4);
+                    optionDCellStr = googleReadStringCellValue(row, 5);
+                    optionECellStr = googleReadStringCellValue(row, 6);
+                    optionFCellStr = googleReadStringCellValue(row, 7);
+                    answerCellStr = googleReadStringCellValue(row, 8);
+                    explanationCellStr = googleReadStringCellValue(row, 9);
+                    chapterCellStr = googleReadStringCellValue(row, 10);
+                    pageCellStr = googleReadStringCellValue(row, 11);
+                    bookCellStr = googleReadStringCellValue(row, 12);
+
+                    if (!chapterCellStr.equalsIgnoreCase(subTopic.getTitle())) {
+                        continue;
+                    }
+                    optionIndex = 0;
+                    optionBuilder.setLength(0);
+                    optionBuilder.append(optionACellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
+                    optionBuilder.append(optionBCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
+                    optionBuilder.append(optionCCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
+                    optionBuilder.append(optionDCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
+                    optionBuilder.append(optionECellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
+                    optionBuilder.append(optionFCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionFCellStr + "\n"));
+
+                    Question quest = new Question();
+                    quest.setTopic(topic);
+                    quest.setSubTopic(subTopic);
+                    quest.setContributer(user);
+                    quest.setQuestion(questionCellStr);
+                    quest.setOptions(optionBuilder.toString());
+                    quest.setAnswers(answerCellStr);
+                    quest.setDifficultyLevel(QuizAppConstants.DIFFICULTY_MEDIUM);
+                    quest.setExplanation(explanationCellStr);
+                    quest.setChapter(chapterCellStr);
+                    quest.setPage(pageCellStr);
+                    quest.setBook(bookCellStr);
+                    if (quest.isValidV2()) {
+                        questionList.add(quest);
+                    } else {
+                        LOG.log(Level.SEVERE, "Invalid question skipped >> {0}", quest.getQuestion());
+                    }
+                }
+            }
+        }
+    }
+
+    private ArrayList<SubjectImport> googleSubjectImport(Iterator<List<Object>> rowIterator) {
+        String subjectStr, targetSheetStr, workSheetIdStr, sheetIdStr, processCellStr = null;
+        ArrayList<SubjectImport> subjectImportList = new ArrayList<>();
+        // Subject	Source Worksheet	Source Sheet	Process
+        // Verify the header
+        if (rowIterator.hasNext()) {
+            List<Object> row = rowIterator.next();
+            subjectStr = googleReadStringCellValue(row, 0);
+            targetSheetStr = googleReadStringCellValue(row, 1);
+            workSheetIdStr = googleReadStringCellValue(row, 2);
+            sheetIdStr = googleReadStringCellValue(row, 3);
+            processCellStr = googleReadStringCellValue(row, 4);
+            if (checkSubjectImportSheetHeader(subjectStr, targetSheetStr, workSheetIdStr, sheetIdStr, processCellStr)) {
+                while (rowIterator.hasNext()) {
+                    row = rowIterator.next();
+                    subjectStr = googleReadStringCellValue(row, 0);
+                    targetSheetStr = googleReadStringCellValue(row, 1);
+                    workSheetIdStr = googleReadStringCellValue(row, 2);
+                    sheetIdStr = googleReadStringCellValue(row, 3);
+                    processCellStr = googleReadStringCellValue(row, 4);
+
+                    if (subjectStr != null && targetSheetStr != null && workSheetIdStr != null && sheetIdStr != null && processCellStr != null && isYes(processCellStr)) {
+                        LOG.log(Level.INFO, "Processing Subject Import >> {0}", subjectStr);
+                        SubjectImport subjectImport = new SubjectImport();
+                        subjectImport.setSubject(subjectStr);
+                        subjectImport.setTargetSheet(targetSheetStr);
+                        subjectImport.setSourceWorkSheet(workSheetIdStr);
+                        subjectImport.setSourceSheet(sheetIdStr);
+                        subjectImportList.add(subjectImport);
+                    } else {
+                        LOG.log(Level.INFO, "Skipping Subject Import >> {0}", subjectStr);
+                    }
+                }
+            }
+        }
+        return subjectImportList;
     }
 
     /**
@@ -831,7 +1038,6 @@ public class QuizBootupRunner implements CommandLineRunner {
         User adminUser = null;
         User user = null;
         // Get iterator to all the rows in current sheet
-//        Iterator<Row> rowIterator = users.iterator();
 
         Cell userIdCell, passwordCell, nameCell, emailCell, phoneCell, adminCell, publisherCell, consumerCell, processCell = null;
         String userIdCellStr, passwordCellStr, nameCellStr, emailCellStr, phoneCellStr, adminCellStr, publisherCellStr, consumerCellStr, processCellStr = null;
