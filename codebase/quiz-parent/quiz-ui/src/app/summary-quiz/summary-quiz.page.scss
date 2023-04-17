@@ -36,7 +36,9 @@ ion-toolbar {
     font-size: 14px;
     margin-left: 15px;
     margin-top: 5px;
-
+  &.wrapText {
+  white-space: break-spaces;
+}
     span {
         font-weight: bold;
         font-style: oblique;
