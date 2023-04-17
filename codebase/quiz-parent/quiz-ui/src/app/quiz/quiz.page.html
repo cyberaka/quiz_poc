@@ -41,7 +41,7 @@
             <div class="optionTxt">
               {{option.text}}
             </div>
-            <ion-radio mode="md" slot="start" [(ngModel)]="option.value"></ion-radio>
+            <ion-radio mode="md" slot="start" aria-label="option.value" [(ngModel)]="option.value"></ion-radio>
           </ion-item>
 
         </ion-card>
@@ -51,7 +51,7 @@
     <!-- User Input Screen -->
     <ng-container *ngIf="QAs[currentQusIndex]?.options.length == 0">
       <div class="textArea">
-        <ion-textarea rows="9" placeholder="Enter your answer" [(ngModel)]="customAns[currentQusIndex]"></ion-textarea>
+        <ion-textarea rows="9" placeholder="Enter your answer" aria-label="textarea" [(ngModel)]="customAns[currentQusIndex]"></ion-textarea>
       </div>
     </ng-container>
   </ng-container>
