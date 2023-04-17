@@ -864,7 +864,7 @@ public class QuizBootupRunner implements CommandLineRunner {
 
             // Load Data from the source sheet.
             LOG.info("Loading source sheet values");
-            String sourceRange = subjectImport.getSourceSheet() + "!A2:M";
+            String sourceRange = subjectImport.getSourceSheet() + "!A1:M";
             ValueRange sourceResponse = service.spreadsheets().values()
                     .get(subjectImport.getSourceWorkSheet(), sourceRange)
                     .execute();
@@ -886,7 +886,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                                 .setRange(new DimensionRange()
                                         .setSheetId(targetSheet.getProperties().getSheetId())
                                         .setDimension("ROWS")
-                                        .setStartIndex(1)
+                                        .setStartIndex(0)
                                         .setEndIndex(totalTargetRows)
                                 )
                         );
@@ -905,8 +905,17 @@ public class QuizBootupRunner implements CommandLineRunner {
             appendRequest.setInsertDataOption("INSERT_ROWS");
 
             AppendValuesResponse appendResult = appendRequest.execute();
-            ValueRange total = appendResult.getUpdates().getUpdatedData();
-//            LOG.info("Total Data Entered >> " + total.getValues().get(0).get(1));
+            appendResult.getUpdates().getUpdatedData();
+
+            // Freeze 1st row
+            GridProperties targetSheetGridProperties = targetSheet.getProperties().getGridProperties();
+            targetSheetGridProperties.setFrozenRowCount(1);
+            UpdateSheetPropertiesRequest updateSheetPropertiesRequest = new UpdateSheetPropertiesRequest().setFields("gridProperties.frozenRowCount")
+                    .setProperties(new SheetProperties().setSheetId(targetSheet.getProperties().getSheetId())
+                            .setGridProperties(new GridProperties().setFrozenRowCount(1)));
+            List<Request> requests = List.of(new Request().setUpdateSheetProperties(updateSheetPropertiesRequest));
+            BatchUpdateSpreadsheetRequest apiRequest = new BatchUpdateSpreadsheetRequest().setRequests(requests);
+            service.spreadsheets().batchUpdate(spreadsheetId, apiRequest ).execute();
         }
     }
 
