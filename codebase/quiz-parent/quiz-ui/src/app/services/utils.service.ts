@@ -33,4 +33,29 @@ export class UtilsService {
       this.isShowingLoader = false
     }
   }
+  
+    linkify(text, textLength?) {
+    let urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
+    let mailRegex = /\S+@\S+\.[a-zA-Z]{2,}/g;
+    let phoneRegex = /([+][9][1]|[9][1]|[0]){0,1}([0-9]{10})/g;
+    if (!text) {
+      return '';
+    }
+    return text.replace(urlRegex, function (url, b, c) {
+      let url2 = (c == 'www.') ? 'http://' + url : url;
+      // console.log('url', text.match(/\bhttps?::\/\/\S+/gi));
+      // console.log('url2', url2);
+      return '<a href="' + url2 + '" target="_blank">' + url + '</a>';
+    })
+      .replace(phoneRegex, (phone) => `<a href='tel:${phone}' target='_system'>${phone}</a>`)
+      .replace(mailRegex, (mail) => `<a href='mailto:${mail}' target='_system'>${mail}</a>`);
+  }
+
+  urlLikefy(text) {
+    let urlRegex = /(((http(s)?:\/\/.)|(www\.))[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/g;
+    return text.replace(urlRegex, function (url, b, c) {
+      let url2 = (c == 'www.') ? 'http://' + url : url;
+      return '<a href="' + url2 + '" target="_blank">' + url + '</a>';
+    })
+  }
 }
