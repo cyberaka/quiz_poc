@@ -16,7 +16,7 @@ public interface QuestionRepository extends MongoRepository<Question, String> {
 //
 //    public List<Question> findByTopicAndSubTopicAndLevel(Integer topic, Integer subTopic, Integer level);
 
-    public List<Question> findByTopicAndSubTopic(Integer topic, Integer subTopic);
+    public List<Question> findByTopicAndSubTopic(Topic topic, SubTopic subTopic);
 
 //    public long count();
 }

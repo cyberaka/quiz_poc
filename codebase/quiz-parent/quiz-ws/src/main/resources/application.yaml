@@ -3,7 +3,13 @@ server:
 logging:
   level:
     root: INFO
-    org.springframework.web: ERROR
+    org:
+      springframework:
+        web: ERROR
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
     com.auth0.example: TRACE
 spring:
   security:
