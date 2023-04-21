@@ -81,7 +81,7 @@ public class QuizBootupRunner implements CommandLineRunner {
     String spreadsheetId;
 
     // QUIZ_JPA_DDL_AUTO
-    @Value("${spring.jpa.hibernate.ddl-auto}")
+    @Value("${data.ddl_auto}")
     String ddlAuto;
 
     @Override

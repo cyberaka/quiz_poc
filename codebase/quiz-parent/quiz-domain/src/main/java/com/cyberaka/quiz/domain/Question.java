@@ -1,50 +1,34 @@
 package com.cyberaka.quiz.domain;
 
-import javax.persistence.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
-@Table(name = "quiz_question")
+
+@Document("questions")
 public class Question {
-    // Question	Option A	Option B	Option C	Option D	Option E	Option F	Answer	Explanation	Chapter	Page	Book
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ques_id", nullable = false)
-    private Integer questionId;
-    @Column(columnDefinition = "text", name = "question")
+    @MongoId
+    private String questionId;
     private String question;
-    @Column(name = "answers")
     private String answers;
-    @Column(columnDefinition = "text", name = "options")
     private String options;
-    @Column(name = "difficulty_level")
     private Integer difficultyLevel;
-    @Column(name = "explanation", length = 3000)
     private String explanation;
-    @Column(name = "chapter")
     private String chapter;
-    @Column(name = "page")
     private String page;
-    @Column(name = "book")
     private String book;
-    @ManyToOne
-    @JoinColumn(name = "topic_id", referencedColumnName = "topic_id")
     private Topic topic;
-    @ManyToOne
-    @JoinColumn(name = "sub_topic_id", referencedColumnName = "sub_topic_id")
     private SubTopic subTopic;
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private User contributer;
 
     public Question() {
         super();
     }
 
-    public Integer getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Integer questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 

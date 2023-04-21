@@ -6,17 +6,17 @@ import com.cyberaka.quiz.domain.User;
  * User DTO to capture user details.
  */
 public class UserDto {
-    private Integer userId;
+    private String userId;
     private String userName;
     private String name;
     private String email;
     private String phoneNo;
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
