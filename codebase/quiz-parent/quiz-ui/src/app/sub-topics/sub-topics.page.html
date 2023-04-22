@@ -4,15 +4,18 @@
       <ion-back-button text="" color="light" defaultHref="topics"></ion-back-button>
     </ion-buttons>
     <ion-title>
-     Sub Topics
+      Sub Topics
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-    <ion-list>
-        <ion-item lines="full" button detail="true" *ngFor="let subTopic of subTopics" (click)="subTopicClick(subTopic)">
-          <ion-label>{{subTopic.title}}</ion-label>
-        </ion-item>
-      </ion-list>
+  <div *ngIf="loader" class="loaderStyle">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
+  <ion-list>
+    <ion-item lines="full" button detail="true" *ngFor="let subTopic of subTopics" (click)="subTopicClick(subTopic)">
+      <ion-label>{{subTopic.title}}</ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

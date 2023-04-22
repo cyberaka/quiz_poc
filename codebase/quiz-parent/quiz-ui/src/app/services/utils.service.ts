@@ -45,7 +45,7 @@ export class UtilsService {
       let url2 = (c == 'www.') ? 'http://' + url : url;
       // console.log('url', text.match(/\bhttps?::\/\/\S+/gi));
       // console.log('url2', url2);
-      return '<br /><a href="' + url2 + '" target="_blank" class="linkify">' + url + '</a><br />';
+      return '<div><a href="' + url2 + '" target="_blank" class="linkify">' + url + '</a></div>';
     });
      /*  .replace(phoneRegex, (phone: string) => `<a href='tel:${phone}' target='_system'>${phone}</a>`)
       .replace(mailRegex, (mail: string) => `<a href='mailto:${mail}' target='_system'>${mail}</a>`) */;

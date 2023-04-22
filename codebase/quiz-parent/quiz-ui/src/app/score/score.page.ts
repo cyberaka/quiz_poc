@@ -24,6 +24,8 @@ export class ScorePage implements OnInit {
       this.userAnswers = state['answers'];
       this.freeTextAns = state['customAns'];
     }
+    console.log(this.userAnswers);
+    console.log(this.freeTextAns);
   }
 
   ngOnInit() {
@@ -36,12 +38,12 @@ export class ScorePage implements OnInit {
         let ans: any = [];
         let userAnswers: any = [];
         question.answers = question.answers.map((c:any) => c.trim());
-        for(var c of question.customOptions) {
+        for(var c of question.options) {
           if (c.checked) {
-            ans.push(c.value);
+            ans.push(c.option);
           }
-          if(c.checked && (question.answers.includes(c.value.toLowerCase()) || question.answers.includes(c.value.toUpperCase()))) {
-            userAnswers.push(c.value);
+          if(c.checked && (question.answers.includes(c.option.toLowerCase()) || question.answers.includes(c.option.toUpperCase()))) {
+            userAnswers.push(c.option);
           }
         }
         if (userAnswers.length == question.answers.length) {
@@ -50,13 +52,13 @@ export class ScorePage implements OnInit {
         }
         this.userAnswers[idx]['userAnswers'] = ans;
       }  else if (question.answers && question.answers.length == 1 && question.options && question.options.length > 0) {
-        let selectedOptions = question.customOptions.filter((c: any) => c.checked);
-        if(selectedOptions.length && question.answers[0].toLowerCase() == selectedOptions[0].value.toLowerCase()) {
+        let selectedOptions = question.options.filter((c: any) => c.checked);
+        if(selectedOptions.length && question.answers[0].toLowerCase() == selectedOptions[0].option.toLowerCase()) {
           ++this.userScore;
           this.userAnswers[idx]['correct'] = true;
         } 
         if(selectedOptions.length) {
-          this.userAnswers[idx]['userAnswers'] = [...selectedOptions[0].value];
+          this.userAnswers[idx]['userAnswers'] = [...selectedOptions[0].option];
         } else {
           this.userAnswers[idx]['userAnswers'] = [''];
         }
@@ -81,7 +83,7 @@ export class ScorePage implements OnInit {
 
   summay() {
     this.router.navigateByUrl('summary-quiz', {
-      replaceUrl: true,
+      replaceUrl: false,
       state : {
         allDet : this.userAnswers
       }
