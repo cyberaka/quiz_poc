@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { ErrorComponent } from './components/error/error.component';
-import { LoadingComponent } from './components/loading/loading.component';
 
 const routes: Routes = [
   {

@@ -1,5 +1,8 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" color="light" defaultHref="score"></ion-back-button>
+    </ion-buttons>
     <ion-title>Summary Quiz</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -27,20 +30,20 @@
           </div>
           <!-- Mutiple Answers -->
           <ng-container *ngIf="item.answers.length > 1">
-            <ng-container *ngFor="let custom of item?.customOptions">
+            <ng-container *ngFor="let custom of item?.options">
               <div class="options" *ngIf="custom.checked">
                 <span>
-                  {{custom.value}}.
+                  {{custom.option}}.
                 </span> {{custom.text}}
               </div>
             </ng-container>
           </ng-container>
           <!-- Single Answers -->
           <ng-container *ngIf="item.answers.length == 1 && item.options.length > 0">
-            <ng-container *ngFor="let custom of item?.customOptions">
+            <ng-container *ngFor="let custom of item?.options">
               <div class="options" *ngIf="custom.checked">
                 <span>
-                  {{custom.value}}.
+                  {{custom.option}}.
                 </span> {{custom.text}}
               </div>
             </ng-container>
@@ -65,10 +68,10 @@
         <!-- Mutiple/Single Correct Answers -->
         <ng-container *ngIf="item.answers.length > 0 && item.options.length > 0 ">
           <ng-container *ngFor="let ans of item?.answers">
-            <ng-container *ngFor="let custom of item?.customOptions">
-              <div *ngIf="ans.toLowerCase() == custom.value.toLowerCase()" class="options">
+            <ng-container *ngFor="let custom of item?.options">
+              <div *ngIf="ans.toLowerCase() == custom.option.toLowerCase()" class="options">
                 <span>
-                  {{custom.value}}.
+                  {{custom.option}}.
                 </span> {{custom.text}}
               </div>
             </ng-container>

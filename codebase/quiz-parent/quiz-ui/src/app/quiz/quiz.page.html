@@ -24,7 +24,7 @@
     </div>
     <!-- Mutiple Answer -->
     <ng-container *ngIf="QAs[currentQusIndex]?.answers.length > 1">
-      <ion-card class="multiCard" *ngFor="let option of QAs[currentQusIndex]?.customOptions">
+      <ion-card class="multiCard" *ngFor="let option of QAs[currentQusIndex]?.options">
         <ion-item lines="none">
           <ion-checkbox mode="md" slot="start" [(ngModel)]="option.checked"></ion-checkbox>
           <div class="optionTxt">
@@ -36,12 +36,12 @@
     <!-- Single Answer -->
     <ng-container *ngIf="QAs[currentQusIndex]?.answers.length == 1 && QAs[currentQusIndex]?.options.length > 0">
       <ion-radio-group [(ngModel)]="singleAns" (ionChange)="singleAnswerSelection()">
-        <ion-card class="multiCard" *ngFor="let option of QAs[currentQusIndex]?.customOptions;let i = index">
+        <ion-card class="multiCard" *ngFor="let option of QAs[currentQusIndex]?.options;let i = index">
           <ion-item class="answerItem" lines="none">
-            <div class="optionTxt">
+            <ion-label>
               {{option.text}}
-            </div>
-            <ion-radio mode="md" slot="start" [(ngModel)]="option.value"></ion-radio>
+            </ion-label>
+            <ion-radio mode="md" slot="start" [(ngModel)]="option.option"></ion-radio>
           </ion-item>
 
         </ion-card>
