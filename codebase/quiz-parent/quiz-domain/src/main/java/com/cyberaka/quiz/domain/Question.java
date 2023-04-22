@@ -10,7 +10,7 @@ public class Question {
     private String questionId;
     private String question;
     private String answers;
-    private String options;
+    private QuestionOption[] options;
     private Integer difficultyLevel;
     private String explanation;
     private String chapter;
@@ -48,11 +48,11 @@ public class Question {
         this.answers = answers;
     }
 
-    public String getOptions() {
+    public QuestionOption[] getOptions() {
         return options;
     }
 
-    public void setOptions(String options) {
+    public void setOptions(QuestionOption[] options) {
         this.options = options;
     }
 
@@ -122,7 +122,7 @@ public class Question {
 
     public boolean isValid() {
         return topic != null && subTopic != null && contributer != null &&
-                difficultyLevel != null && options != null && !options.isEmpty() &&
+                difficultyLevel != null && options != null && options != null &&
                 answers != null && !answers.isEmpty() && question != null &&
                 !question.isEmpty();
     }

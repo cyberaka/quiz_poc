@@ -1,6 +1,7 @@
 package com.cyberaka.quiz.dto;
 
 import com.cyberaka.quiz.domain.Question;
+import com.cyberaka.quiz.domain.QuestionOption;
 import com.cyberaka.quiz.dto.common.QuestionParser;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ public class QuestionDto {
     private String questionId;
     private String question;
     private List<String> answers;
-    private List<String> options;
+    private List<QuestionOption> options;
     private Integer difficultyLevel;
     private String topicId;
     private String subTopicId;
@@ -43,7 +44,8 @@ public class QuestionDto {
 //                }
             }
             if (question.getOptions() != null) {
-                this.options = Arrays.asList(qp.parseOptions(question.getOptions()));
+                //this.options = Arrays.asList(qp.parseOptions(question.getOptions()));
+                this.options = Arrays.asList(question.getOptions());
 //                this.options = new ArrayList<String>();
 //                String options = question.getOptions();
 //                StringTokenizer st = new StringTokenizer(options, "\n");
@@ -84,11 +86,11 @@ public class QuestionDto {
         this.answers = answers;
     }
 
-    public List<String> getOptions() {
+    public List<QuestionOption> getOptions() {
         return options;
     }
 
-    public void setOptions(List<String> options) {
+    public void setOptions(List<QuestionOption> options) {
         this.options = options;
     }
 
