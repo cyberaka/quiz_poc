@@ -4,19 +4,19 @@ import com.cyberaka.quiz.domain.SubTopic;
 
 public class SubTopicDto {
 
-    private Integer subTopicId;
+    private String subTopicId;
     private String title;
-    private Integer topicId;
+    private String topicId;
 
     public SubTopicDto() {
         super();
     }
 
-    public Integer getSubTopicId() {
+    public String getSubTopicId() {
         return subTopicId;
     }
 
-    public void setSubTopicId(Integer subTopicId) {
+    public void setSubTopicId(String subTopicId) {
         this.subTopicId = subTopicId;
     }
 
@@ -28,11 +28,11 @@ public class SubTopicDto {
         this.title = title;
     }
 
-    public Integer getTopicId() {
+    public String getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Integer topicId) {
+    public void setTopicId(String topicId) {
         this.topicId = topicId;
     }
 

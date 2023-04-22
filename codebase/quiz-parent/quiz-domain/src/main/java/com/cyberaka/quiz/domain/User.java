@@ -1,40 +1,30 @@
 package com.cyberaka.quiz.domain;
 
-import javax.persistence.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
-@Table(name = "quiz_user", uniqueConstraints = @UniqueConstraint(name="unique_user_id", columnNames = {"user_name"}))
+@Document("users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
-    @Column(name = "user_name", nullable = false, unique =  true)
+    @MongoId
+    private String userId;
     private String userName;
-    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name = "phone_no", nullable = false)
     private String phoneNo;
-    @Column(name = "admin", nullable = false)
     private boolean admin;
-    @Column(name = "publisher", nullable = false)
     private boolean publisher;
-    @Column(name = "consumer", nullable = false)
     private boolean consumer;
 
     public User() {
         super();
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

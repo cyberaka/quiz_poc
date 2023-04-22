@@ -3,7 +3,7 @@ package com.cyberaka.quiz.dto;
 import com.cyberaka.quiz.domain.Topic;
 
 public class TopicDto {
-    private Integer topicId;
+    private String topicId;
 
     private String title;
 
@@ -12,11 +12,11 @@ public class TopicDto {
 
     }
 
-    public Integer getTopicId() {
+    public String getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Integer topicId) {
+    public void setTopicId(String topicId) {
         this.topicId = topicId;
     }
 

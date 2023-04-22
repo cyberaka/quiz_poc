@@ -12,6 +12,9 @@
 </ion-header>
 
 <ion-content>
+  <div *ngIf="loader" class="loaderStyle">
+    <ion-spinner color="primary"></ion-spinner>
+  </div>
   <ion-list>
     <ion-item lines="full" button detail="true" *ngFor="let topic of topics" (click)="topicClick(topic)">
       <ion-label>

@@ -18,6 +18,7 @@ export class SubTopicsPage implements OnInit {
   pageTitle: string = "Sub Topics"
   subTopics: subTopic[] =  [];
   topicId: Number;
+  loader: boolean = true
   constructor(
     private router: Router,
     private http: HttpService,
@@ -37,6 +38,7 @@ export class SubTopicsPage implements OnInit {
   }
   getSubTopics() {
     this.http.getSubTopics(this.topicId).subscribe((list: any) => {
+      this.loader = false;
       this.subTopics = [...list];
     });
   }

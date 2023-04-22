@@ -15,4 +15,9 @@ public class TopicServiceImpl implements TopicService {
         return topicRepo.findAll();
 
     }
+
+    @Override
+    public Topic findTopic(String topicId) {
+        return topicRepo.findById(topicId).get();
+    }
 }

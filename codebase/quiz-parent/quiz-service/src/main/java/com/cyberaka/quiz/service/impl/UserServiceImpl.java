@@ -15,11 +15,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(String userName, String password) {
-        return userRepo.login(userName, password);
+//        return userRepo.login(userName, password);
+        return null;
     }
 
     @Override
     public User find(int id) {
-        return userRepo.findById(id).get();
+        return userRepo.findById("" + id).get();
     }
 }
