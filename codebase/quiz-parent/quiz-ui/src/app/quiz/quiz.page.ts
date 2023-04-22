@@ -43,7 +43,7 @@ export class QuizPage implements OnInit {
       });
       this.http.getQAs(this.topics).subscribe((qas: any) => {
         if (qas.length == 0) {
-          this.showAlert('No Questions are there, Please select different level', 'settingsPage');
+          this.showAlert('No Questions are there, Please select different level', 'topics');
         } else {
           this.customAns = [];
           this.QAs = qas.map((question: any) => {
