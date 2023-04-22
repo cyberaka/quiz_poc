@@ -4,4 +4,6 @@ import com.cyberaka.quiz.domain.Topic;
 
 public interface TopicService {
     public Iterable<Topic> findAll();
+
+    public Topic findTopic(String topicId);
 }

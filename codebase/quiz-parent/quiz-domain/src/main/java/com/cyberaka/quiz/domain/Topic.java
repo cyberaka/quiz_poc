@@ -1,27 +1,23 @@
 package com.cyberaka.quiz.domain;
 
-import javax.persistence.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
-@Table(name = "quiz_topic")
+@Document("topics")
 public class Topic {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "topic_id", nullable = false)
-    private Integer topicId;
-
-    @Column(name = "title")
+    @MongoId
+    private String topicId;
     private String title;
 
     public Topic() {
         super();
     }
 
-    public Integer getTopicId() {
+    public String getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Integer topicId) {
+    public void setTopicId(String topicId) {
         this.topicId = topicId;
     }
 

@@ -36,28 +36,28 @@ public class QuestionParser {
      * @param opt An array of options.
      * @return
      */
-    public String[] parseOptions(String opt) {
-        String options = opt.trim();
-        if (options.isEmpty()) {
-            return new String[0];
-        }
-        ArrayList<String> optionList = new ArrayList<>();
-        char option = 65; // A
-        String optionStr;
-        int lastIndex = 0;
-        int newIndex;
-        do {
-            option++;
-            optionStr = option + ". ";
-            newIndex = options.indexOf(optionStr);
-            if (newIndex == -1) {
-                optionList.add(options.substring(lastIndex, options.length()).trim());
-                break;
-            } else {
-                optionList.add(options.substring(lastIndex, newIndex).trim());
-                lastIndex = newIndex;
-            }
-        } while (true);
-        return optionList.toArray(new String[0]);
-    }
+//    public String[] parseOptions(String opt) {
+//        String options = opt.trim();
+//        if (options.isEmpty()) {
+//            return new String[0];
+//        }
+//        ArrayList<String> optionList = new ArrayList<>();
+//        char option = 65; // A
+//        String optionStr;
+//        int lastIndex = 0;
+//        int newIndex;
+//        do {
+//            option++;
+//            optionStr = option + ". ";
+//            newIndex = options.indexOf(optionStr);
+//            if (newIndex == -1) {
+//                optionList.add(options.substring(lastIndex, options.length()).trim());
+//                break;
+//            } else {
+//                optionList.add(options.substring(lastIndex, newIndex).trim());
+//                lastIndex = newIndex;
+//            }
+//        } while (true);
+//        return optionList.toArray(new String[0]);
+//    }
 }

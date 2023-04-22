@@ -1,20 +1,13 @@
 package com.cyberaka.quiz.domain;
 
-import javax.persistence.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
-@Entity
-@Table(name = "quiz_sub_topic")
+@Document("sub_topics")
 public class SubTopic {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "sub_topic_id", nullable = false)
-
-    private Integer subTopicId;
-    @Column(name = "title")
+    @MongoId
+    private String subTopicId;
     private String title;
-
-    @ManyToOne
-    @JoinColumn(name = "topic_id", referencedColumnName = "topic_id")
     private Topic topic;
 
     public SubTopic() {
@@ -22,11 +15,11 @@ public class SubTopic {
 
     }
 
-    public Integer getSubTopicId() {
+    public String getSubTopicId() {
         return subTopicId;
     }
 
-    public void setSubTopicId(Integer subTopicId) {
+    public void setSubTopicId(String subTopicId) {
         this.subTopicId = subTopicId;
     }
 

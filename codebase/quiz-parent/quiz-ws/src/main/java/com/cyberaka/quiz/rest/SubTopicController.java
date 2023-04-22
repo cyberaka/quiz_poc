@@ -21,7 +21,7 @@ public class SubTopicController {
 
     @RequestMapping("/subtopics/{topicID}")
     @ResponseBody
-    public List<SubTopicDto> findByTopic(@PathVariable("topicID") int topicId) {
+    public List<SubTopicDto> findByTopic(@PathVariable("topicID") String topicId) {
         log.info("findByTopic(" + topicId + ")");
         Iterable<SubTopic> subTopics = subTopicService.findByTopic(topicId);
         List<SubTopicDto> results = new ArrayList<SubTopicDto>();

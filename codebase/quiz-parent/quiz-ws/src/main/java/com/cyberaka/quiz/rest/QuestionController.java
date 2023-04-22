@@ -50,7 +50,7 @@ public class QuestionController {
 
     @RequestMapping("/quiz/{topicId}/{subTopicId}/{level}/{count}")
     @ResponseBody
-    public List<QuestionDto> getQuiz(@PathVariable("topicId") int topicId, @PathVariable("subTopicId") int subTopicId,
+    public List<QuestionDto> getQuiz(@PathVariable("topicId") String topicId, @PathVariable("subTopicId") String subTopicId,
                                      @PathVariable("level") int level, @PathVariable("count") int count) {
         log.info("getQuiz(" + topicId + ", " + subTopicId + ", " + level + ", " + count + ")");
         Iterable<Question> questions = questionService.findQuiz(topicId, subTopicId, level, count);
@@ -66,6 +66,9 @@ public class QuestionController {
     @RequestMapping(value="/quiz/publish", method=RequestMethod.POST)
     @ResponseBody
     public void submitQuizAnswer(Model model, @RequestBody QuestionAnswerDto[] body) throws QuizSecurityException {
+        if (true) { // Need to deprecate this functionality.
+            return;
+        }
         int userId = 1; // TODO Replace with principal nickname
         System.out.println("Received answer submitted by user " + userId);
         System.out.println(body);
