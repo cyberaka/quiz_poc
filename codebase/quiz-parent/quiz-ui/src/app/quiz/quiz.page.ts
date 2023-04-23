@@ -48,6 +48,7 @@ export class QuizPage implements OnInit {
         } else {
           this.customAns = [];
           this.customAns = Array(qas.length).fill('');
+          // this.singleAns = Array(qas.length).fill('');
           this.QAs = qas;
           loading.dismiss();
         }
@@ -94,6 +95,7 @@ export class QuizPage implements OnInit {
   }
 
   singleAnswerSelection() {
+    console.log(this.QAs[this.currentQusIndex]['options']);
     let updatedOptions = [...this.QAs[this.currentQusIndex]['options'].map((option : any) => {
       if(option.option == this.singleAns) {
         option.checked= true;
@@ -103,7 +105,7 @@ export class QuizPage implements OnInit {
       return option;
     })];
     this.QAs[this.currentQusIndex]['options'] = [...updatedOptions];
-    this.QAs[this.currentQusIndex]['userAnswers'] = [...this.singleAns];
+    this.QAs[this.currentQusIndex]['userAnswers'] = [...this.singleAns]; 
   }
 
   NextClick() {
@@ -113,6 +115,7 @@ export class QuizPage implements OnInit {
     if (this.currentQusIndex == this.QAs.length - 1) {
       this.reachEnd = true;
     }
+    this.singleSelectionAnsAppend();
     this.qaCircleMove();
   }
   
@@ -121,7 +124,13 @@ export class QuizPage implements OnInit {
     if(this.currentQusIndex > 0) {
       this.currentQusIndex -= 1;
     }
+    this.singleSelectionAnsAppend();
     this.qaCircleMove();
+  }
+
+  singleSelectionAnsAppend() {
+    let ans = this.QAs[this.currentQusIndex]['userAnswers'] || ""; 
+    this.singleAns = ans.toString();
   }
 
   qaCircleMove() {
