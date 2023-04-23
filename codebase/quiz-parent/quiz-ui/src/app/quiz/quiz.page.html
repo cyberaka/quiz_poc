@@ -38,12 +38,9 @@
       <ion-radio-group [(ngModel)]="singleAns" (ionChange)="singleAnswerSelection()">
         <ion-card class="multiCard" *ngFor="let option of QAs[currentQusIndex]?.options;let i = index">
           <ion-item class="answerItem" lines="none">
-            <ion-label class="optionTxt">
+            <div class="optionTxt">
               {{option.text}}
-            </ion-label>
-            <!-- <div class="optionTxt">
-             
-            </div> -->
+            </div>
             <ion-radio mode="md" slot="start" [(ngModel)]="option.option"></ion-radio>
           </ion-item>
 
