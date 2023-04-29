@@ -781,28 +781,18 @@ public class QuizBootupRunner implements CommandLineRunner {
         if (rowIterator.hasNext()) {
             // Expected Field >> Category	Sub Category	Sheet Name	Process
             List<Object> headerRow = rowIterator.next();
-//            categoryCell = headerRow.getCell(0);
             categoryCellStr = googleReadStringCellValue(headerRow, 0);
-//            subCategoryCell = headerRow.getCell(1);
             subCategoryCellStr = googleReadStringCellValue(headerRow, 1);
-//            sheetNameCell = headerRow.getCell(2);
             sheetNameCellStr = googleReadStringCellValue(headerRow, 2);
-//            processCell = headerRow.getCell(3);
             processCellStr = googleReadStringCellValue(headerRow, 3);
-//            versionCell = headerRow.getCell(4);
             versionCellStr = googleReadStringCellValue(headerRow, 4);
             if (checkSubjectSheetHeader(categoryCellStr, subCategoryCellStr, sheetNameCellStr, processCellStr, versionCellStr)) {
                 while (rowIterator.hasNext()) {
                     List<Object> row = rowIterator.next();
-//                    categoryCell = row.getCell(0);
                     categoryCellStr = googleReadStringCellValue(row, 0);
-//                    subCategoryCell = row.getCell(1);
                     subCategoryCellStr = googleReadStringCellValue(row, 1);
-//                    sheetNameCell = row.getCell(2);
                     sheetNameCellStr = googleReadStringCellValue(row, 2);
-//                    processCell = row.getCell(3);
                     processCellStr = googleReadStringCellValue(row, 3);
-//                    versionCell = row.getCell(4);
                     versionCellStr = googleReadStringCellValue(row, 4);
 
                     if (isYes(processCellStr) && sheetNameCellStr != null) {
@@ -921,8 +911,6 @@ public class QuizBootupRunner implements CommandLineRunner {
 
     private void googleImportQuestions(User user, Topic topic, SubTopic subTopic, Iterator<List<Object>> rowIterator) {
         String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr, answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr = null;
-//        StringBuilder optionBuilder = new StringBuilder();
-//        char optionIndex = 0;
         ArrayList<Question> questionList = new ArrayList<>();
         // Verify the header
         if (rowIterator.hasNext()) {
@@ -959,7 +947,6 @@ public class QuizBootupRunner implements CommandLineRunner {
                     if (!chapterCellStr.equalsIgnoreCase(subTopic.getTitle())) {
                         continue;
                     }
-//                    optionIndex = 0;
                     List<QuestionOption> questionOptionList = new ArrayList<>();
                     if (!optionACellStr.isEmpty()) {
                         questionOptionList.add(new QuestionOption("A", optionACellStr));
@@ -979,13 +966,6 @@ public class QuizBootupRunner implements CommandLineRunner {
                     if (!optionFCellStr.isEmpty()) {
                         questionOptionList.add(new QuestionOption("F", optionFCellStr));
                     }
-//                    optionBuilder.setLength(0);
-//                    optionBuilder.append(optionACellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
-//                    optionBuilder.append(optionBCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
-//                    optionBuilder.append(optionCCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
-//                    optionBuilder.append(optionDCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
-//                    optionBuilder.append(optionECellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
-//                    optionBuilder.append(optionFCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionFCellStr + "\n"));
 
                     Question quest = new Question();
                     quest.setTopic(topic);
@@ -1012,7 +992,6 @@ public class QuizBootupRunner implements CommandLineRunner {
     private ArrayList<SubjectImport> googleSubjectImport(Iterator<List<Object>> rowIterator) {
         String subjectStr, targetSheetStr, workSheetIdStr, sheetIdStr, processCellStr = null;
         ArrayList<SubjectImport> subjectImportList = new ArrayList<>();
-        // Subject	Source Worksheet	Source Sheet	Process
         // Verify the header
         if (rowIterator.hasNext()) {
             List<Object> row = rowIterator.next();
@@ -1064,44 +1043,26 @@ public class QuizBootupRunner implements CommandLineRunner {
         // Verify the header
         if (rowIterator.hasNext()) {
             List<Object> row = rowIterator.next();
-//            userIdCell = row.getCell(0);
             userIdCellStr = googleReadStringCellValue(row, 0);
-//            passwordCell = row.getCell(1);
             passwordCellStr = googleReadStringCellValue(row, 1);
-//            nameCell = row.getCell(2);
             nameCellStr = googleReadStringCellValue(row, 2);
-//            emailCell = row.getCell(3);
             emailCellStr = googleReadStringCellValue(row, 3);
-//            phoneCell = row.getCell(4);
             phoneCellStr = googleReadStringCellValue(row, 4);
-//            adminCell = row.getCell(5);
             adminCellStr = googleReadStringCellValue(row, 5);
-//            publisherCell = row.getCell(6);
             publisherCellStr = googleReadStringCellValue(row, 6);
-//            consumerCell = row.getCell(7);
             consumerCellStr = googleReadStringCellValue(row, 7);
-//            processCell = row.getCell(8);
             processCellStr = googleReadStringCellValue(row, 8);
             if (checkUserSheetHeader(userIdCellStr, passwordCellStr, nameCellStr, emailCellStr, phoneCellStr, adminCellStr, publisherCellStr, consumerCellStr, processCellStr)) {
                 while (rowIterator.hasNext()) {
                     row = rowIterator.next();
-//                    userIdCell = row.getCell(0);
                     userIdCellStr = googleReadStringCellValue(row, 0);
-//                    passwordCell = row.getCell(1);
                     passwordCellStr = googleReadStringCellValue(row, 1);
-//                    nameCell = row.getCell(2);
                     nameCellStr = googleReadStringCellValue(row, 2);
-//                    emailCell = row.getCell(3);
                     emailCellStr = googleReadStringCellValue(row, 3);
-//                    phoneCell = row.getCell(4);
                     phoneCellStr = googleReadStringCellValue(row, 4);
-//                    adminCell = row.getCell(5);
                     adminCellStr = googleReadStringCellValue(row, 5);
-//                    publisherCell = row.getCell(6);
                     publisherCellStr = googleReadStringCellValue(row, 6);
-//                    consumerCell = row.getCell(7);
                     consumerCellStr = googleReadStringCellValue(row, 7);
-//                    processCell = row.getCell(8);
                     processCellStr = googleReadStringCellValue(row, 8);
 
                     if (userIdCellStr != null && passwordCellStr != null && nameCellStr != null
@@ -1139,11 +1100,6 @@ public class QuizBootupRunner implements CommandLineRunner {
     }
 
     private String googleReadStringCellValue(List<Object> row, int index) {
-//        if (cell == null) {
-//            return "";
-//        }
-//        cell.setCellType(Cell.CELL_TYPE_STRING);
-//        return cell.getStringCellValue();
         return "" + row.get(index);
     }
 
@@ -1224,41 +1180,25 @@ public class QuizBootupRunner implements CommandLineRunner {
     private void googleExtractV1Format(User user, Topic topic, SubTopic subTopic, Iterator<List<Object>> rowIterator) {
         Cell questionCell, optionACell, optionBCell, optionCCell, optionDCell, optionECell, answerCell = null;
         String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr = null;
-//        StringBuilder optionBuilder = new StringBuilder();
-//        char optionIndex = 0;
         // Verify the header
         if (rowIterator.hasNext()) {
             List<Object> headerRow = rowIterator.next();
-//            questionCell = headerRow.getCell(0);
             questionCellStr = googleReadStringCellValue(headerRow, 0);
-//            optionACell = headerRow.getCell(1);
             optionACellStr = googleReadStringCellValue(headerRow, 1);
-//            optionBCell = headerRow.getCell(2);
             optionBCellStr = googleReadStringCellValue(headerRow, 2);
-//            optionCCell = headerRow.getCell(3);
             optionCCellStr = googleReadStringCellValue(headerRow, 3);
-//            optionDCell = headerRow.getCell(4);
             optionDCellStr = googleReadStringCellValue(headerRow, 4);
-//            optionECell = headerRow.getCell(5);
             optionECellStr = googleReadStringCellValue(headerRow, 5);
-//            answerCell = headerRow.getCell(6);
             answerCellStr = googleReadStringCellValue(headerRow, 6);
             if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, answerCellStr)) {
                 while (rowIterator.hasNext()) {
                     List<Object> row = rowIterator.next();
-//                    questionCell = row.getCell(0);
                     questionCellStr = googleReadStringCellValue(headerRow, 0);
-//                    optionACell = row.getCell(1);
                     optionACellStr = googleReadStringCellValue(headerRow, 1);
-//                    optionBCell = row.getCell(2);
                     optionBCellStr = googleReadStringCellValue(headerRow, 2);
-//                    optionCCell = row.getCell(3);
                     optionCCellStr = googleReadStringCellValue(headerRow, 3);
-//                    optionDCell = row.getCell(4);
                     optionDCellStr = googleReadStringCellValue(headerRow, 4);
-//                    optionECell = row.getCell(5);
                     optionECellStr = googleReadStringCellValue(headerRow, 5);
-//                    answerCell = row.getCell(6);
                     answerCellStr = googleReadStringCellValue(headerRow, 6);
 
                     List<QuestionOption> questionOptionList = new ArrayList<>();
@@ -1277,13 +1217,6 @@ public class QuizBootupRunner implements CommandLineRunner {
                     if (!optionECellStr.isEmpty()) {
                         questionOptionList.add(new QuestionOption("E", optionECellStr));
                     }
-//                    optionIndex = 0;
-//                    optionBuilder.setLength(0);
-//                    optionBuilder.append(optionACellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
-//                    optionBuilder.append(optionBCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
-//                    optionBuilder.append(optionCCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
-//                    optionBuilder.append(optionDCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
-//                    optionBuilder.append(optionECellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
 
                     Question quest = new Question();
                     quest.setTopic(topic);
@@ -1312,57 +1245,33 @@ public class QuizBootupRunner implements CommandLineRunner {
         // Verify the header
         if (rowIterator.hasNext()) {
             List<Object> headerRow = rowIterator.next();
-//            questionCell = headerRow.getCell(0);
             questionCellStr = googleReadStringCellValue(headerRow, 0);
-//            optionACell = headerRow.getCell(1);
             optionACellStr = googleReadStringCellValue(headerRow, 1);
-//            optionBCell = headerRow.getCell(2);
             optionBCellStr = googleReadStringCellValue(headerRow, 2);
-//            optionCCell = headerRow.getCell(3);
             optionCCellStr = googleReadStringCellValue(headerRow, 3);
-//            optionDCell = headerRow.getCell(4);
             optionDCellStr = googleReadStringCellValue(headerRow, 4);
-//            optionECell = headerRow.getCell(5);
             optionECellStr = googleReadStringCellValue(headerRow, 5);
-//            optionFCell = headerRow.getCell(6);
             optionFCellStr = googleReadStringCellValue(headerRow, 6);
-//            answerCell = headerRow.getCell(7);
             answerCellStr = googleReadStringCellValue(headerRow, 7);
-//            explanationCell = headerRow.getCell(8);
             explanationCellStr = googleReadStringCellValue(headerRow, 8);
-//            chapterCell = headerRow.getCell(9);
             chapterCellStr = googleReadStringCellValue(headerRow, 9);
-//            pageCell = headerRow.getCell(10);
             pageCellStr = googleReadStringCellValue(headerRow, 10);
-//            bookCell = headerRow.getCell(11);
             bookCellStr = googleReadStringCellValue(headerRow, 11);
             if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr,
                     answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr)) {
                 while (rowIterator.hasNext()) {
                     List<Object> row = rowIterator.next();
-//                    questionCell = row.getCell(0);
                     questionCellStr = googleReadStringCellValue(row, 0);
-//                    optionACell = row.getCell(1);
                     optionACellStr = googleReadStringCellValue(row, 1);
-//                    optionBCell = row.getCell(2);
                     optionBCellStr = googleReadStringCellValue(row, 2);
-//                    optionCCell = row.getCell(3);
                     optionCCellStr = googleReadStringCellValue(row, 3);
-//                    optionDCell = row.getCell(4);
                     optionDCellStr = googleReadStringCellValue(row, 4);
-//                    optionECell = row.getCell(5);
                     optionECellStr = googleReadStringCellValue(row, 5);
-//                    optionFCell = row.getCell(6);
                     optionFCellStr = googleReadStringCellValue(row, 6);
-//                    answerCell = row.getCell(7);
                     answerCellStr = googleReadStringCellValue(row, 7);
-//                    explanationCell = row.getCell(8);
                     explanationCellStr = googleReadStringCellValue(row, 8);
-//                    chapterCell = row.getCell(9);
                     chapterCellStr = googleReadStringCellValue(row, 9);
-//                    pageCell = row.getCell(10);
                     pageCellStr = googleReadStringCellValue(row, 10);
-//                    bookCell = row.getCell(11);
                     bookCellStr = googleReadStringCellValue(row, 11);
 
                     if (!chapterCellStr.equalsIgnoreCase(subTopic.getTitle())) {
@@ -1387,14 +1296,6 @@ public class QuizBootupRunner implements CommandLineRunner {
                     if (!optionFCellStr.isEmpty()) {
                         questionOptionList.add(new QuestionOption("F", optionFCellStr));
                     }
-//                    optionIndex = 0;
-//                    optionBuilder.setLength(0);
-//                    optionBuilder.append(optionACellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionACellStr + "\n"));
-//                    optionBuilder.append(optionBCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionBCellStr + "\n"));
-//                    optionBuilder.append(optionCCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionCCellStr + "\n"));
-//                    optionBuilder.append(optionDCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionDCellStr + "\n"));
-//                    optionBuilder.append(optionECellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionECellStr + "\n"));
-//                    optionBuilder.append(optionFCellStr.isEmpty() ? "" : ((char) ('A' + optionIndex++) + ". " + optionFCellStr + "\n"));
 
                     Question quest = new Question();
                     quest.setTopic(topic);
