@@ -6,37 +6,32 @@ import com.cyberaka.quiz.dao.SubTopicRepository;
 import com.cyberaka.quiz.dao.TopicRepository;
 import com.cyberaka.quiz.dao.UserRepository;
 import com.cyberaka.quiz.domain.*;
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.sheets.v4.SheetsScopes;
-import com.google.api.services.sheets.v4.model.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.GeneralSecurityException;
-import java.util.*;
+import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.util.DigestUtils;
 
 import java.io.*;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -159,8 +154,7 @@ public class QuizBootupRunner implements CommandLineRunner {
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + credentialsFilePath);
         }
-        GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(jsonFactory, new InputStreamReader(in));
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(jsonFactory, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -601,7 +595,7 @@ public class QuizBootupRunner implements CommandLineRunner {
 
         List<List<Object>> values = questionAnswerSheet.getValues();
         if (values == null || values.isEmpty()) {
-            System.err.println("No data found for header.");
+            LOG.log(Level.SEVERE, "No data found for header.");
             throw new IllegalArgumentException("The google sheet header is invalid.");
         } else {
             if (versionCellStr.equalsIgnoreCase("1")) {
@@ -670,13 +664,14 @@ public class QuizBootupRunner implements CommandLineRunner {
             }
         }
     }
-
+//String md5Hex = DigestUtils.md5DigestAsHex(message.getBytes()).toUpperCase();
     private void googleExtractV2Format(User user, Topic topic, SubTopic subTopic, Iterator<List<Object>> rowIterator) {
         // Question	Option A	Option B	Option C	Option D	Option E	Option F	Answer	Explanation	Chapter	Page	Book
         Cell questionCell, optionACell, optionBCell, optionCCell, optionDCell, optionECell, optionFCell, answerCell, explanationCell, chapterCell, pageCell, bookCell = null;
         String questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr, answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr = null;
-        StringBuilder optionBuilder = new StringBuilder();
-        char optionIndex = 0;
+
+        int questionsAdded = 0, questionsUpdated = 0, questionsSkipped = 0;
+
         // Verify the header
         if (rowIterator.hasNext()) {
             List<Object> headerRow = rowIterator.next();
@@ -694,6 +689,14 @@ public class QuizBootupRunner implements CommandLineRunner {
             bookCellStr = googleReadStringCellValue(headerRow, 11);
             if (checkQuestionBankSheetHeader(questionCellStr, optionACellStr, optionBCellStr, optionCCellStr, optionDCellStr, optionECellStr, optionFCellStr,
                     answerCellStr, explanationCellStr, chapterCellStr, pageCellStr, bookCellStr)) {
+
+                // Load the questions in a map.
+                List<Question> existingQuestionList = questionRepo.queryByTopicAndSubTopic(topic.getTitle(), subTopic.getTitle());
+                HashMap<String, Question> existingQuestionMap = new HashMap<>();
+                for (Question existingQuestion: existingQuestionList) {
+                    existingQuestionMap.put(existingQuestion.toString(), existingQuestion);
+                }
+
                 while (rowIterator.hasNext()) {
                     List<Object> row = rowIterator.next();
                     questionCellStr = googleReadStringCellValue(row, 0);
@@ -745,13 +748,36 @@ public class QuizBootupRunner implements CommandLineRunner {
                     quest.setPage(pageCellStr);
                     quest.setBook(bookCellStr);
                     if (quest.isValidV2()) {
-                        questionRepo.save(quest);
+//                        List<Question> matchingQuestionList = questionRepo.findByQuestionAndTopicAndSubTopic(quest.getQuestion(), quest.getTopic().getTitle(), quest.getSubTopic().getTitle());
+                        Question existingQuestion = existingQuestionMap.get(quest.toString());
+                        if (existingQuestion == null) { // Only if the question doesn't exist.
+                            questionRepo.save(quest);
+                            questionsAdded++;
+                            LOG.info("Added Question >> " + quest.getQuestion());
+                        } else { // If matching question is found.
+                            if (!existingQuestion.toString().equalsIgnoreCase(quest.toString())) {
+                                existingQuestion.setOptions(quest.getOptions());
+                                existingQuestion.setAnswers(quest.getAnswers());
+                                existingQuestion.setDifficultyLevel(quest.getDifficultyLevel());
+                                existingQuestion.setExplanation(quest.getExplanation());
+                                existingQuestion.setChapter(quest.getChapter());
+                                existingQuestion.setPage(quest.getPage());
+                                existingQuestion.setBook(quest.getBook());
+                                questionRepo.save(existingQuestion);
+                                questionsUpdated++;
+                                LOG.info("Updated Question >> " + existingQuestion.getQuestion());
+                            } else {
+                                questionsSkipped++;
+//                                LOG.info("No Changes detected in question. Skipping >> " + quest.getQuestion());
+                            }
+                        }
                     } else {
                         LOG.log(Level.SEVERE, "Invalid question skipped >> {0}", quest.getQuestion());
                     }
                 }
             }
         }
+        LOG.info("Import Stats. Added (" + questionsAdded + "), Updated (" + questionsUpdated + "), Skipped (" + questionsSkipped + ")");
     }
 
 }

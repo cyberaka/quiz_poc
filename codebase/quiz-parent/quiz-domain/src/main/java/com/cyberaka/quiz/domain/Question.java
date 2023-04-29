@@ -3,6 +3,8 @@ package com.cyberaka.quiz.domain;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.Arrays;
+
 
 @Document("questions")
 public class Question {
@@ -138,4 +140,19 @@ public class Question {
                 book != null && !book.isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                ", question='" + question + '\'' +
+                ", answers='" + answers + '\'' +
+                ", options=" + Arrays.toString(options) +
+                ", difficultyLevel=" + difficultyLevel +
+                ", explanation='" + explanation + '\'' +
+                ", chapter='" + chapter + '\'' +
+                ", page='" + page + '\'' +
+                ", book='" + book + '\'' +
+                ", topic=" + topic.getTitle() +
+                ", subTopic=" + subTopic.getTitle() +
+                '}';
+    }
 }
