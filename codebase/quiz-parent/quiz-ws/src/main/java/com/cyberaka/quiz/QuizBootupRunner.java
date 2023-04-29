@@ -694,7 +694,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                 List<Question> existingQuestionList = questionRepo.queryByTopicAndSubTopic(topic.getTitle(), subTopic.getTitle());
                 HashMap<String, Question> existingQuestionMap = new HashMap<>();
                 for (Question existingQuestion: existingQuestionList) {
-                    existingQuestionMap.put(existingQuestion.toString(), existingQuestion);
+                    existingQuestionMap.put(existingQuestion.getQuestion(), existingQuestion);
                 }
 
                 while (rowIterator.hasNext()) {
@@ -749,7 +749,7 @@ public class QuizBootupRunner implements CommandLineRunner {
                     quest.setBook(bookCellStr);
                     if (quest.isValidV2()) {
 //                        List<Question> matchingQuestionList = questionRepo.findByQuestionAndTopicAndSubTopic(quest.getQuestion(), quest.getTopic().getTitle(), quest.getSubTopic().getTitle());
-                        Question existingQuestion = existingQuestionMap.get(quest.toString());
+                        Question existingQuestion = existingQuestionMap.get(quest.getQuestion());
                         if (existingQuestion == null) { // Only if the question doesn't exist.
                             questionRepo.save(quest);
                             questionsAdded++;
