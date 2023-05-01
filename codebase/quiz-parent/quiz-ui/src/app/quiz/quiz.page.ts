@@ -152,6 +152,7 @@ export class QuizPage implements OnInit {
   }
 
   submitAns() {
+    this.resetModal();
     this.utils.showLoader();
     let missedAns: any = [];
     this.QAs.forEach((qa: any, idx: any) => {
