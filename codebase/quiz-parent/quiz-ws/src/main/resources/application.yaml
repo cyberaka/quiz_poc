@@ -3,7 +3,13 @@ server:
 logging:
   level:
     root: INFO
-    org.springframework.web: ERROR
+    org:
+      springframework:
+        web: ERROR
+        data:
+          mongodb:
+            core:
+              MongoTemplate: DEBUG
     com.auth0.example: TRACE
 spring:
   security:
@@ -14,21 +20,14 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  datasource: 
-    autoReconnect: true
-    driver-class-name: com.mysql.jdbc.Driver
-    password: ${QUIZ_CONNECTION_PASSWORD}
-    testOnBorrow: true
-    url: ${QUIZ_CONNECTION_STRING}
-    username: ${QUIZ_CONNECTION_USER}
-    validationQuery: "SELECT 1"
-  jpa: 
-    hibernate:
-      ddl-auto: ${QUIZ_JPA_DDL_AUTO}
-      dialect: org.hibernate.dialect.MySQL5Dialect
+  data:
+    mongodb:
+      database: ${QUIZ_CONNECTION_DATABASE}
+      uri: ${QUIZ_CONNECTION_STRING}
   thymeleaf:
     cache: false
 data:
+  ddl_auto: ${QUIZ_DDL_AUTO}
   file: ${QUIZ_DATA_FOLDER}
   result_output: ${QUIZ_RESULT_FOLDER}
   font_file: ${QUIZ_FONT_FILE}

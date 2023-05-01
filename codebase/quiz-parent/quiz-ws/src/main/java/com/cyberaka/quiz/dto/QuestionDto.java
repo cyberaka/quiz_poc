@@ -1,20 +1,20 @@
 package com.cyberaka.quiz.dto;
 
 import com.cyberaka.quiz.domain.Question;
+import com.cyberaka.quiz.domain.QuestionOption;
 import com.cyberaka.quiz.dto.common.QuestionParser;
 
-import javax.persistence.Column;
 import java.util.Arrays;
 import java.util.List;
 
 public class QuestionDto {
-    private Integer questionId;
+    private String questionId;
     private String question;
     private List<String> answers;
-    private List<String> options;
+    private List<QuestionOption> options;
     private Integer difficultyLevel;
-    private Integer topicId;
-    private Integer subTopicId;
+    private String topicId;
+    private String subTopicId;
     private String explanation;
     private String chapter;
     private String page;
@@ -44,7 +44,8 @@ public class QuestionDto {
 //                }
             }
             if (question.getOptions() != null) {
-                this.options = Arrays.asList(qp.parseOptions(question.getOptions()));
+                //this.options = Arrays.asList(qp.parseOptions(question.getOptions()));
+                this.options = Arrays.asList(question.getOptions());
 //                this.options = new ArrayList<String>();
 //                String options = question.getOptions();
 //                StringTokenizer st = new StringTokenizer(options, "\n");
@@ -61,11 +62,11 @@ public class QuestionDto {
         }
     }
 
-    public Integer getQuestionId() {
+    public String getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Integer questionId) {
+    public void setQuestionId(String questionId) {
         this.questionId = questionId;
     }
 
@@ -85,11 +86,11 @@ public class QuestionDto {
         this.answers = answers;
     }
 
-    public List<String> getOptions() {
+    public List<QuestionOption> getOptions() {
         return options;
     }
 
-    public void setOptions(List<String> options) {
+    public void setOptions(List<QuestionOption> options) {
         this.options = options;
     }
 
@@ -101,19 +102,19 @@ public class QuestionDto {
         this.difficultyLevel = difficultyLevel;
     }
 
-    public Integer getTopicId() {
+    public String getTopicId() {
         return topicId;
     }
 
-    public void setTopicId(Integer topicId) {
+    public void setTopicId(String topicId) {
         this.topicId = topicId;
     }
 
-    public Integer getSubTopicId() {
+    public String getSubTopicId() {
         return subTopicId;
     }
 
-    public void setSubTopicId(Integer subTopicId) {
+    public void setSubTopicId(String subTopicId) {
         this.subTopicId = subTopicId;
     }
 

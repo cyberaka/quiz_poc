@@ -41,30 +41,26 @@ export class QuizPage implements OnInit {
       const loading = await this.loader.create({
         message: 'Loading...'
       });
+      loading.present();
       this.http.getQAs(this.topics).subscribe((qas: any) => {
+        loading.dismiss();
         if (qas.length == 0) {
-          this.showAlert('No Questions are there, Please select different level', 'settingsPage');
+          this.showAlert('No Questions are there, Please select different topic', 'topics');
         } else {
           this.customAns = [];
-          this.QAs = qas.map((question: any) => {
-            this.customAns.push('');
-            if (question != null && question.options != null && question.options.length > 0) {
-              question['customOptions'] = [];
-              for (var i = 0; i < question.options.length; i++) {
-                question['customOptions'][i] = {
-                  text: question.options[i].substring(3),
-                  value: question.options[i].charAt(0),
-                  checked: false
-                }
-              }
-            }
-            return question;
-          });
-          loading.dismiss();
+          this.customAns = Array(qas.length).fill('');
+          this.QAs = qas;
         }
       });
     }
 
+  }
+
+  goBack() {
+    this.nav.setDirection('back');
+    this.router.navigateByUrl('sub-topics', {
+      replaceUrl: true
+    });
   }
 
   showAlert(message: string, type: string) {
@@ -105,16 +101,17 @@ export class QuizPage implements OnInit {
   }
 
   singleAnswerSelection() {
-    let updatedOptions = [...this.QAs[this.currentQusIndex]['customOptions'].map((option : any) => {
-      if(option.value == this.singleAns) {
+    console.log(this.QAs[this.currentQusIndex]['options']);
+    let updatedOptions = [...this.QAs[this.currentQusIndex]['options'].map((option : any) => {
+      if(option.option == this.singleAns) {
         option.checked= true;
       } else {
         option.checked = false;
       }
       return option;
     })];
-    this.QAs[this.currentQusIndex]['customOptions'] = [...updatedOptions];
-    this.QAs[this.currentQusIndex]['userAnswers'] = [...this.singleAns];
+    this.QAs[this.currentQusIndex]['options'] = [...updatedOptions];
+    this.QAs[this.currentQusIndex]['userAnswers'] = [...this.singleAns]; 
   }
 
   NextClick() {
@@ -124,6 +121,7 @@ export class QuizPage implements OnInit {
     if (this.currentQusIndex == this.QAs.length - 1) {
       this.reachEnd = true;
     }
+    this.singleSelectionAnsAppend();
     this.qaCircleMove();
   }
   
@@ -132,7 +130,13 @@ export class QuizPage implements OnInit {
     if(this.currentQusIndex > 0) {
       this.currentQusIndex -= 1;
     }
+    this.singleSelectionAnsAppend();
     this.qaCircleMove();
+  }
+
+  singleSelectionAnsAppend() {
+    let ans = this.QAs[this.currentQusIndex]['userAnswers'] || ""; 
+    this.singleAns = ans.toString();
   }
 
   qaCircleMove() {
@@ -153,7 +157,7 @@ export class QuizPage implements OnInit {
     let missedAns: any = [];
     this.QAs.forEach((qa: any, idx: any) => {
       if(qa.options.length > 0) {
-        let len = qa.customOptions.filter((ele: any) => ele.checked);
+        let len = qa.options.filter((ele: any) => ele.checked);
         if(len == 0) {
           missedAns.push(idx);
         }

@@ -28,7 +28,13 @@ export class SummaryQuizPage implements OnInit {
 
   ngOnInit() {
   }
-
+  
+  goBack() {
+    this.nav.setDirection('back');
+    this.router.navigateByUrl('topics', {
+      replaceUrl: true
+    });
+  }
 
   quitQuiz() {
     this.nav.setDirection('forward');

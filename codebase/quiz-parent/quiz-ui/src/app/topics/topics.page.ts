@@ -21,6 +21,7 @@ export interface topic {
 export class TopicsPage implements OnInit {
   pageTitle: string = "Topics"
   topics: topic[] =  []
+  loader: boolean = true
   constructor(
     private router: Router,
     private http: HttpService,
@@ -42,8 +43,11 @@ export class TopicsPage implements OnInit {
 
   getTopics() {
     this.http.getTopics().subscribe((topics: any) => {
+      this.loader = false;
       this.topics = [...topics];
       this.utils.stopLoader();
+    }, err => {
+      this.loader = false;
     });
   }
 

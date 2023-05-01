@@ -38,3 +38,5 @@ plugins
 *.log
 *.DS_Store
 **/history_*.txt
+codebase/quiz-parent/quiz-ui/test.txt
+codebase/quiz-parent/quiz-ws/execute-quiz-ws.sh
