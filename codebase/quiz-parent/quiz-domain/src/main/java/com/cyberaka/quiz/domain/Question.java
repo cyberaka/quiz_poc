@@ -11,7 +11,7 @@ public class Question {
     private String question;
     private String answers;
     private QuestionOption[] options;
-    private Integer difficultyLevel;
+    private int difficultyLevel;
     private String explanation;
     private String chapter;
     private String page;
@@ -122,14 +122,14 @@ public class Question {
 
     public boolean isValid() {
         return topic != null && subTopic != null && contributer != null &&
-                difficultyLevel != null && options != null && options != null &&
+                options != null && options != null &&
                 answers != null && !answers.isEmpty() && question != null &&
                 !question.isEmpty();
     }
 
     public boolean isValidV2() {
         return topic != null && subTopic != null && contributer != null &&
-                difficultyLevel != null && options != null &&
+                options != null &&
                 answers != null && question != null &&
                 !question.isEmpty() &&
                 explanation != null &&
