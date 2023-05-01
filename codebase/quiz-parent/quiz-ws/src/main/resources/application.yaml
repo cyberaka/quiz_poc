@@ -9,7 +9,7 @@ logging:
         data:
           mongodb:
             core:
-              MongoTemplate: DEBUG
+              MongoTemplate: ERROR
     com.auth0.example: TRACE
 spring:
   security:
