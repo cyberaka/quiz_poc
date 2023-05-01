@@ -31,9 +31,7 @@ export class SummaryQuizPage implements OnInit {
   
   goBack() {
     this.nav.setDirection('back');
-    this.router.navigateByUrl('topics', {
-      replaceUrl: true
-    });
+    this.router.navigateByUrl('score');
   }
 
   quitQuiz() {
