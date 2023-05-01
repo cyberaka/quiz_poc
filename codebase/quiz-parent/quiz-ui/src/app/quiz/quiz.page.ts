@@ -43,18 +43,24 @@ export class QuizPage implements OnInit {
       });
       loading.present();
       this.http.getQAs(this.topics).subscribe((qas: any) => {
+        loading.dismiss();
         if (qas.length == 0) {
-          this.showAlert('No Questions are there, Please select different level', 'topics');
+          this.showAlert('No Questions are there, Please select different topic', 'topics');
         } else {
           this.customAns = [];
           this.customAns = Array(qas.length).fill('');
-          // this.singleAns = Array(qas.length).fill('');
           this.QAs = qas;
-          loading.dismiss();
         }
       });
     }
 
+  }
+
+  goBack() {
+    this.nav.setDirection('back');
+    this.router.navigateByUrl('sub-topics', {
+      replaceUrl: true
+    });
   }
 
   showAlert(message: string, type: string) {

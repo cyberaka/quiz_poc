@@ -46,6 +46,8 @@ export class TopicsPage implements OnInit {
       this.loader = false;
       this.topics = [...topics];
       this.utils.stopLoader();
+    }, err => {
+      this.loader = false;
     });
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
 import { UtilsService } from '../services/utils.service';
+import { NavController } from '@ionic/angular';
 
 export interface subTopic {
   subTopicId: Number,
@@ -22,7 +23,8 @@ export class SubTopicsPage implements OnInit {
   constructor(
     private router: Router,
     private http: HttpService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private nav: NavController,
   ) { 
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state && state['topicId']) {
@@ -36,6 +38,14 @@ export class SubTopicsPage implements OnInit {
   ngOnInit() {
     this.getSubTopics();
   }
+
+  goBack() {
+    this.nav.setDirection('back');
+    this.router.navigateByUrl('topics', {
+      replaceUrl: true
+    });
+  }
+
   getSubTopics() {
     this.http.getSubTopics(this.topicId).subscribe((list: any) => {
       this.loader = false;
