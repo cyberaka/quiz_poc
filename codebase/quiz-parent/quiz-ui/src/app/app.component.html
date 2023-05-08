@@ -4,8 +4,8 @@
       <div class="profile" *ngIf="auth.user$ | async as user">
         <img [src]="user.picture" [alt]="user.name" />
         <div class="userSection">
-          <div class="name">{{ user.name }}</div>
-          <div class="mail">{{ user.email }}</div>
+          <!-- <div class="name">{{ user.name }}</div> -->
+          <div class="name">{{ user.email }}</div>
         </div>
       </div>
       <ion-list class="itemsList">
@@ -20,7 +20,7 @@
           <div class="item ion-activatable ripple-parent rounded-rectangle" (click)="deactivate()">
             <ion-icon name="trash-outline" color="danger"></ion-icon>
             <span class="itemTitle">
-              Deactivate Account
+              Delete Account
             </span>
             <ion-ripple-effect class="custom-ripple"></ion-ripple-effect>
           </div>
