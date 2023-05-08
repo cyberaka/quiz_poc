@@ -32,4 +32,8 @@ export class HttpService {
   publishAnswers(data: any) {
     return this.http.post(`${this.apiURL}quiz/publish`, data);
   }
+
+  deleteUser() {
+    return this.http.get(`${this.apiURL}delete_user`);
+  }
 }

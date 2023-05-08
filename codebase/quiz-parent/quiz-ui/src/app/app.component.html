@@ -2,10 +2,10 @@
   <ion-menu side="start" contentId="content">
     <div class="side-menu">
       <div class="profile" *ngIf="auth.user$ | async as user">
-        <img [src]="user.picture" [alt]="user.name" />
+        <img [src]="user.picture" [alt]="user.nickname" />
         <div class="userSection">
-          <!-- <div class="name">{{ user.name }}</div> -->
-          <div class="name">{{ user.email }}</div>
+          <div class="name">{{ user.nickname }}</div>
+          <div class="mail">{{ user.email }}</div>
         </div>
       </div>
       <ion-list class="itemsList">

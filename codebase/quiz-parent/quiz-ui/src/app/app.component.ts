@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { DialogService } from './services/dialog.service';
+import { HttpService } from './services/http.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,8 @@ export class AppComponent implements OnInit  {
     public auth: AuthService,
     private ngZone: NgZone,
     private router: Router,
-    private dialog: DialogService
+    private dialog: DialogService,
+    private http: HttpService
   ) {}
 
   ngOnInit(): void {
@@ -111,8 +113,15 @@ export class AppComponent implements OnInit  {
       }
     ]).then(c => {
       if(c == 'ok') {
-        alert('Pending API call');
+        this.deleteUser();
       }
     })
+  }
+
+  deleteUser() {
+    this.http.deleteUser().subscribe(c => {
+      this.router
+      .navigateByUrl('login', { replaceUrl: true });
+    });
   }
 }
