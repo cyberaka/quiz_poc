@@ -6,6 +6,8 @@ import { mergeMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
+import { DialogService } from './services/dialog.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -15,7 +17,8 @@ export class AppComponent implements OnInit  {
   constructor(
     public auth: AuthService,
     private ngZone: NgZone,
-    private router: Router
+    private router: Router,
+    private dialog: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -28,8 +31,6 @@ export class AppComponent implements OnInit  {
             url.includes('state=') &&
             (url.includes('error=') || url.includes('code='))
           ) {
-            console.log('state');
-            console.log(url);
             this.auth
               .handleRedirectCallback(url)
               .pipe(mergeMap(() => 
@@ -95,5 +96,23 @@ export class AppComponent implements OnInit  {
         .navigateByUrl('login', { replaceUrl: true }); */
       });
     }
+  }
+
+  deactivate() {
+    this.dialog.showAlert('Do you want to deactivate your account?', 
+    [
+      {
+        text: 'Ok',
+        handlerReturn: 'ok'
+      },
+      {
+        text: 'Cancel',
+        handlerReturn: 'cancel'
+      }
+    ]).then(c => {
+      if(c == 'ok') {
+        alert('Pending API call');
+      }
+    })
   }
 }
