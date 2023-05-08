@@ -31,6 +31,7 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .mvcMatchers("/public").permitAll()
                 .mvcMatchers("/login").permitAll()
+                .mvcMatchers("/delete_user").permitAll()
                 .mvcMatchers("/quiz").authenticated()
                 .mvcMatchers("/topics").authenticated()
                 .mvcMatchers("/subtopics").authenticated()
