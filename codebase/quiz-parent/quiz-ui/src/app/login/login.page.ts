@@ -27,6 +27,13 @@ export class LoginPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    /* let token = localStorage.getItem('token') || "";
+    if(token) {
+      let data = JSON.parse(atob(token.split('.')[1])).exp;
+      if(new Date().getTime() < data * 1000) {
+
+      }
+    } */
     this.getLoggedDetails();
   }
 
@@ -57,6 +64,7 @@ export class LoginPage implements OnInit {
         .subscribe((res) => {
           this.auth.isAuthenticated$.subscribe((res) => {
             if (res) {
+              this.setToken();
               this.router
                 .navigateByUrl('topics', { replaceUrl: true });
             }
@@ -65,8 +73,12 @@ export class LoginPage implements OnInit {
     } else {
       this.auth.loginWithRedirect().subscribe((c) => {
         console.log('loginWithRedirect');
-        console.log(c);
       });
     }
+  }
+  setToken() {
+    this.auth.getAccessTokenSilently().subscribe((c) => {
+      localStorage.setItem('token', c);
+    });
   }
 }
