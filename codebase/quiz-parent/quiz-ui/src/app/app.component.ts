@@ -99,7 +99,7 @@ export class AppComponent implements OnInit  {
   }
 
   deactivate() {
-    this.dialog.showAlert('Do you want to deactivate your account?', 
+    this.dialog.showAlert('This action is permanent and irreversible. Are you sure you want to delete your account?', 
     [
       {
         text: 'Ok',
