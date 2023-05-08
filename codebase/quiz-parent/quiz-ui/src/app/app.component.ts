@@ -120,7 +120,10 @@ export class AppComponent implements OnInit  {
 
   deleteUser() {
     this.http.deleteUser().subscribe(c => {
-      this.logout();
+      alert(c);
+      if(c) {
+        this.logout();
+      }
     });
   }
 }
