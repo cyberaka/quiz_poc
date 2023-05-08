@@ -44,6 +44,7 @@ export class LoginPage implements OnInit {
         this.router.navigateByUrl('topics', {replaceUrl : true});
         this.auth.user$.subscribe((res) => {
           console.log(res);
+          this.http.userDet = res;
         })
       } else {
         this.loading = false;

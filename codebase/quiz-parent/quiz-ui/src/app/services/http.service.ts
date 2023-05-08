@@ -34,6 +34,6 @@ export class HttpService {
   }
 
   deleteUser() {
-    return this.http.get(`${this.apiURL}delete_user`);
+    return this.http.delete(`${this.apiURL}delete_user`);
   }
 }
