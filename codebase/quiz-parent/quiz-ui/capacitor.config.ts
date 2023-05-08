@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.cyberaka.qajit',
-  appName: 'Quiz App',
+  appName: 'Quiz Ajit',
   webDir: 'www',
   bundledWebRuntime: false
 };
