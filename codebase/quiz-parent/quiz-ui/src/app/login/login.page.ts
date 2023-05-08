@@ -42,6 +42,9 @@ export class LoginPage implements OnInit {
     this.auth.isAuthenticated$.subscribe((res) =>{
       if(res) {
         this.router.navigateByUrl('topics', {replaceUrl : true});
+        this.auth.user$.subscribe((res) => {
+          console.log(res);
+        })
       } else {
         this.loading = false;
         this.isAuthenticated = false;
