@@ -5,7 +5,7 @@ import { AuthService } from '@auth0/auth0-angular';
 import { mergeMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { Router } from '@angular/router';
-
+import { Capacitor } from '@capacitor/core';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit  {
   constructor(
-    private auth: AuthService,
+    public auth: AuthService,
     private ngZone: NgZone,
     private router: Router
   ) {}
@@ -23,10 +23,6 @@ export class AppComponent implements OnInit  {
       // Must run inside an NgZone for Angular to pick up the changes
       // https://capacitorjs.com/docs/guides/angular
       this.ngZone.run(() => {
-        console.log('appUrlOpen');
-        console.log(url);
-        console.log('redirect URI');
-        console.log(environment.auth.authorizationParams.redirect_uri);
         if (url?.startsWith(environment.auth.authorizationParams.redirect_uri)) {
           if (
             url.includes('state=') &&
@@ -37,10 +33,7 @@ export class AppComponent implements OnInit  {
             this.auth
               .handleRedirectCallback(url)
               .pipe(mergeMap(() => 
-                Browser.close().then(c => {
-                  console.log('close');
-                  console.log('url');
-                })
+                Browser.close()
               ))
               .subscribe({
                 next: (val) => {
@@ -63,6 +56,7 @@ export class AppComponent implements OnInit  {
         }
       });
     });
+
   }
 
   homeRedirect() {
@@ -76,5 +70,30 @@ export class AppComponent implements OnInit  {
         });
       });
     });
+  }
+
+  logout() {
+    let returnTo = environment.auth.authorizationParams.redirect_uri;
+    if (Capacitor.isNativePlatform()) { 
+      this.auth
+      .logout({ 
+        logoutParams: {
+          returnTo
+        },
+        async openUrl(url: string) {
+         await Browser.open({ url, windowName: '_self' })} 
+      })
+      .subscribe();
+    } else {
+      this.auth
+      .logout({ 
+        logoutParams: {
+          returnTo
+        },
+      }).subscribe((c) => {
+       /*  this.router
+        .navigateByUrl('login', { replaceUrl: true }); */
+      });
+    }
   }
 }
