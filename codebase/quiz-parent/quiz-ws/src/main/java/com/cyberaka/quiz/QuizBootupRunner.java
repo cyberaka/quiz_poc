@@ -529,7 +529,12 @@ public class QuizBootupRunner implements CommandLineRunner {
     }
 
     private String googleReadStringCellValue(List<Object> row, int index) {
-        return "" + row.get(index);
+    	if (index < row.size()) {
+    		return "" + row.get(index);	
+    	} else {
+    		LOG.severe("Invalid Index >> " + index + ". Size is " + row.size());
+    		return "";
+    	}
     }
 
     private boolean googleCheckSubjectSheetHeader(String categoryCellStr, String subCategoryCellStr, String sheetNameCellStr, String processCellStr, String versionCellStr) {
