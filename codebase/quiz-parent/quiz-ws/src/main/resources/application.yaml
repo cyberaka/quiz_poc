@@ -38,3 +38,7 @@ data:
     spreadsheet_id: ${QUIZ_GOOGLE_SPREADSHEET_ID}
 auth0:
   audience: ${QUIZ_AUTH_AUDIENCE}
+  management:
+    audience: ${QUIZ_AUTH_MANAGEMENT_AUDIENCE}
+    client_id: ${QUIZ_AUTH_MANAGEMENT_CLIENT_ID}
+    client_secret: ${QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET}
