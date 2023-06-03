@@ -13,6 +13,8 @@ import { UtilsService } from '../services/utils.service';
 })
 export class SummaryQuizPage implements OnInit {
   userAnswers: any = [];
+  actualUserAnswers: any = [];
+  freeTextAns: any = [];
   constructor(
     private router: Router,
     private http: HttpService,
@@ -23,6 +25,8 @@ export class SummaryQuizPage implements OnInit {
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state && state['allDet']) {
       this.userAnswers = state['allDet'];
+      this.actualUserAnswers = state['answers'];
+      this.freeTextAns = state['customAns'];
     }
   }
 
@@ -31,15 +35,21 @@ export class SummaryQuizPage implements OnInit {
   
   goBack() {
     this.nav.setDirection('back');
-    this.router.navigateByUrl('score');
+    this.router.navigateByUrl('score', {
+      state: {
+        answers: this.actualUserAnswers,
+        customAns : this.freeTextAns
+      }
+    });
   }
 
   quitQuiz() {
     this.nav.setDirection('forward');
     this.http.topicId = this.userAnswers[0].topicId;
-    
     this.router.navigateByUrl('topics', {
       replaceUrl: true,
+    }).then(c => {
+      console.log(this.router)
     });
   }
 

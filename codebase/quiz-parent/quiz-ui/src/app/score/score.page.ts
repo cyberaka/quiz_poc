@@ -11,6 +11,7 @@ import { HttpService } from '../services/http.service';
 })
 export class ScorePage implements OnInit {
   userAnswers: any = [];
+  actualUserAnswers: any = [];
   freeTextAns: any = [];
   userScore:number = 0;
   constructor(
@@ -22,10 +23,11 @@ export class ScorePage implements OnInit {
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state) {
       this.userAnswers = state['answers'];
+      this.actualUserAnswers = state['answers'];
       this.freeTextAns = state['customAns'];
     }
-    console.log(this.userAnswers);
-    console.log(this.freeTextAns);
+    localStorage.setItem('answers', JSON.stringify(this.userAnswers));
+    localStorage.setItem('customAns', JSON.stringify(this.freeTextAns));
   }
 
   ngOnInit() {
@@ -83,11 +85,13 @@ export class ScorePage implements OnInit {
 
   summay() {
     this.router.navigateByUrl('summary-quiz', {
-      replaceUrl: false,
+      replaceUrl: true,
       state : {
-        allDet : this.userAnswers
+        allDet : this.userAnswers,
+        answers: this.actualUserAnswers,
+        customAns : this.freeTextAns
       }
-    });
+    })
   }
 
   showAlert(message: string, type: string = '') {
