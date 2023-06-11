@@ -26,8 +26,6 @@ export class ScorePage implements OnInit {
       this.actualUserAnswers = state['answers'];
       this.freeTextAns = state['customAns'];
     }
-    localStorage.setItem('answers', JSON.stringify(this.userAnswers));
-    localStorage.setItem('customAns', JSON.stringify(this.freeTextAns));
   }
 
   ngOnInit() {
@@ -73,6 +71,16 @@ export class ScorePage implements OnInit {
         this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
       } 
     });
+    this.scrollIntoScore();
+  }
+
+  scrollIntoScore() {
+    let ele: any = document.getElementById('scoreDetail');
+    if(ele) {
+      setTimeout(() => {
+        ele.scrollIntoView();
+      }, 1000);
+    }
   }
 
   publish() {

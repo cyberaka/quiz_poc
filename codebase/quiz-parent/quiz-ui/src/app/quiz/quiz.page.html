@@ -60,7 +60,7 @@
   <div>
       <div>
         <ion-fab>
-          <ion-fab-button size="small" [disabled]="!currentQusIndex" (click)="previousClick()">
+          <ion-fab-button size="medium" [disabled]="!currentQusIndex" (click)="previousClick()">
             <ion-icon name="chevron-back"></ion-icon>
           </ion-fab-button>
         </ion-fab>
@@ -72,7 +72,7 @@
       </div>
       <div>
         <ion-fab>
-          <ion-fab-button size="small" [disabled]="(currentQusIndex == QAs.length -1)" (click)="NextClick()">
+          <ion-fab-button size="medium" [disabled]="(currentQusIndex == QAs.length -1)" (click)="NextClick()">
             <ion-icon name="chevron-forward"></ion-icon>
           </ion-fab-button>
         </ion-fab>
