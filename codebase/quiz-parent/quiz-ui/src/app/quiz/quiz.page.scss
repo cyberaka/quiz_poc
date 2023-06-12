@@ -26,9 +26,9 @@ ion-header ion-toolbar {
         flex-direction: row;
         justify-content: space-evenly;
         align-items: center;
-
+        flex: 1;
         ion-button {
-            height: 35px;
+            flex: 1;
         }
     }
 }

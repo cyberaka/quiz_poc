@@ -57,13 +57,17 @@
   </ng-container>
 </ion-content>
 <ion-footer class="ion-no-border footer">
-  <div>
+  <div class="alignment">
       <div>
-        <ion-fab>
+        <ion-button  [disabled]="!currentQusIndex" (click)="previousClick()">
+          <ion-icon slot="start" name="chevron-back"></ion-icon>
+          Previous
+        </ion-button>
+       <!--  <ion-fab>
           <ion-fab-button size="medium" [disabled]="!currentQusIndex" (click)="previousClick()">
             <ion-icon name="chevron-back"></ion-icon>
           </ion-fab-button>
-        </ion-fab>
+        </ion-fab> -->
       </div>
       <div *ngIf="reachEnd" >
         <ion-button class="publish" fill="outline" (click)="submitAns()">
@@ -71,11 +75,15 @@
         </ion-button>
       </div>
       <div>
-        <ion-fab>
+        <ion-button [disabled]="(currentQusIndex == QAs.length -1)" (click)="NextClick()">
+          <ion-icon slot="end" name="chevron-forward"></ion-icon>
+          Next
+        </ion-button>
+       <!--  <ion-fab>
           <ion-fab-button size="medium" [disabled]="(currentQusIndex == QAs.length -1)" (click)="NextClick()">
             <ion-icon name="chevron-forward"></ion-icon>
           </ion-fab-button>
-        </ion-fab>
+        </ion-fab> -->
       </div>
   </div>
 </ion-footer>
