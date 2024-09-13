@@ -2,14 +2,13 @@ package com.cyberaka.quiz.rest;
 
 import com.cyberaka.quiz.PdfGenaratorUtil;
 import com.cyberaka.quiz.domain.Question;
+import com.cyberaka.quiz.domain.SubTopic;
 import com.cyberaka.quiz.domain.User;
-import com.cyberaka.quiz.dto.CandidateResultDto;
-import com.cyberaka.quiz.dto.QuestionAnswerDto;
-import com.cyberaka.quiz.dto.QuestionDto;
-import com.cyberaka.quiz.dto.UserDto;
+import com.cyberaka.quiz.dto.*;
 import com.cyberaka.quiz.dto.common.exception.QuizSecurityException;
 import com.cyberaka.quiz.service.QuestionService;
 import com.cyberaka.quiz.service.UserService;
+import com.cyberaka.quiz.utils.CommonHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -26,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -53,14 +53,18 @@ public class QuestionController {
     public List<QuestionDto> getQuiz(@PathVariable("topicId") String topicId, @PathVariable("subTopicId") String subTopicId,
                                      @PathVariable("level") int level, @PathVariable("count") int count) {
         log.info("getQuiz(" + topicId + ", " + subTopicId + ", " + level + ", " + count + ")");
-        Iterable<Question> questions = questionService.findQuiz(topicId, subTopicId, level, count);
-        List<QuestionDto> results = new ArrayList<QuestionDto>();
-        for (Question question : questions) {
-            QuestionDto dto = new QuestionDto();
-            dto.clone(question);
-            results.add(dto);
+
+        List<QuestionDto> results = StreamSupport.stream(
+                        questionService.findQuiz(topicId, subTopicId, level, count)
+                                .spliterator(), false)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        if (CommonHelper.getInstance().isAuthenticated()) {
+            return results;
+        } else {
+            return CommonHelper.getInstance().getTwentyPercentOfResults(results);
         }
-        return results;
     }
 
     @RequestMapping(value="/quiz/publish", method=RequestMethod.POST)
@@ -149,4 +153,9 @@ public class QuestionController {
         }
     }
 
+    private QuestionDto convertToDto(Question question) {
+        QuestionDto dto = new QuestionDto();
+        dto.clone(question);
+        return dto;
+    }
 }
