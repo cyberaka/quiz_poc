@@ -32,9 +32,7 @@ public class SecurityConfig {
                 .mvcMatchers("/public").permitAll()
                 .mvcMatchers("/login").permitAll()
                 .mvcMatchers("/delete_user").permitAll()
-                .mvcMatchers("/quiz").authenticated()
-                .mvcMatchers("/topics").authenticated()
-                .mvcMatchers("/subtopics").authenticated()
+                .mvcMatchers("/quiz" , "/topics", "subtopics").permitAll()
                 //.mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
                 .and().cors()
                 .and().oauth2ResourceServer().jwt();
