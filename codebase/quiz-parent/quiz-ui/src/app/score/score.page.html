@@ -21,7 +21,7 @@
   </div>
   <div class="buttons">
     <ion-button fill="outline" color="tertiary" (click)="summay()">Summary Quiz</ion-button>
-    <ion-button (click)="publish()">Publish Quiz</ion-button>
+    <ion-button (click)="publish()" [disabled]="isGuest">Publish Quiz</ion-button>
 
   </div>
 </ion-content>

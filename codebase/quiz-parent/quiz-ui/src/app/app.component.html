@@ -12,12 +12,15 @@
         <ion-menu-toggle>
           <div class="item ion-activatable ripple-parent rounded-rectangle" (click)="logout()">
             <ion-icon name="log-out-outline"></ion-icon>
-            <span class="itemTitle">
+            <span class="itemTitle" *ngIf="loginMode === 'user'">
               Logout
+            </span>
+            <span class="itemTitle" *ngIf="loginMode === 'guest'">
+              Logout as Guest
             </span>
             <ion-ripple-effect class="custom-ripple"></ion-ripple-effect>
           </div>
-          <div class="item ion-activatable ripple-parent rounded-rectangle" (click)="deactivate()">
+          <div *ngIf="loginMode === 'user'" class="item ion-activatable ripple-parent rounded-rectangle" (click)="deactivate()">
             <ion-icon name="trash-outline" color="danger"></ion-icon>
             <span class="itemTitle">
               Delete Account

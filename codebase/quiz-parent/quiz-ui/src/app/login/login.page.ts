@@ -16,7 +16,7 @@ let window: any;
 export class LoginPage implements OnInit {
   pageTitle: string = 'Login';
   loading: boolean = true;
-  
+
   isAuthenticated: boolean = false;
   constructor(
     private router: Router,
@@ -27,13 +27,6 @@ export class LoginPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    /* let token = localStorage.getItem('token') || "";
-    if(token) {
-      let data = JSON.parse(atob(token.split('.')[1])).exp;
-      if(new Date().getTime() < data * 1000) {
-
-      }
-    } */
     this.getLoggedDetails();
   }
 
@@ -80,6 +73,12 @@ export class LoginPage implements OnInit {
       });
     }
   }
+
+  guest() {
+    localStorage.setItem('mode', 'guest');
+    this.router.navigateByUrl('topics', { replaceUrl: true });
+  }
+
   setToken() {
     this.auth.getAccessTokenSilently().subscribe((c) => {
       localStorage.setItem('token', c);

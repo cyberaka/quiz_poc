@@ -23,7 +23,7 @@ export class TopicsPage implements OnInit {
     private http: HttpService,
     private utils: UtilsService,
     private auth: AuthService,
-  ) { 
+  ) {
   }
 
   ngOnInit() {
@@ -37,6 +37,7 @@ export class TopicsPage implements OnInit {
       this.topics = [...topics];
       this.utils.stopLoader();
     }, err => {
+      console.log(err);
       this.loader = false;
     });
   }
