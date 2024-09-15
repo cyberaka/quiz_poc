@@ -4,7 +4,7 @@ import { App } from '@capacitor/app';
 import { AuthService } from '@auth0/auth0-angular';
 import { mergeMap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Capacitor } from '@capacitor/core';
 import { DialogService } from './services/dialog.service';
 import { HttpService } from './services/http.service';
@@ -15,13 +15,17 @@ import { HttpService } from './services/http.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit  {
+  loginMode: string ='';
+
   constructor(
     public auth: AuthService,
     private ngZone: NgZone,
     private router: Router,
     private dialog: DialogService,
     private http: HttpService
-  ) {}
+  ) {
+    this.routerListen()
+  }
 
   ngOnInit(): void {
     App.addListener('appUrlOpen', ({ url }) => {
@@ -35,7 +39,7 @@ export class AppComponent implements OnInit  {
           ) {
             this.auth
               .handleRedirectCallback(url)
-              .pipe(mergeMap(() => 
+              .pipe(mergeMap(() =>
                 Browser.close()
               ))
               .subscribe({
@@ -54,7 +58,7 @@ export class AppComponent implements OnInit  {
                 });
               }
             })
-           
+
           }
         }
       });
@@ -62,8 +66,19 @@ export class AppComponent implements OnInit  {
 
   }
 
+  routerListen() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        // Check if user is logged in (you can use a service or localStorage)
+        const isLoggedIn = localStorage.getItem('mode') === 'guest';
+        // Update loginMode based on login status
+        this.loginMode = !isLoggedIn ? 'user' : 'guest';
+      }
+    });
+  }
+
   homeRedirect() {
-    this.ngZone.run(() => { 
+    this.ngZone.run(() => {
       this.router
       .navigateByUrl('login', { replaceUrl: true }).then(c => {
         Browser.close().then(c => {
@@ -76,32 +91,38 @@ export class AppComponent implements OnInit  {
   }
 
   logout() {
-    let returnTo = environment.auth.authorizationParams.redirect_uri;
-    if (Capacitor.isNativePlatform()) { 
-      this.auth
-      .logout({ 
-        logoutParams: {
-          returnTo
-        },
-        async openUrl(url: string) {
-         await Browser.open({ url, windowName: '_self' })} 
-      })
-      .subscribe();
+    const guestMode  = localStorage.getItem('mode')
+    if(guestMode && guestMode == 'guest') {
+      localStorage.removeItem('mode');
+      this.router.navigateByUrl('login', { replaceUrl: true });
     } else {
-      this.auth
-      .logout({ 
-        logoutParams: {
-          returnTo
-        },
-      }).subscribe((c) => {
-       /*  this.router
-        .navigateByUrl('login', { replaceUrl: true }); */
-      });
+        let returnTo = environment.auth.authorizationParams.redirect_uri;
+        if (Capacitor.isNativePlatform()) {
+          this.auth
+          .logout({
+            logoutParams: {
+              returnTo
+            },
+            async openUrl(url: string) {
+            await Browser.open({ url, windowName: '_self' })}
+          })
+          .subscribe();
+        } else {
+          this.auth
+          .logout({
+            logoutParams: {
+              returnTo
+            },
+          }).subscribe((c) => {
+          /*  this.router
+            .navigateByUrl('login', { replaceUrl: true }); */
+          });
+        }
     }
   }
 
   deactivate() {
-    this.dialog.showAlert('This action is permanent and irreversible. Are you sure you want to delete your account?', 
+    this.dialog.showAlert('This action is permanent and irreversible. Are you sure you want to delete your account?',
     [
       {
         text: 'Ok',

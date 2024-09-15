@@ -70,7 +70,7 @@
         <ng-container *ngIf="item.answers.length > 0 && item.options.length > 0 ">
           <ng-container *ngFor="let ans of item?.answers">
             <ng-container *ngFor="let custom of item?.options">
-              <div *ngIf="ans.toLowerCase() == custom.option.toLowerCase()" class="options">
+              <div *ngIf="ans.toLowerCase() === custom.option.toLowerCase()" class="options">
                 <span>
                   {{custom.option}}.
                 </span> {{custom.text}}
@@ -78,7 +78,7 @@
             </ng-container>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="item.answers.length == 1 && item.options.length == 0">
+        <ng-container *ngIf="item.answers.length === 1 && item.options.length === 0">
           <ng-container *ngFor="let custom of item?.answers">
             <div class="options">
               {{custom}}
@@ -130,7 +130,7 @@
 <ion-footer class="ion-no-border footer">
   <div class="buttons">
     <ion-button fill="outline" color="tertiary" (click)="quitQuiz()">Quit Quiz</ion-button>
-    <ion-button (click)="publishQuiz()">Publish Quiz</ion-button>
+    <ion-button (click)="publishQuiz()" [disabled]="isGuest">Publish Quiz</ion-button>
 
   </div>
 </ion-footer>

@@ -12,6 +12,7 @@ import { UtilsService } from '../services/utils.service';
   styleUrls: ['./summary-quiz.page.scss'],
 })
 export class SummaryQuizPage implements OnInit {
+  isGuest: boolean;
   userAnswers: any = [];
   actualUserAnswers: any = [];
   freeTextAns: any = [];
@@ -21,7 +22,8 @@ export class SummaryQuizPage implements OnInit {
     private nav: NavController,
     private dialog: DialogService,
     public utils: UtilsService
-  ) { 
+  ) {
+    this.isGuest = (localStorage.getItem('mode') === 'guest') ? true : false;
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state && state['allDet']) {
       this.userAnswers = state['allDet'];
@@ -32,7 +34,7 @@ export class SummaryQuizPage implements OnInit {
 
   ngOnInit() {
   }
-  
+
   goBack() {
     this.nav.setDirection('back');
     this.router.navigateByUrl('score', {
@@ -74,7 +76,7 @@ export class SummaryQuizPage implements OnInit {
       if (type == 'topics') {
         this.nav.setDirection('forward');
         this.http.topicId = this.userAnswers[0].topicId;
-        
+
         this.router.navigateByUrl('topics', {
           replaceUrl: true,
         });

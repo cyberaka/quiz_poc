@@ -19,6 +19,7 @@ export class QuizPage implements OnInit {
   customAns: any[] = []; //user enter the value
   singleAns: any; //user single selection
   reachEnd: boolean = false;
+index: any;
   constructor(
     private router: Router,
     private http: HttpService,
@@ -110,20 +111,20 @@ export class QuizPage implements OnInit {
       return option;
     })];
     this.QAs[this.currentQusIndex]['options'] = [...updatedOptions];
-    this.QAs[this.currentQusIndex]['userAnswers'] = [...this.singleAns]; 
+    this.QAs[this.currentQusIndex]['userAnswers'] = [...this.singleAns];
   }
 
   NextClick() {
     this.resetModal();
     if(this.currentQusIndex >= 0)
-      this.currentQusIndex += 1;  
+      this.currentQusIndex += 1;
     if (this.currentQusIndex == this.QAs.length - 1) {
       this.reachEnd = true;
     }
     this.singleSelectionAnsAppend();
     this.qaCircleMove();
   }
-  
+
   previousClick() {
     this.resetModal();
     if(this.currentQusIndex > 0) {
@@ -134,7 +135,7 @@ export class QuizPage implements OnInit {
   }
 
   singleSelectionAnsAppend() {
-    let ans = this.QAs[this.currentQusIndex]['userAnswers'] || ""; 
+    let ans = this.QAs[this.currentQusIndex]['userAnswers'] || "";
     this.singleAns = ans.toString();
   }
 

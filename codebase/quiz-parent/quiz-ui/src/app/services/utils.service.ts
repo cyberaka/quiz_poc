@@ -25,7 +25,7 @@ export class UtilsService {
     if (this.isShowingLoader) {
       const loader = this.loadingController;
       const load = await loader.getTop();
-      if(load) {
+      if (load) {
         loader.dismiss();
       }
       this.loader?.dismiss()
@@ -33,15 +33,15 @@ export class UtilsService {
       this.isShowingLoader = false
     }
   }
-  
-    linkify(text: string) {
+
+  linkify(text: string) {
     let urlRegex = /(((https?:\/\/)|(www\.))[^\s]+)/g;
     let mailRegex = /\S+@\S+\.[a-zA-Z]{2,}/g;
     let phoneRegex = /([+][9][1]|[9][1]|[0]){0,1}([0-9]{10})/g;
     if (!text) {
       return '';
     }
-    return text.replace(urlRegex, function (url: string, b:any, c: any) {
+    return text.replace(urlRegex, function (url: string, b: any, c: any) {
       let url2 = (c == 'www.') ? 'http://' + url : url;
       // console.log('url', text.match(/\bhttps?::\/\/\S+/gi));
       // console.log('url2', url2);

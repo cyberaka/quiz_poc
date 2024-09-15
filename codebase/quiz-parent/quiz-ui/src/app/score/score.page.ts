@@ -10,6 +10,7 @@ import { HttpService } from '../services/http.service';
   styleUrls: ['./score.page.scss'],
 })
 export class ScorePage implements OnInit {
+  isGuest: boolean;
   userAnswers: any = [];
   actualUserAnswers: any = [];
   freeTextAns: any = [];
@@ -19,7 +20,8 @@ export class ScorePage implements OnInit {
     private http: HttpService,
     private nav: NavController,
     private dialog: DialogService
-  ) { 
+  ) {
+    this.isGuest = (localStorage.getItem('mode') === 'guest') ? true : false;
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state) {
       this.userAnswers = state['answers'];
@@ -56,7 +58,7 @@ export class ScorePage implements OnInit {
         if(selectedOptions.length && question.answers[0].toLowerCase() == selectedOptions[0].option.toLowerCase()) {
           ++this.userScore;
           this.userAnswers[idx]['correct'] = true;
-        } 
+        }
         if(selectedOptions.length) {
           this.userAnswers[idx]['userAnswers'] = [...selectedOptions[0].option];
         } else {
@@ -69,7 +71,7 @@ export class ScorePage implements OnInit {
           this.userAnswers[idx]['correct'] = true;
         }
         this.userAnswers[idx]['userAnswers'] = [this.freeTextAns[idx]];
-      } 
+      }
     });
     this.scrollIntoScore();
   }
@@ -115,7 +117,7 @@ export class ScorePage implements OnInit {
       if (type == 'topics') {
         this.nav.setDirection('forward');
         this.http.topicId = this.userAnswers[0].topicId;
-        
+
         this.router.navigateByUrl('topics', {
           replaceUrl: true,
         });

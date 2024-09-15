@@ -9,7 +9,7 @@
   </ion-toolbar>
   <ng-container *ngIf="questionNoShow && QAs.length">
     <div class="badges">
-      <div class="circle" *ngFor="let qa of QAs; let i= index" [ngClass]="{active: currentQusIndex == i}">
+      <div class="circle" *ngFor="let qa of QAs; let i= index" [ngClass]="{active: currentQusIndex === i}">
         <span id="qaNo-{{i}}" class="circle__content">{{i + 1}}</span>
       </div>
     </div>
@@ -34,7 +34,7 @@
       </ion-card>
     </ng-container>
     <!-- Single Answer -->
-    <ng-container *ngIf="QAs[currentQusIndex]?.answers.length == 1 && QAs[currentQusIndex]?.options.length > 0">
+    <ng-container *ngIf="QAs[currentQusIndex]?.answers.length === 1 && QAs[currentQusIndex]?.options.length > 0">
       <ion-radio-group [(ngModel)]="singleAns" (ionChange)="singleAnswerSelection()">
         <ion-card class="multiCard" *ngFor="let option of QAs[currentQusIndex]?.options;let i = index">
           <ion-item class="answerItem" lines="none">
@@ -49,7 +49,7 @@
 
     </ng-container>
     <!-- User Input Screen -->
-    <ng-container *ngIf="QAs[currentQusIndex]?.options.length == 0">
+    <ng-container *ngIf="QAs[currentQusIndex]?.options.length === 0">
       <div class="textArea">
         <ion-textarea rows="9" placeholder="Enter your answer" [(ngModel)]="customAns[currentQusIndex]"></ion-textarea>
       </div>
@@ -75,7 +75,7 @@
         </ion-button>
       </div>
       <div>
-        <ion-button [disabled]="(currentQusIndex == QAs.length -1)" (click)="NextClick()">
+        <ion-button [disabled]="(currentQusIndex === QAs.length -1)" (click)="NextClick()">
           <ion-icon slot="end" name="chevron-forward"></ion-icon>
           Next
         </ion-button>

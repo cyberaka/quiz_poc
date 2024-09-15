@@ -4,7 +4,10 @@
       <div class="title">Quiz Ajit</div>
       <div class="subtitle">Share More to Learn More</div>
       <ion-img src="./../../assets/logo.png" alt="home Logo"></ion-img>
-      <ion-button expand="block" (click)="login()">Get Started</ion-button>
+      <div>
+        <ion-button expand="block" (click)="login()">Get Started</ion-button>
+        <ion-button fill="clear" (click)="guest()">Join As Guest</ion-button>
+      </div>
     </div>
    </ng-container>
    <ng-container *ngIf="loading">

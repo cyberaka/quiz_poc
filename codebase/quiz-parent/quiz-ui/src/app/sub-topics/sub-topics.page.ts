@@ -25,7 +25,7 @@ export class SubTopicsPage implements OnInit {
     private http: HttpService,
     private utils: UtilsService,
     private nav: NavController,
-  ) { 
+  ) {
     let state = this.router.getCurrentNavigation()?.extras.state;
     if(state && state['topicId']) {
       this.topicId = state['topicId'] as Number;
@@ -50,6 +50,8 @@ export class SubTopicsPage implements OnInit {
     this.http.getSubTopics(this.topicId).subscribe((list: any) => {
       this.loader = false;
       this.subTopics = [...list];
+    }, err => {
+      this.loader = false;
     });
   }
 
