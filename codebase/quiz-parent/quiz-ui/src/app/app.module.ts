@@ -13,6 +13,7 @@ import { LoadingComponent } from './components/loading/loading.component';
 import { environment as env } from '../environments/environment';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from './services/Auth/auth.service';
+import { oAuthInterceptor } from './guard/AuthOInterceptor';
 
 @NgModule({
   declarations: [AppComponent, ScorePipe, ErrorComponent, LoadingComponent],
@@ -31,11 +32,16 @@ import { AuthService } from './services/Auth/auth.service';
     }),
     AppRoutingModule, HttpClientModule],
   providers: [
-    {
+    /* {
       provide: APP_INITIALIZER,
       useFactory: authInterceptorFactory,
       deps: [AuthService],
       multi: true,
+    }, */
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: oAuthInterceptor,
+      multi: true
     },
     {
       provide: RouteReuseStrategy,
@@ -53,7 +59,7 @@ export function authInterceptorFactory(authService: AuthService) {
     if (isAuthenticated) {
       return {
         provide: HTTP_INTERCEPTORS,
-        useClass: AuthHttpInterceptor,
+        useClass: oAuthInterceptor,
         multi: true
       };
     }

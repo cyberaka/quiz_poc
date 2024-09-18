@@ -34,7 +34,13 @@ export class LoginPage implements OnInit {
   getLoggedDetails() {
     this.auth.isAuthenticated$.subscribe((res) =>{
       if(res) {
-        this.router.navigateByUrl('topics', {replaceUrl : true});
+        this.auth.getAccessTokenSilently().subscribe(token => {
+          if(token) {
+            this.http.oauthToken = token;
+            this.router.navigateByUrl('topics', {replaceUrl : true});
+          }
+        })
+        // this.router.navigateByUrl('topics', {replaceUrl : true});
         this.auth.user$.subscribe((res) => {
           console.log(res);
           this.http.userDet = res;
@@ -55,15 +61,20 @@ export class LoginPage implements OnInit {
         .loginWithRedirect({
           async openUrl(url: string) {
             const res = await Browser.open({ url, windowName: '_self' });
-            console.log(res);
           },
         })
         .subscribe((res) => {
           this.auth.isAuthenticated$.subscribe((res) => {
             if (res) {
+              this.auth.getAccessTokenSilently().subscribe(token => {
+                if(token) {
+                  this.http.oauthToken = token;
+                  this.router.navigateByUrl('topics', {replaceUrl : true});
+                }
+              })
               this.setToken();
-              this.router
-                .navigateByUrl('topics', { replaceUrl: true });
+              /* this.router
+                .navigateByUrl('topics', { replaceUrl: true }); */
             }
           });
         });

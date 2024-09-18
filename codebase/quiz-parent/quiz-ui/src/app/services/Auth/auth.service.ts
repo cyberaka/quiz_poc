@@ -15,4 +15,8 @@ export class AuthService {
       map(isAuth => isAuth)
     );
   }
+
+  isGuestMode() {
+    return localStorage.getItem('mode') === 'guest' ? true : false
+  }
 }

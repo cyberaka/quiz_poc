@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { HttpService } from '../services/http.service';
 import { UtilsService } from '../services/utils.service';
+import { AuthService as localAuth } from '../services/Auth/auth.service';
+import { take } from 'rxjs';
 
 export interface topic {
   topicId: Number,
@@ -22,13 +24,23 @@ export class TopicsPage implements OnInit {
     private router: Router,
     private http: HttpService,
     private utils: UtilsService,
-    private auth: AuthService,
+    private authO: AuthService,
+    private auth: localAuth
   ) {
   }
 
   ngOnInit() {
     this.http.topicId = 0;
-    this.getTopics();
+    if(this.auth.isGuestMode()) {
+      this.getTopics();
+    } else {
+      this.authO.getAccessTokenSilently().subscribe(token => {
+        if(token) {
+          this.http.oauthToken = token;
+          this.getTopics();
+        }
+      })
+    }
   }
 
   getTopics() {
