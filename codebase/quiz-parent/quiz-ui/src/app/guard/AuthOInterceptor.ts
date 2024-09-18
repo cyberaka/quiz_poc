@@ -10,7 +10,6 @@ export class oAuthInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add authorization header with oAuth token if available
-
         let token = localStorage.getItem('mode') === 'guest' ? '' : this.httpService?.oauthToken || "";
         if (token) {
             request = request.clone({

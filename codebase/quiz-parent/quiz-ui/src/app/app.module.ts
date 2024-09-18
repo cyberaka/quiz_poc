@@ -26,6 +26,7 @@ import { oAuthInterceptor } from './guard/AuthOInterceptor';
     ),
     AuthModule.forRoot({
       ...env.auth,
+      authorizeTimeoutInSeconds: 8,
       httpInterceptor: {
         ...env.httpInterceptor,
       },

@@ -49,6 +49,9 @@ export class LoginPage implements OnInit {
         this.loading = false;
         this.isAuthenticated = false;
       }
+    }, err => {
+      this.loading = false;
+      this.isAuthenticated = false;
     });
   }
   /**
