@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export class HttpService {
   topicId: Number = 0;
   userDet: any;
+  oauthToken: any;
   apiURL: string = environment.baseURL;
   constructor(
     private http: HttpClient
