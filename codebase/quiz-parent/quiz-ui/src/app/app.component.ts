@@ -81,11 +81,11 @@ export class AppComponent implements OnInit  {
     this.ngZone.run(() => {
       this.router
       .navigateByUrl('login', { replaceUrl: true }).then(c => {
-        Browser.close().then(c => {
+       /*  Browser.close().then(c => {
           console.log(c);
         }).catch(e => {
           console.log(e);
-        });
+        }); */
       });
     });
   }
@@ -104,7 +104,8 @@ export class AppComponent implements OnInit  {
               returnTo
             },
             async openUrl(url: string) {
-            await Browser.open({ url, windowName: '_self' })}
+              await Browser.open({ url, windowName: '_self' })
+            }
           })
           .subscribe();
         } else {
