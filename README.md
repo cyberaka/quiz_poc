@@ -77,3 +77,12 @@ Back in Xcode, go to the **Info** tab of your app target settings. In the **URL 
 
 <img width="1327" alt="deep-linking-url-scheme" src="https://user-images.githubusercontent.com/30489397/232323001-b42cf5b6-14ca-4991-b6ff-4637a4588bc4.png">
 
+### iOS Trouble shooting
+
+`Issue: Xcode build fails with Command PhaseScriptExecution failed with a nonzero exit code`
+
+**Solution Ref. below image**
+
+![image](https://github.com/user-attachments/assets/a9db91b0-72ae-4a73-9309-b4b67366e4bf)
+
+ 
