@@ -34,6 +34,8 @@ export class LoginPage implements OnInit {
   getLoggedDetails() {
     this.auth.isAuthenticated$.subscribe((res) =>{
       if(res) {
+        // A signed-in session replaces any earlier guest session.
+        localStorage.removeItem('mode');
         this.auth.getAccessTokenSilently().subscribe(token => {
           if(token) {
             this.http.oauthToken = token;
@@ -59,6 +61,7 @@ export class LoginPage implements OnInit {
    *
    */
   async login() {
+    localStorage.removeItem('mode');
     if (Capacitor.isNativePlatform()) {
       this.auth
         .loginWithRedirect({
