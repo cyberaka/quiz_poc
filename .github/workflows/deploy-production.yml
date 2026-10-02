@@ -1,0 +1,128 @@
+name: deploy-production
+
+# Builds quiz-ws and quiz-ui, pushes them to Docker Hub, and redeploys qajit.com
+# on the shared quizwrap.com server. See docs/deploy/qajit-com-runbook.md.
+on:
+  push:
+    branches: [master]
+    paths:
+      - "codebase/quiz-parent/**"
+      - "deploy/**"
+      - ".github/workflows/deploy-production.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: qajitcom-prod-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    steps:
+      # Fail before building or touching the server if any secret is missing.
+      - name: Check required secrets
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          QUIZ_CONNECTION_STRING: ${{ secrets.QUIZ_CONNECTION_STRING }}
+          QUIZ_AUTH_MANAGEMENT_CLIENT_ID: ${{ secrets.QUIZ_AUTH_MANAGEMENT_CLIENT_ID }}
+          QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET: ${{ secrets.QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET }}
+        run: |
+          missing=0
+          for name in DOCKER_USERNAME DOCKER_PASSWORD SERVER_HOST SERVER_USER SSH_PRIVATE_KEY \
+                      QUIZ_CONNECTION_STRING QUIZ_AUTH_MANAGEMENT_CLIENT_ID QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET; do
+            if [ -z "${!name}" ]; then echo "::error::Secret $name is not set"; missing=1; fi
+          done
+          exit $missing
+
+      - uses: actions/checkout@v4
+
+      - name: Add production auth config to the UI build
+        run: cp deploy/auth_config.prod.json codebase/quiz-parent/quiz-ui/auth_config.json
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push quiz-ws
+        uses: docker/build-push-action@v6
+        with:
+          context: codebase/quiz-parent
+          file: codebase/quiz-parent/quiz-ws/Dockerfile
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/quiz-ws:prod
+            ${{ env.DOCKER_USERNAME }}/quiz-ws:prod-${{ github.sha }}
+          cache-from: type=gha,scope=quiz-ws
+          cache-to: type=gha,mode=max,scope=quiz-ws
+
+      - name: Build and push quiz-ui
+        uses: docker/build-push-action@v6
+        with:
+          context: codebase/quiz-parent/quiz-ui
+          push: true
+          tags: |
+            ${{ env.DOCKER_USERNAME }}/quiz-ui:prod
+            ${{ env.DOCKER_USERNAME }}/quiz-ui:prod-${{ github.sha }}
+          cache-from: type=gha,scope=quiz-ui
+          cache-to: type=gha,mode=max,scope=quiz-ui
+
+      - name: Copy compose file to the server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: deploy/docker-compose.prod.yml
+          target: qajit-com
+          strip_components: 1
+          overwrite: true
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.0.0
+        env:
+          DOCKER_IMAGE_TAG: prod
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          QUIZ_CONNECTION_STRING: ${{ secrets.QUIZ_CONNECTION_STRING }}
+          QUIZ_AUTH_MANAGEMENT_CLIENT_ID: ${{ secrets.QUIZ_AUTH_MANAGEMENT_CLIENT_ID }}
+          QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET: ${{ secrets.QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET }}
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 15m
+          # Passed as environment variables, so values containing $ or quotes survive.
+          envs: DOCKER_USERNAME,DOCKER_IMAGE_TAG,DOCKER_PASSWORD,QUIZ_CONNECTION_STRING,QUIZ_AUTH_MANAGEMENT_CLIENT_ID,QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET
+          script: |
+            set -e
+            cd ~/qajit-com
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+            docker compose -f docker-compose.prod.yml pull ws ui
+            # Recreate only this stack's services; never `down`, other products share this host.
+            docker compose -f docker-compose.prod.yml up -d --no-deps --force-recreate ws ui
+            # Images only: never prune volumes or networks on the shared host.
+            docker image prune -f
+
+            # Poll instead of `up --wait`, which reports unhealthy during start_period.
+            for i in $(seq 1 36); do
+              ws=$(docker inspect -f '{{.State.Health.Status}}' qajitcom-ws)
+              ui=$(docker inspect -f '{{.State.Health.Status}}' qajitcom-ui)
+              echo "attempt $i: ws=$ws ui=$ui"
+              if [ "$ws" = healthy ] && [ "$ui" = healthy ]; then
+                echo "qajit.com deployed"
+                exit 0
+              fi
+              sleep 10
+            done
+            echo "Containers did not become healthy within 6 minutes"
+            docker compose -f docker-compose.prod.yml ps
+            docker logs --tail 100 qajitcom-ws
+            exit 1

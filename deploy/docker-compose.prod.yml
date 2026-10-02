@@ -1,0 +1,60 @@
+# qajit.com production stack on the shared quizwrap.com server (~/qajit-com).
+#
+# The project name must stay unique: quizwrap's Vector ingests every container
+# whose compose project is "qajit" into quizwrap's production analytics.
+#
+# Secrets are exported by the GitHub Actions deploy step and are only declared
+# here. Deploy through the workflow; a hand-run `docker compose up` on the
+# server starts the API with empty secrets.
+name: qajitcom
+
+services:
+  ws:
+    image: ${DOCKER_USERNAME:-cyberaka}/quiz-ws:${DOCKER_IMAGE_TAG:-prod}
+    container_name: qajitcom-ws
+    restart: unless-stopped
+    mem_limit: 768m
+    ports:
+      - "127.0.0.1:8401:7070"
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m"
+      QUIZ_PORT: "7070"
+      SERVER_SERVLET_CONTEXT_PATH: "/api"
+      # Anything other than "none" re-imports questions into the shared Atlas database.
+      QUIZ_DDL_AUTO: "none"
+      QUIZ_CONNECTION_STRING: ${QUIZ_CONNECTION_STRING:?QUIZ_CONNECTION_STRING is required}
+      QUIZ_CONNECTION_DATABASE: "quiz_ajit"
+      QUIZ_AUTH_ISSUER_URI: "https://quiz-dev-qfyy7zspmvytp6j0.us.auth0.com/"
+      QUIZ_AUTH_AUDIENCE: "https://qajit.com/api"
+      QUIZ_AUTH_MANAGEMENT_AUDIENCE: "https%3A%2F%2Fquiz-dev-qfyy7zspmvytp6j0.us.auth0.com%2Fapi%2Fv2%2F"
+      QUIZ_AUTH_MANAGEMENT_CLIENT_ID: ${QUIZ_AUTH_MANAGEMENT_CLIENT_ID:?QUIZ_AUTH_MANAGEMENT_CLIENT_ID is required}
+      QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET: ${QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET:?QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET is required}
+      # Only read by the Google Sheets import (QUIZ_DDL_AUTO=create) and the
+      # disabled PDF endpoint, so no files are mounted for them.
+      QUIZ_DATA_FOLDER: "/quiz/Quiz_Question_Bank.xlsx"
+      QUIZ_RESULT_FOLDER: "/tmp"
+      QUIZ_FONT_FILE: "/quiz/k010.TTF"
+      QUIZ_GOOGLE_APP_NAME: "Google Sheets API Java Quickstart"
+      QUIZ_GOOGLE_TOKENS_DIR: "/quiz_poc_files/tokens"
+      QUIZ_GOOGLE_CREDENTIALS_JSON: "/quiz_poc_files/google-sheets-client-secret.json"
+      QUIZ_GOOGLE_SPREADSHEET_ID: "1sjEnemYuGV5oRadBCbZImkR2Uff7rPLS4oIfj8N9yEQ"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:7070/api/public"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 180s
+
+  ui:
+    image: ${DOCKER_USERNAME:-cyberaka}/quiz-ui:${DOCKER_IMAGE_TAG:-prod}
+    container_name: qajitcom-ui
+    restart: unless-stopped
+    mem_limit: 64m
+    ports:
+      - "127.0.0.1:8400:8080"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
