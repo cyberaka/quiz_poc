@@ -39,10 +39,10 @@ Rules for the shared server:
 
 ### 1. Deploy key
 
-```bash
-ssh-keygen -t ed25519 -f ~/.ssh/qajitcom_deploy -C "github-actions qajit.com" -N ""
-ssh-copy-id -i ~/.ssh/qajitcom_deploy.pub cyberaka@23.239.19.23
-```
+The workflow reuses the existing deployment key whose public half is already in
+`~/.ssh/authorized_keys` for `cyberaka` on the server. No new key is needed;
+only its private half has to be added to this repository's secrets (step 2),
+because GitHub secrets are per repository.
 
 ### 2. GitHub secrets (cyberaka/quiz_poc)
 
@@ -55,7 +55,7 @@ gh secret set DOCKER_USERNAME -R $R --body cyberaka
 gh secret set DOCKER_PASSWORD -R $R          # Docker Hub access token
 gh secret set SERVER_HOST -R $R --body 23.239.19.23   # origin IP; the domain resolves to Cloudflare
 gh secret set SERVER_USER -R $R --body cyberaka
-gh secret set SSH_PRIVATE_KEY -R $R < ~/.ssh/qajitcom_deploy
+gh secret set SSH_PRIVATE_KEY -R $R < <path to the existing deployment private key>
 gh secret set QUIZ_CONNECTION_STRING -R $R
 gh secret set QUIZ_AUTH_MANAGEMENT_CLIENT_ID -R $R
 gh secret set QUIZ_AUTH_MANAGEMENT_CLIENT_SECRET -R $R
