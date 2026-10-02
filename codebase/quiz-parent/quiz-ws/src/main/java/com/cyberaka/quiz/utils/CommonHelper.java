@@ -25,7 +25,8 @@ public class CommonHelper {
 
     public <T> List<T> getTwentyPercentOfResults(List<T> results) {
         int size = results.size();
-        int twentyPercentCount = Math.max(1, (int) Math.ceil(size * 0.20));
+        // At least one result for guests, but never more than the list holds.
+        int twentyPercentCount = Math.min(size, Math.max(1, (int) Math.ceil(size * 0.20)));
         return results.subList(0, twentyPercentCount);
     }
 }
