@@ -1,0 +1,10 @@
+{
+  "domain": "quiz-dev-qfyy7zspmvytp6j0.us.auth0.com",
+  "clientId": "PzCYYKck97fVNCgK8pMzm6TV9Rjr3r8b",
+  "authorizationParams": {
+    "audience": "https://qajit.com/api"
+  },
+  "apiUri": "https://qajit.com/api/",
+  "appUri": "http://localhost:8100",
+  "errorPath": "/error"
+}
